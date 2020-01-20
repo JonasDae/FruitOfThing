@@ -1,3 +1,6 @@
-h1 {
-	color: red;
+#div_side {
+	background-color: red;
+}
+#div_main {
+	background-color: blue;
 }
