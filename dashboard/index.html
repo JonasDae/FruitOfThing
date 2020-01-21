@@ -28,9 +28,14 @@
 						</div>
 						<div class="row">
 							<div class="col" id="img_weather">
-								<a href="http://www.buienradar.be" target="_blank">
-									<img border="0" src="http://api.buienradar.nl/image/1.0/radarmapbe?width=550" class="img-fluid">
-								</a>
+								<div>
+									<a href="http://www.buienradar.be" target="_blank">
+										<img border="0" src="http://api.buienradar.nl/image/1.0/radarmapbe?width=550" class="img-fluid">
+									</a>
+								</div>
+								<div class="embed-responsive embed-responsive-16by9">
+							    	<iframe class="embed-responsive-item"  src="https://www.meteo.be/services/widget/.?postcode=3800&nbDay=2&type=4&lang=nl&bgImageId=1&bgColor=567cd2&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
+								</div>
 							</div>
 						</div>
 						<div class="row">
@@ -109,9 +114,10 @@
 						</div>
 						<div class="row">
 							<div class="col">
-							 <input type="checkbox" name="chk_dataset_0" class="chk_dataset" value="0"> set 0 <br>
-							 <input type="checkbox" name="chk_dataset_1" class="chk_dataset" value="1"> set 1 <br>
-							 <input type="checkbox" name="chk_dataset_2" class="chk_dataset" value="2"> set 2 <br>
+							 <input type="checkbox" name="chk_grootte" class="chk_dataset" value="0"> Grootte <br>
+							 <input type="checkbox" name="chk_waterniveau" class="chk_dataset" value="1"> Waterniveau <br>
+							 <input type="checkbox" name="chk_temp" class="chk_dataset" value="2"> Temperatuur <br>
+							 <input type="checkbox" name="chk_lucht" class="chk_dataset" value="3"> Luchtvochtigheid <br>
 							</div>
 						</div>
 						<div class="row">
@@ -122,20 +128,17 @@
 						<div class="row">
 							<div class="col">
 								<h3> TABEL </h3>
-								<table class="table">
+								<table class="table" id="data_table">
 									<thead>
 										<tr>
-											<th scope="col"> DATA 1 </th>
-											<th scope="col"> DATA 2 </th>
-											<th scope="col"> DATA 3 </th>
+											<th scope="col"> Datum </th>
+											<th scope="col"> Grootte </th>
+											<th scope="col"> Grondwaterniveau </th>
+											<th scope="col"> Temperatuur </th>
+											<th scope="col"> Luchtvochtigheid </th>
 										</tr>
 									</thead>
-									<tbody>
-										<tr>
-											<th scope="row"> ITEM HEADER </th>
-											<td> ITEM 1 </td>
-											<td> ITEM 2 </td>
-										</tr>
+									<tbody id="data_table_body">
 									</tbody>
 								</table>
 							</div>
@@ -149,7 +152,7 @@
 		</div>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <!-- chart.js voor grafieken -->

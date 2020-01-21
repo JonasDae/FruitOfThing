@@ -1,8 +1,12 @@
 // graph
 // datasets
-var datasets = [[12, 19, 3, 5, 2, 3],
-				[11, 18, 5, 2, 12, 13],
-				[1, 8, 15, 8, 5, 8]];
+/*
+[0]: dendro
+[1]: water
+[2]: temp
+[3]: lucht
+*/
+var datasets = [];
 // checkboxes
 $('input[class=chk_dataset]').change(function() {
 	var value = $(this).val();
@@ -22,21 +26,23 @@ var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 var chart_out = new Chart(cnv_graph, {
     type: 'bar',
     data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
         datasets: [{
-            label: 'set 0',
             data: [],
             borderWidth: 1,
 			backgroundColor: '#ff6574',
         },
 		{
-            label: 'set 1',
             data: [],
             borderWidth: 1,
 			backgroundColor: '#74ff65',
 		},
 		{
-            label: 'set 2',
+            data: [],
+            borderWidth: 1,
+			backgroundColor: '#6574ff',
+		},
+		{
             data: [],
             borderWidth: 1,
 			backgroundColor: '#6574ff',
@@ -55,3 +61,43 @@ var chart_out = new Chart(cnv_graph, {
         }
     }
 });
+
+// ajax
+var URL_ALL = "https://floriandh.sinners.be/pcfruit/api/measurement/read.php";
+function fill_table() {
+   $.ajax({	
+   	url: URL_ALL,
+	dataType: 'json',
+	success: function(data){
+		datasets[0] = [];
+		datasets[1] = [];
+		datasets[2] = [];
+		datasets[3] = [];
+
+        $.each(data, function(index, element) {
+			datasets[0].push(element.dendrometer);
+			datasets[1].push(element.watermark);
+			datasets[2].push(element.temperature);
+			datasets[3].push(element.humidity);
+			var content = 	"<tr>";
+			content +=			"<td>";
+			content +=				element.date_time;
+			content +=			"</td>";
+			content +=			"<td>";
+			content +=				element.dendrometer;
+			content +=			"</td>";
+			content +=			"<td>";
+			content +=				element.watermark;
+			content +=			"</td>";
+			content +=			"<td>";
+			content +=				element.temperature;
+			content +=			"</td>";
+			content +=			"<td>";
+			content +=				element.humidity;
+			content +=			"</td>";
+			content +=		"</tr>";
+            $('#data_table_body').append(content);
+		});
+	}})
+}
+fill_table();
