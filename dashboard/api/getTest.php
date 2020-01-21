@@ -2,19 +2,21 @@
 require 'connect.php';
 
 $sql = "SELECT * 
-		FROM test_table";
+        FROM test_table";
+$testData[];
 
 if($result = mysqli_query($con, $sql))
 {
     $cr=0;
     while($row = mysqli_fetch_assoc($result))
     {
-        $nieuwsartikels[$cr]['id'] = $row['id'];
-        $nieuwsartikels[$cr]['naam'] = $row['naam'];
+        $testData[$cr]['id'] = $row['id'];
+        $testData[$cr]['naam'] = $row['naam'];
         $cr++;
     }
 
-    echo json_encode($nieuwsartikels);
+
+    echo json_encode($testData);
 }
 else
 {
