@@ -28,31 +28,34 @@
 						</div>
 						<div class="row">
 							<div class="col" id="img_weather">
-								<h3> IMG </h3>
+								<img src="res/sunny.svg" class="img-fluid"/>
 							</div>
 							<div class="col" id="tmp_weather">
-								<h3> TEMP </h3>
+								<p> Huidige temperatuur </p>
+								<h1> TEMP </h1>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col">
+								<p> Verwacht laagste </p>
 								<h2> temp lo </h2>
 							</div>
 							<div class="col">
+								<p> Verwacht hoogste </p>
 								<h2> temp hi </h2>
 							</div>
 						</div>
 					</div>
 					<div id="div_feed">
 						<h2> FEED </h2>
-						<ol>
-							<li>
+						<ol class="list-group">
+							<li class="list-group-item">
 								<h2>feed1</h2>
 							</li>
-							<li>
+							<li class="list-group-item">
 								<h2>feed2</h2>
 							</li>
-							<li>
+							<li class="list-group-item">
 								<h2>feed3</h2>
 							</li>
 						</ol>
@@ -99,12 +102,35 @@
 						</div>
 						<div class="row">
 							<div class="col">
+							 <input type="checkbox" name="chk_dataset_0" class="chk_dataset" value="0"> set 0 <br>
+							 <input type="checkbox" name="chk_dataset_1" class="chk_dataset" value="1"> set 1 <br>
+							 <input type="checkbox" name="chk_dataset_2" class="chk_dataset" value="2"> set 2 <br>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
 								<h2> METINGEN </h2>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col">
 								<h3> TABEL </h3>
+								<table class="table">
+									<thead>
+										<tr>
+											<th scope="col"> DATA 1 </th>
+											<th scope="col"> DATA 2 </th>
+											<th scope="col"> DATA 3 </th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th scope="row"> ITEM HEADER </th>
+											<td> ITEM 1 </td>
+											<td> ITEM 2 </td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
