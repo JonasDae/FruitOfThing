@@ -63,10 +63,10 @@ var chart_out = new Chart(cnv_graph, {
 });
 
 // ajax
-var URL_ALL = "https://floriandh.sinners.be/pcfruit/api/measurement/read.php";
+var BASE_URL = "https://floriandh.sinners.be/pcfruit/api/";
 function fill_table() {
    $.ajax({	
-   	url: URL_ALL,
+   	url: BASE_URL + "measurement/read.php",
 	dataType: 'json',
 	success: function(data){
 		datasets[0] = [];
@@ -100,4 +100,25 @@ function fill_table() {
 		});
 	}})
 }
+
+function fill_notifications(){
+	$.ajax({	
+		url: BASE_URL + "notification/read.php",
+	 	dataType: 'json',
+	 success: function(data){
+		 $.each(data, function(index, element) {
+			 var content = 	"<li>";
+			 content +=			"<h3>";
+			 content +=				element.title;
+			 content +=			"</h3";
+			 content +=			"<p>";
+			 content +=				element.description;
+			 content +=			"</p>";
+			 content +=		"</li>";
+			 $('#notificationFeed').append(content);
+		 });
+	 }})
+}
+
 fill_table();
+fill_notifications();
