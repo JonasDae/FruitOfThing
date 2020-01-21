@@ -1,23 +1,23 @@
 <?php
 
 // db credentials
-define('DB_HOST', 'server-pcfruit.database.windows.net');
-define('DB_USER', 'FruitOfThings');
-define('DB_PASS', 'ThingsOfFruit321654+');
-define('DB_NAME', 'db_pcfruit');
+define('DB_HOST', 'db.sinners.be');
+define('DB_USER', 'floriandh');
+define('DB_PASS', 'yu0p7fOrDc3g');
+define('DB_NAME', 'floriandh_pcfruit');
 
 // connect with the database
 function connect(){
-    $connect = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die($mysqli->error);
+    $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
     // check connection
-    if(mysqli_connect_errno($connect)){
-        die("Failed to connect: " .mysqli_connect_error());
+    if($conn->connect_error){
+        die("Failed to connect: ");
+        // die("Failed to connect: " $conn->connect_error);
     }
 
-    mysqli_set_charset($connect, "utf8");
-
-    return $connect;
+    mysqli_set_charset($conn, "utf8");
+    return $conn;    
 }
 
 $con = connect();
