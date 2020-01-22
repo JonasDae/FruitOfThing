@@ -29,9 +29,6 @@
 
 /* TABEL */
 
-table {
-    overflow-y: scroll;
-}
 
 th {
     background-color: #6F9F3E;
@@ -40,9 +37,12 @@ th {
 
 td {
     text-align: right;
-    border: 1px solid #6F9F3E;
 }
 
 tr:hover {
     background-color: #bdca8b;
+}
+
+table, td {
+    border: 1px solid #6F9F3E;
 }
