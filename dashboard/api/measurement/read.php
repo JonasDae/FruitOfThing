@@ -1,5 +1,4 @@
 <?php
-	header("Access-Control-Allow-Origin: *");
     require '../connect.php';
 
     $sql = "SELECT * 
