@@ -59,7 +59,7 @@ function graph_clr_dataset(setnr) {
 // dropdowns
 $('select[id=slc_soort]').change(function() {
 	var value = $(this).val();
-	fill_data_measure(value);
+	fetch_data_measure_by_type(value);
 });
 // checkboxes
 $('input[class=chk_dataset]').change(function() {
@@ -149,7 +149,7 @@ var URL_MEASURE_TYPE = BASE_URL + "api/measurement/readByType.php?id=";
 var URL_FRUIT_TYPE = BASE_URL + "api/fruit_type/read.php";
 var URL_NOTIFICATION = BASE_URL + "api/notification/read.php";
 
-function fill_data_measure(typeid) {
+function fetch_data_measure_by_type(typeid) {
    $.ajax({	
    	url: URL_MEASURE_TYPE+typeid,
 	dataType: 'json',
@@ -160,59 +160,76 @@ function fill_data_measure(typeid) {
 			element.date_time = new Date(Date.parse(date));
 			data_measure.push(element);
 		});
-		console.log(data_measure);
 		graph_fill_by_flags();
+		table_fill();
 	}})
 }
-
-function fill_table() {
+function fetch_data_measure() {
    $.ajax({	
-	url: URL_MEASURE,
+   	url: URL_MEASURE,
 	dataType: 'json',
 	success: function(data){
-
+		data_measure = [];
         $.each(data, function(index, element) {
+			var date = element.date_time;
+			element.date_time = new Date(Date.parse(date));
 			data_measure.push(element);
-			var content = 	"<tr>";
-			content +=			"<td>";
-			content +=				element.date_time;
-			content +=			"</td>";
-			content +=			"<td>";
-			content +=				element.dendrometer;
-			content +=			"</td>";
-			content +=			"<td>";
-			content +=				element.watermark;
-			content +=			"</td>";
-			content +=			"<td>";
-			content +=				element.temperature;
-			content +=			"</td>";
-			content +=			"<td>";
-			content +=				element.humidity;
-			content +=			"</td>";
-			content +=		"</tr>";
-            $('#data_table_body').append(content);
 		});
 		graph_fill_by_flags();
+		table_fill();
 	}})
 }
 
-function fill_notifications(){
-	$.ajax({	
-		url: URL_NOTIFICATION,
-	 	dataType: 'json',
-		 success: function(data){
-			 $.each(data, function(index, element) {
-				 var content = 	"<li>";
-				 content +=			"<h3>";
-				 content +=				element.title;
-				 content +=			"</h3";
-				 content +=			"<p>";
-				 content +=				element.description;
-				 content +=			"</p>";
-				 content +=		"</li>";
-				 $('#notificationFeed').append(content);
-			 });
-	 }})
+function table_fill() {
+	$('#data_table_body').empty();
+	$.each(data_measure, function(index, element) {
+		var content = 	"<tr>";
+		content +=			"<td>";
+		content +=				element.date_time;
+		content +=			"</td>";
+		content +=			"<td>";
+		content +=				element.dendrometer;
+		content +=			"</td>";
+		content +=			"<td>";
+		content +=				element.watermark;
+		content +=			"</td>";
+		content +=			"<td>";
+		content +=				element.temperature;
+		content +=			"</td>";
+		content +=			"<td>";
+		content +=				element.humidity;
+		content +=			"</td>";
+		content +=		"</tr>";
+		$('#data_table_body').append(content);
+	})
+}
+function fill_notifications() {
+    $.ajax({
+        url: URL_NOTIFICATION,
+        dataType: 'json',
+        success: function (data) {
+            $.each(data, function (index, element) {
+            	var bg = element.severity == "alert" ? "rgba(220, 53, 69, 0.5)" : "rgba(255, 193, 7, 0.5)";
+            	var text = element.severity == "alert" ? "text-light" : "text-muted";
+                var content = "<li class='mb-1' style='background-color: " + bg + "'>";
+                content += "<div class='row ml-2'>";
+                content += "<div class='col-auto'>";
+				content += "<div class='row'>";
+                content += "<h4 class='mb-0'>" + element.title + "</h4>";
+                content += "</div>";
+				content += "<div class='row'>";
+				content += "<span class='" + text + "'>" + element.description + "</span>";
+				content += "</div>";
+				content += "</div>";
+				content += "<div class='col-auto'>";
+                content += "<p>" + element.date_time + "</p>";
+				content += "</div>";
+				content += "</div>";
+                content += "</li>";
+                $('#notificationFeed').append(content);
+            });
+        }
+    })
 }
 
 function fill_select_soort() {
@@ -232,6 +249,6 @@ function fill_select_soort() {
 	}})
 }
 
-fill_table();
+fetch_data_measure();
 fill_select_soort();
 fill_notifications();
