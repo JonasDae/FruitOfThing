@@ -26,3 +26,23 @@
 #div_main {
 	background-color: white;
 }
+
+/* TABEL */
+
+table {
+    overflow-y: scroll;
+}
+
+th {
+    background-color: #6F9F3E;
+    text-align: center;
+}
+
+td {
+    text-align: right;
+    border: 1px solid #6F9F3E;
+}
+
+tr:hover {
+    background-color: #bdca8b;
+}
