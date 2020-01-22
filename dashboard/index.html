@@ -9,6 +9,18 @@
 
 <!-- FoT CSS-->
 		<link rel="stylesheet" href="css/index.css">
+		<style>
+			#kmi-info {
+				margin-left: -0.5em;
+				margin-right: -0.5em;
+			}
+			iframe {
+				display: block;
+				border: none;
+				height: 200px;
+				width: 100%;
+			}
+		</style>
 		<title>Dashboard prototype B4</title>
 	</head>
 	<body>
@@ -83,24 +95,28 @@
 									<input type="checkbox" id="grootte" name="chk_grootte" class="chk_dataset" value="1">
 									<label class="form-check-label" for="grootte">
 										Vruchtgrootte
+										<span id="chk_span_1" class="span_dataset"></span>
 									</label>
 								</div>
 								<div class="col-6 col-lg-4 col-xl-3 form-check">
 									<input type="checkbox" id="waterniveau" name="chk_waterniveau" class="chk_dataset" value="2">
 									<label class="form-check-label" for="waterniveau">
 										Grondwaterniveau
+										<span id="chk_span_2" class="span_dataset"></span>
 									</label>
 								</div>
 								<div class="col-6 col-lg-4 col-xl-3 form-check">
 									<input type="checkbox" id="temp" name="chk_temp" class="chk_dataset" value="4">
 									<label class="form-check-label" for="temp">
 										Temperatuur
+										<span id="chk_span_4" class="span_dataset"></span>
 									</label>
 								</div>
 								<div class="col-6 col-lg-4 col-xl-3 form-check">
 									<input type="checkbox" id="lucht" name="chk_lucht" class="chk_dataset" value="8">
 									<label class="form-check-label" for="lucht">
 										Luchtvochtigheid
+										<span id="chk_span_8" class="span_dataset"></span>
 									</label>
 								</div>
 							</div>
