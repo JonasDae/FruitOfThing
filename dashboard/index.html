@@ -67,15 +67,17 @@
 						<div class="col-sm-6 col-lg-3 form-group">
 							<label for="slc_soort">Vruchtsoort</label>
 							<select id="slc_soort" class="form-control">
-								<option value="-1">Allen</option>
+								<!-- <option value="-1">Allen</option> -->
 							</select>
 						</div>
 						<div class="col-sm-6 col-lg-3 form-group">
 							<label for="slc_weergave">Weergave</label>
 							<select id="slc_weergave" class="form-control">
-								<option value="1">week</option>
-								<option value="2">maand</option>
-								<option value="3">jaar</option>
+								<option value="1">uur</option>
+								<option value="2">dag</option>
+								<option value="3">week</option>
+								<option selected value="4">maand</option>
+								<option value="5">jaar</option>
 							</select>
 						</div>
 						<div class="col-sm-6 col-lg-3 form-group">
@@ -92,7 +94,7 @@
 						<div id="graph-check" class="col-12 p-5">
 							<div class="row">
 								<div class="col-6 col-lg-4 col-xl-3 form-check">
-									<input type="checkbox" id="grootte" name="chk_grootte" class="chk_dataset" value="1">
+									<input type="checkbox" checked id="grootte" name="chk_grootte" class="chk_dataset" value="1">
 									<label class="form-check-label" for="grootte">
 										Vruchtgrootte
 										<span id="chk_span_1" class="span_dataset"></span>
@@ -100,21 +102,21 @@
 								</div>
 								<div class="col-6 col-lg-4 col-xl-3 form-check">
 									<span class=""></span>
-									<input type="checkbox" id="waterniveau" name="chk_waterniveau" class="chk_dataset" value="2">
+									<input type="checkbox" checked id="waterniveau" name="chk_waterniveau" class="chk_dataset" value="2">
 									<label class="form-check-label" for="waterniveau">
 										Grondwaterniveau
 										<span id="chk_span_2" class="span_dataset"></span>
 									</label>
 								</div>
 								<div class="col-6 col-lg-4 col-xl-3 form-check">
-									<input type="checkbox" id="temp" name="chk_temp" class="chk_dataset" value="4">
+									<input type="checkbox" checked id="temp" name="chk_temp" class="chk_dataset" value="4">
 									<label class="form-check-label" for="temp">
 										Temperatuur
 										<span id="chk_span_4" class="span_dataset"></span>
 									</label>
 								</div>
 								<div class="col-6 col-lg-4 col-xl-3 form-check">
-									<input type="checkbox" id="lucht" name="chk_lucht" class="chk_dataset" value="8">
+									<input type="checkbox" checked id="lucht" name="chk_lucht" class="chk_dataset" value="8">
 									<label class="form-check-label" for="lucht">
 										Luchtvochtigheid
 										<span id="chk_span_8" class="span_dataset"></span>

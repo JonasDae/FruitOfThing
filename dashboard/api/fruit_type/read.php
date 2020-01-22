@@ -3,7 +3,8 @@
     require '../connect.php';
 
     $sql = "SELECT * 
-            FROM fruit_type";
+            FROM fruit_type
+            ORDER BY name";
 
     $data = [];
 
