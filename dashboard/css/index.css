@@ -12,8 +12,8 @@
 
 
 .content-title{
-	background-color: rgb(202, 202, 202);
-	color: rgb(82, 79, 79);
+	background-color: #2B9482;
+	color: white;
 	padding: 8px 0px 8px 0px;
 	margin-bottom: 12px;
 }
@@ -23,9 +23,9 @@
 }
 
 #div_side {
-	background-color: hotpink;
+	background-color: white;
 }
 
 #div_main {
-	background-color: hotpink;
+	background-color: white;
 }
