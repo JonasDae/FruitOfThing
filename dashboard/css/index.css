@@ -1,6 +1,7 @@
-#div_side {
-	background-color: red;
-}
+/* Kleur 1 : #2B9482; */
+/* Kleur 2 : #6F9F3E; */
+/* Kleur 3 : #ce6564; */
+/* kleur 4 : #bdca8b; */
 
 /* HEADER */
 .navbar{
@@ -8,6 +9,8 @@
 }
 
 /* ALGEMEEN */
+
+
 .content-title{
 	background-color: rgb(202, 202, 202);
 	color: rgb(82, 79, 79);
@@ -17,4 +20,12 @@
 .content-title h5{
 	margin: 0px;
 	padding: 0px;
+}
+
+#div_side {
+	background-color: hotpink;
+}
+
+#div_main {
+	background-color: hotpink;
 }
