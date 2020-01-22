@@ -26,6 +26,14 @@ const FLAG_SHOW_LUCHT 	= 8;
 var graph_select_flags = 0;
 var data_measure = [];
 
+function data_lowest_week() {
+	var out = data_measure[0].date_time;
+	$.each(data_measure, function(index, element) {
+		if(element.date_time < out) {
+			out = element.date_time;
+		}
+	})
+}
 // graph data control
 function graph_fill_by_flags() {
 	for(var i=0;i<FLAG_NUM_FLAGS;i++) {
@@ -200,19 +208,19 @@ function table_fill() {
 	$.each(data_measure, function(index, element) {
 		var content = 	"<tr>";
 		content +=			"<td>";
-		content +=				element.date_time;
+		content +=				element.date_time != null ? element.date_time : "";
 		content +=			"</td>";
 		content +=			"<td>";
-		content +=				element.dendrometer;
+		content +=				element.dendrometer != null ? element.dendrometer : "";
 		content +=			"</td>";
 		content +=			"<td>";
-		content +=				element.watermark;
+		content +=				element.watermark != null ? element.watermark : "";
 		content +=			"</td>";
 		content +=			"<td>";
-		content +=				element.temperature;
+		content +=				element.temperature != null ? element.temperature : "";
 		content +=			"</td>";
 		content +=			"<td>";
-		content +=				element.humidity;
+		content +=				element.humidity != null ? element.humidity : "";
 		content +=			"</td>";
 		content +=		"</tr>";
 		$('#data_table_body').append(content);
@@ -284,7 +292,6 @@ function ui_init() {
 		}
 	});
 	graph_fill_by_flags();
-	
 }
 
 fetch_data_measure();
