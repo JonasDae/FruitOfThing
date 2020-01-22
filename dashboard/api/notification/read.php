@@ -6,10 +6,10 @@
 
     $data = [];
 
-    if($result = mysqli_query($con, $sql))
+    if($result = sql_query($con, $sql))
     {
         $cr=0;
-        while($row = mysqli_fetch_assoc($result))
+        while($row = sql_fetch_row($result))
         {
             $data[$cr]['id'] = $row['id'];
             $data[$cr]['title'] = $row['title'];
