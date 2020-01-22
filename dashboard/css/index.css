@@ -9,5 +9,12 @@
 
 /* ALGEMEEN */
 .content-title{
-	background-color: gray;
+	background-color: rgb(202, 202, 202);
+	color: rgb(82, 79, 79);
+	padding: 8px 0px 8px 0px;
+	margin-bottom: 12px;
+}
+.content-title h5{
+	margin: 0px;
+	padding: 0px;
 }
