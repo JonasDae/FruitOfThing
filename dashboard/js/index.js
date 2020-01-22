@@ -7,7 +7,7 @@ const DATASET_LUCHT 	= 3;
 const GRAPH_COLOR_DENDRO 	= '#00ff00';
 const GRAPH_COLOR_WATER		= '#0000ff';
 const GRAPH_COLOR_TEMP		= '#ff0000';
-const GRAPH_COLOR_LUCHT 	= 'orange';
+const GRAPH_COLOR_LUCHT 	= '#ff8800';
 
 const GRAPH_TYPE_DENDRO 	= 'line';
 const GRAPH_TYPE_WATER		= 'bar';
@@ -25,7 +25,62 @@ const FLAG_SHOW_LUCHT 	= 8;
 // global vars
 var graph_select_flags = 0;
 var data_measure = [];
+var data_measure_filtered = [];
 
+/*
+unchanged:
+	id
+	fruit_type
+	date_time
+	module_id
+*/
+function data_add(data1, data2) {
+	var out = data1;
+	out.dendrometer += data2.dendrometer;
+	out.humidity += data2.humidity;
+	out.temperature += data2.temperature;
+	out.watermark += data2.watermark;
+	return out;
+}
+function data_div(data, div) {
+	var out = data;
+	out.dendrometer /= div;
+	out.humidity /= div;
+	out.temperature /= div;
+	out.watermark /= div;
+	return out;
+}
+function week_of_year(date) {
+	date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+	date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+	var year_start = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+	return Math.ceil((((date-year_start)/86400000)+1)/7);
+}
+function data_filter_medium_week() {
+	var i = 0;
+	var out = [];
+	var cur_data = {};
+	var cur_week = -1;
+	$.each(data_measure, function(index, element) {
+
+		console.log(week_of_year(element.date_time))
+		if(week_of_year(element.date_time) == cur_week) {
+			cur_data = data_add(cur_data, element);
+			i++
+		}
+		else {
+			if(i != 0) {
+		console.log(i);
+				cur_data = data_div(cur_data, i);
+				i = 0;
+				out.push(cur_data);
+			}
+			cur_data = element;
+			cur_week = week_of_year(cur_data.date_time);
+		}
+	})
+	console.log(out);
+}
 // graph data control
 function graph_fill_by_flags() {
 	for(var i=0;i<FLAG_NUM_FLAGS;i++) {
@@ -192,6 +247,8 @@ function fetch_data_measure() {
 		});
 		graph_fill_by_flags();
 		table_fill();
+// FIXME: remove
+data_filter_medium_week();
 	}})
 }
 
@@ -200,19 +257,20 @@ function table_fill() {
 	$.each(data_measure, function(index, element) {
 		var content = 	"<tr>";
 		content +=			"<td>";
-		content +=				dateFormat(element.date_time, true) ;
+		// content +=				element.date_time != null ? element.date_time : "";
+		content +=					dateFormat(element.date_time, true) ;
 		content +=			"</td>";
 		content +=			"<td>";
-		content +=				element.dendrometer;
+		content +=				element.dendrometer != null ? element.dendrometer : "";
 		content +=			"</td>";
 		content +=			"<td>";
-		content +=				element.watermark;
+		content +=				element.watermark != null ? element.watermark : "";
 		content +=			"</td>";
 		content +=			"<td>";
-		content +=				element.temperature;
+		content +=				element.temperature != null ? element.temperature : "";
 		content +=			"</td>";
 		content +=			"<td>";
-		content +=				element.humidity;
+		content +=				element.humidity != null ? element.humidity : "";
 		content +=			"</td>";
 		content +=		"</tr>";
 		$('#data_table_body').append(content);
@@ -284,7 +342,6 @@ function ui_init() {
 		}
 	});
 	graph_fill_by_flags();
-	
 }
 
 function dateFormat(date, time){
