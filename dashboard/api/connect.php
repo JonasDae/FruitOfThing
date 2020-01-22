@@ -1,5 +1,6 @@
 <?php
-
+// CORS fix: FIXME remove
+header("Access-Control-Allow-Origin: *");
 // db credentials
 define('DB_HOST', 'db.sinners.be');
 define('DB_USER', 'floriandh');
