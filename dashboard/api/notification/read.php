@@ -15,6 +15,7 @@
             $data[$cr]['title'] = $row['title'];
             $data[$cr]['description'] = $row['description'];
             $data[$cr]['date_time'] = $row['date_time'];
+            $data[$cr]['severity'] = $row['severity'];
             $cr++;
         }
 
