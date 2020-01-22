@@ -80,7 +80,7 @@ var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 var chart_out = new Chart(cnv_graph, {
     type: 'bar',
     data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+        labels: ['Januari', 'Februari', 'Maart', 'April', 'Mei'],
         datasets: [{
 			yAxisID: 'axistemp',
             data: [],
