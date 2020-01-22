@@ -63,6 +63,7 @@ $('select[id=slc_soort]').change(function() {
 });
 // checkboxes
 $('input[class=chk_dataset]').change(function() {
+console.log("CHG");
 	var value = $(this).val();
 	if($(this).is(':checked')) {
 		graph_select_flags |= value;

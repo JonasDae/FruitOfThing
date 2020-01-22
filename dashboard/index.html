@@ -22,89 +22,88 @@
 
 		<div class="container-fluid">
 			<div class="row">
-				<div id="div_side" class="col-4">
+				<div id="div_side" class="col-md-4 d-none d-md-block">
 					<div class="content-title text-center">
 						<h5>Weer & temperatuur vandaag</h5>
 					</div>
-					<div id="div_weather">
-						<div class="row">
-							<div class="col-12">
-								<div>
-									<a href="http://www.buienradar.be" target="_blank">
-										<img border="0" src="http://api.buienradar.nl/image/1.0/radarmapbe?width=550" class="img-fluid">
-									</a>
-								</div>
-								<div class="embed-responsive embed-responsive-16by9">
-							    	<iframe class="embed-responsive-item"  src="https://www.meteo.be/services/widget/.?postcode=3800&nbDay=2&type=4&lang=nl&bgImageId=1&bgColor=567cd2&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
-								</div>
-							</div>
-							<div class="col-12">
-								<img src="res/sunny.svg" class="img-fluid"/>
-							</div>
-							<div class="col" id="tmp_weather">
-								<p> Huidige temperatuur </p>
-								<h1> TEMP </h1>
-							</div>
+					<div id="weather-info">
+						<div id="buienradar-info">
+							<a href="http://www.buienradar.be" target="_blank">
+								<img src="http://api.buienradar.nl/image/1.0/radarmapbe" class="img-fluid">
+							</a>
 						</div>
-						<div class="row">
-							<div class="col">
-								<p> Verwacht laagste </p>
-								<h2> temp lo </h2>
-							</div>
-							<div class="col">
-								<p> Verwacht hoogste </p>
-								<h2> temp hi </h2>
-							</div>
+						<div id="kmi-info">
+							<iframe src="https://www.meteo.be/services/widget/.?postcode=3800&nbDay=2&type=4&lang=nl&bgImageId=1&bgColor=567cd2&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
 						</div>
 					</div>
+					<div class="content-title text-center">
+						<h5>Meldingen</h5>
+					</div>
 					<div id="div_feed">
-						<h2> FEED </h2>
 						<ol id="notificationFeed" class="list-group">
 
 						</ol>
 					</div>
 				</div>
 
-				<div id="div_main" class="col-8">
+				<div id="div_main" class="col-md-8 col-sm-12">
 					<div class="content-title text-center">
 						<h5>Grafieken en statistieken</h5>
 					</div>
 
 					<div class="row">
-						<div class="col">
-							<p>Vruchtsoort:</p>
-							<select id="slc_soort">
+						<div class="col-sm-6 col-lg-3 form-group">
+							<label for="slc_soort">Vruchtsoort</label>
+							<select id="slc_soort" class="form-control">
 								<option value="-1">Allen</option>
 							</select>
 						</div>
-						<div class="col">
-							<p>Weergave:</p>
-							<select id="slc_weergave">
+						<div class="col-sm-6 col-lg-3 form-group">
+							<label for="slc_weergave">Weergave</label>
+							<select id="slc_weergave" class="form-control">
 								<option value="1">week</option>
 								<option value="2">maand</option>
 								<option value="3">jaar</option>
 							</select>
 						</div>
-						<div class="col">
-							<p>Begindatum:</p>
-							<input type="date" id="dte_begin" placeholder="Selecteer begindatum" >
+						<div class="col-sm-6 col-lg-3 form-group">
+							<label for="dte_begin">Begindatum</label>
+							<input type="date" id="dte_begin" placeholder="Selecteer begindatum" class="form-control" >
 						</div>
-						<div class="col">
-							<p>Einddatum:</p>
-							<input type="date" id="dte_end" placeholder="Selecteer einddatum" >
+						<div class="col-sm-6 col-lg-3 form-group">
+							<label for="dte_end">Einddatum</label>
+							<input type="date" id="dte_end" placeholder="Selecteer einddatum" class="form-control" >
 						</div>
-					</div>
-					<div class="row">
-						<div class="col">
+						<div class="col-12">
 							<canvas id="cnv_graph"></canvas>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col">
-							<input type="checkbox" name="chk_grootte" class="chk_dataset" value="1"> Grootte <br>
-							<input type="checkbox" name="chk_waterniveau" class="chk_dataset" value="2"> Waterniveau <br>
-							<input type="checkbox" name="chk_temp" class="chk_dataset" value="4"> Temperatuur <br>
-							<input type="checkbox" name="chk_lucht" class="chk_dataset" value="8"> Luchtvochtigheid <br>
+						<div id="graph-check" class="col-12">
+							<div class="row">
+								<div class="col-md-6 col-lg-4 col-xl-3 form-check">
+									<input type="checkbox" id="chk_grootte" name="chk_grootte" class="form-check-input chk_dataset" value="1">
+									<label class="form-check-label" for="chk_grootte">
+										Vruchtgrootte
+									</label>
+								</div>
+								<div class="col-md-6 col-lg-4 col-xl-3 form-check">
+									<input type="checkbox" id="chk_waterniveau" name="chk_waterniveau" class="form-check-input chk_dataset" value="2">
+									<label class="form-check-label" for="chk_waterniveau">
+										Grondwaterniveau
+									</label>
+								</div>
+								<div class="col-md-6 col-lg-4 col-xl-3 form-check">
+									<input type="checkbox" id="chk_temp" name="chk_temp" class="form-check-input chk_dataset" value="4">
+									<label class="form-check-label" for="chk_temp">
+										Temperatuur
+									</label>
+								</div>
+								<div class="col-6 col-lg-4 col-xl-3 form-check">
+									<input type="checkbox" id="chk_lucht" name="chk_lucht" class="form-check-input chk_dataset" value="8">
+									<label class="form-check-label" for="chk_lucht">
+										Luchtvochtigheid
+									</label>
+								</div>
+							</div>
 						</div>
 					</div>
 

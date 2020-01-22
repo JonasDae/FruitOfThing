@@ -9,11 +9,9 @@
 }
 
 /* ALGEMEEN */
-
-
 .content-title{
-	background-color: rgb(202, 202, 202);
-	color: rgb(82, 79, 79);
+	background-color: #2B9482;
+	color: white;
 	padding: 8px 0px 8px 0px;
 	margin-bottom: 12px;
 }
@@ -21,11 +19,30 @@
 	margin: 0px;
 	padding: 0px;
 }
-
 #div_side {
-	background-color: hotpink;
+	background-color: white;
 }
 
 #div_main {
-	background-color: hotpink;
+	background-color: white;
+}
+
+/* TABEL */
+
+table {
+    overflow-y: scroll;
+}
+
+th {
+    background-color: #6F9F3E;
+    text-align: center;
+}
+
+td {
+    text-align: right;
+    border: 1px solid #6F9F3E;
+}
+
+tr:hover {
+    background-color: #bdca8b;
 }
