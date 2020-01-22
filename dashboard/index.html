@@ -22,7 +22,7 @@
 
 		<div class="container-fluid">
 			<div class="row">
-				<div id="div_side" class="col-4 d-sm-none d-md-block">
+				<div id="div_side" class="col-md-4 d-none d-md-block">
 					<div class="content-title text-center">
 						<h5>Weer & temperatuur vandaag</h5>
 					</div>
@@ -46,46 +46,64 @@
 					</div>
 				</div>
 
-				<div id="div_main" class="col-lg-8 col-md-12">
+				<div id="div_main" class="col-md-8 col-sm-12">
 					<div class="content-title text-center">
 						<h5>Grafieken en statistieken</h5>
 					</div>
 
 					<div class="row">
-						<div class="col">
-							<p>Vruchtsoort:</p>
-							<select id="slc_soort">
+						<div class="col-sm-6 col-lg-3 form-group">
+							<label for="slc_soort">Vruchtsoort</label>
+							<select id="slc_soort" class="form-control">
 								<option value="-1">Allen</option>
 							</select>
 						</div>
-						<div class="col">
-							<p>Weergave:</p>
-							<select id="slc_weergave">
+						<div class="col-sm-6 col-lg-3 form-group">
+							<label for="slc_weergave">Weergave</label>
+							<select id="slc_weergave" class="form-control">
 								<option value="1">week</option>
 								<option value="2">maand</option>
 								<option value="3">jaar</option>
 							</select>
 						</div>
-						<div class="col">
-							<p>Begindatum:</p>
-							<input type="date" id="dte_begin" placeholder="Selecteer begindatum" >
+						<div class="col-sm-6 col-lg-3 form-group">
+							<label for="dte_begin">Begindatum</label>
+							<input type="date" id="dte_begin" placeholder="Selecteer begindatum" class="form-control" >
 						</div>
-						<div class="col">
-							<p>Einddatum:</p>
-							<input type="date" id="dte_end" placeholder="Selecteer einddatum" >
+						<div class="col-sm-6 col-lg-3 form-group">
+							<label for="dte_end">Einddatum</label>
+							<input type="date" id="dte_end" placeholder="Selecteer einddatum" class="form-control" >
 						</div>
-					</div>
-					<div class="row">
-						<div class="col">
+						<div class="col-12">
 							<canvas id="cnv_graph"></canvas>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col">
-							<input type="checkbox" name="chk_grootte" class="chk_dataset" value="0"> Grootte <br>
-							<input type="checkbox" name="chk_waterniveau" class="chk_dataset" value="1"> Waterniveau <br>
-							<input type="checkbox" name="chk_temp" class="chk_dataset" value="2"> Temperatuur <br>
-							<input type="checkbox" name="chk_lucht" class="chk_dataset" value="3"> Luchtvochtigheid <br>
+						<div id="graph-check" class="col-12">
+							<div class="row">
+								<div class="col-md-6 col-lg-4 col-xl-3 form-check">
+									<input type="checkbox" id="chk_grootte" name="chk_grootte" class="form-check-input chk_dataset" value="0">
+									<label class="form-check-label" for="chk_grootte">
+										Vruchtgrootte
+									</label>
+								</div>
+								<div class="col-md-6 col-lg-4 col-xl-3 form-check">
+									<input type="checkbox" id="chk_waterniveau" name="chk_waterniveau" class="form-check-input chk_dataset" value="1">
+									<label class="form-check-label" for="chk_waterniveau">
+										Grondwaterniveau
+									</label>
+								</div>
+								<div class="col-md-6 col-lg-4 col-xl-3 form-check">
+									<input type="checkbox" id="chk_temp" name="chk_temp" class="form-check-input chk_dataset" value="2">
+									<label class="form-check-label" for="chk_temp">
+										Temperatuur
+									</label>
+								</div>
+								<div class="col-6 col-lg-4 col-xl-3 form-check">
+									<input type="checkbox" id="chk_lucht" name="chk_lucht" class="form-check-input chk_dataset" value="3">
+									<label class="form-check-label" for="chk_lucht">
+										Luchtvochtigheid
+									</label>
+								</div>
+							</div>
 						</div>
 					</div>
 
