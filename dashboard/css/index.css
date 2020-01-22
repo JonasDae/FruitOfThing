@@ -28,18 +28,16 @@
 
 /* GRAFIEK */
 .kleur-temp{
-	width: 20px;
-	height: 20px;
-	background-color: red;
+	color: red;
 }
 .kleur-groei{
-
+	color: green;
 }
 .kleur-luchtvocht{
-
+	color: blue;
 }
 .kleur-bodemvocht{
-
+	color: orange;
 }
 
 

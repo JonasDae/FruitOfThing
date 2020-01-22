@@ -11,6 +11,12 @@ const FLAG_SHOW_WATER 	= 2;
 const FLAG_SHOW_TEMP 	= 4;
 const FLAG_SHOW_LUCHT 	= 8;
 
+var kleurTemp = 'red';
+var kleurGroei = 'green';
+var kleurLuchtVocht = 'blue';
+var kleurBodemVocht = 'orange';
+
+
 
 // global vars
 var graph_select_flags = 0;
@@ -85,7 +91,7 @@ var chart_out = new Chart(cnv_graph, {
 			yAxisID: 'axistemp',
             data: [],
             borderWidth: 1,
-			backgroundColor: '#ff6574',
+			backgroundColor: this.kleurTemp,
 			hoverBorderWidth: 3,
 			hoverBorderColor: '#000000',
         },
