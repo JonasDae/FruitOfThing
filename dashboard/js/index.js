@@ -94,13 +94,10 @@ var chart_out = new Chart(cnv_graph, {
 });
 
 // ajax
-// var BASE_URL = "https://floriandh.sinners.be/pcfruit/api/";
-// function fill_table() {
-//    $.ajax({	
-//    	url: BASE_URL + "measurement/read.php",
-
-var URL_MEASURE = "https://floriandh.sinners.be/pcfruit/api/measurement/read.php";
-var URL_FRUIT_TYPE = "https://floriandh.sinners.be/pcfruit/api/fruit_type/read.php";
+var BASE_URL = "https://floriandh.sinners.be/pcfruit/";
+var URL_MEASURE = BASE_URL + "api/measurement/read.php";
+var URL_FRUIT_TYPE = BASE_URL + "api/fruit_type/read.php";
+var URL_NOTIFICATION = BASE_URL + "api/fruit_type/read.php";
 
 function fill_table() {
    $.ajax({	
@@ -141,20 +138,20 @@ function fill_table() {
 
 function fill_notifications(){
 	$.ajax({	
-		url: BASE_URL + "notification/read.php",
+		url: URL_NOTIFICATION,
 	 	dataType: 'json',
-	 success: function(data){
-		 $.each(data, function(index, element) {
-			 var content = 	"<li>";
-			 content +=			"<h3>";
-			 content +=				element.title;
-			 content +=			"</h3";
-			 content +=			"<p>";
-			 content +=				element.description;
-			 content +=			"</p>";
-			 content +=		"</li>";
-			 $('#notificationFeed').append(content);
-		 });
+		 success: function(data){
+			 $.each(data, function(index, element) {
+				 var content = 	"<li>";
+				 content +=			"<h3>";
+				 content +=				element.title;
+				 content +=			"</h3";
+				 content +=			"<p>";
+				 content +=				element.description;
+				 content +=			"</p>";
+				 content +=		"</li>";
+				 $('#notificationFeed').append(content);
+			 });
 	 }})
 }
 
@@ -166,7 +163,7 @@ function fill_select_soort() {
 
         $.each(data, function(index, element) {
 			var content = 	"<option";
-			content +=			"value=\""+element.id+"\"";
+			content +=			" value=\""+element.id+"\"";
 			content +=			">";
 			content +=			element.name;
 			content +=		"</option>";
@@ -174,6 +171,7 @@ function fill_select_soort() {
 		});
 	}})
 }
+
 fill_table();
 fill_select_soort();
 fill_notifications();
