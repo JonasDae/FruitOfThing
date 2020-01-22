@@ -7,10 +7,10 @@
 
     $data = [];
 
-    if($result = mysqli_query($con, $sql))
+    if($result = query($con, $sql);
     {
         $cr=0;
-        while($row = mysqli_fetch_assoc($result))
+        while($row = fetch_row($result))
         {
             $data[$cr]['id'] = $row['id'];
             $data[$cr]['fruit_type_id'] = $row['fruit_type_id'];
