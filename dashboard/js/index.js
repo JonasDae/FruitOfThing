@@ -28,36 +28,62 @@ var chart_out = new Chart(cnv_graph, {
     data: {
         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
         datasets: [{
+			yAxisID: 'axistemp',
             data: [],
             borderWidth: 1,
 			backgroundColor: '#ff6574',
+			hoverBorderWidth: 3,
+			hoverBorderColor: '#000000',
         },
 		{
+			yAxisID: 'axis1',
             data: [],
             borderWidth: 1,
 			backgroundColor: '#74ff65',
+			hoverBorderWidth: 3,
+			hoverBorderColor: '#000000',
 		},
 		{
+			yAxisID: 'axis1',
+			type: 'line',
             data: [],
             borderWidth: 1,
 			backgroundColor: '#6574ff',
+			hoverBorderWidth: 3,
+			hoverBorderColor: '#000000',
 		},
 		{
+			yAxisID: 'axis1',
             data: [],
             borderWidth: 1,
-			backgroundColor: '#6574ff',
+			backgroundColor: '#ff74ff',
+			hoverBorderWidth: 3,
+			hoverBorderColor: '#000000',
 		}]
     },
     options: {
+		title: {
+			display: true,
+			text: "prototype",
+			fontSize: 23,
+		},
 		legend: {
 			display: false
 		},
         scales: {
             yAxes: [{
+				id: 'axis1',
                 ticks: {
                     beginAtZero: true
-                }
-            }]
+                },
+				type: 'linear',
+				position: 'left',
+            },
+			{
+				id: 'axistemp',
+				type: 'linear',
+				position: 'right',
+			}]
         }
     }
 });
