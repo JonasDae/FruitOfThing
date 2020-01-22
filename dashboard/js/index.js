@@ -7,6 +7,10 @@
 [3]: lucht
 */
 var datasets = [];
+
+// init
+
+
 // checkboxes
 $('input[class=chk_dataset]').change(function() {
 	var value = $(this).val();
@@ -19,6 +23,7 @@ $('input[class=chk_dataset]').change(function() {
 		chart_out.update();
 	}
 });
+
 // canvas
 var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 
@@ -89,10 +94,17 @@ var chart_out = new Chart(cnv_graph, {
 });
 
 // ajax
-var BASE_URL = "https://floriandh.sinners.be/pcfruit/api/";
+// var BASE_URL = "https://floriandh.sinners.be/pcfruit/api/";
+// function fill_table() {
+//    $.ajax({	
+//    	url: BASE_URL + "measurement/read.php",
+
+var URL_MEASURE = "https://floriandh.sinners.be/pcfruit/api/measurement/read.php";
+var URL_FRUIT_TYPE = "https://floriandh.sinners.be/pcfruit/api/fruit_type/read.php";
+
 function fill_table() {
    $.ajax({	
-   	url: BASE_URL + "measurement/read.php",
+   	url: URL_MEASURE,
 	dataType: 'json',
 	success: function(data){
 		datasets[0] = [];
@@ -146,5 +158,24 @@ function fill_notifications(){
 	 }})
 }
 
+function fill_select_soort() {
+   $.ajax({	
+   	url: URL_FRUIT_TYPE,
+	dataType: 'json',
+	success: function(data){
+
+        $.each(data, function(index, element) {
+			var content = 	"<option";
+			content +=			"value=\""+element.id+"\"";
+			content +=			">";
+			content +=			element.name;
+			content +=		"</option>";
+            $('#slc_soort').append(content);
+		});
+	}})
+}
 fill_table();
+fill_select_soort();
 fill_notifications();
+
+
