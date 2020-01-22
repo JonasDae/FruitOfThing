@@ -200,7 +200,7 @@ function table_fill() {
 	$.each(data_measure, function(index, element) {
 		var content = 	"<tr>";
 		content +=			"<td>";
-		content +=				element.date_time;
+		content +=				dateFormat(element.date_time, true) ;
 		content +=			"</td>";
 		content +=			"<td>";
 		content +=				element.dendrometer;
@@ -285,6 +285,33 @@ function ui_init() {
 	});
 	graph_fill_by_flags();
 	
+}
+
+function dateFormat(date, time){
+	var day =  date.getDate();
+	var month = date.getMonth() +1;
+	var year = date.getFullYear();
+
+	var dayZero = "";
+	var monthZero = "";
+
+	if(day < 10){
+		dayZero = "0";
+	}
+
+	if(month < 10){
+		monthZero = "0";
+	}
+
+	if (time == true){
+		var hour = date.getHours();
+		var minute = date.getMinutes()+1;
+		return dayZero + day + "/" + monthZero + month + "/" + year + " " + hour + ":" + minute;
+
+	}else {
+		return dayZero + day + "/" + monthZero + month + "/" + year;
+	}
+
 }
 
 fetch_data_measure();
