@@ -4,18 +4,22 @@ const DATASET_WATER 	= 1;
 const DATASET_TEMP 		= 2;
 const DATASET_LUCHT 	= 3;
 
+const GRAPH_COLOR_DENDRO 	= '#00ff00';
+const GRAPH_COLOR_WATER		= '#0000ff';
+const GRAPH_COLOR_TEMP		= '#ff0000';
+const GRAPH_COLOR_LUCHT 	= 'orange';
+
+const GRAPH_TYPE_DENDRO 	= 'line';
+const GRAPH_TYPE_WATER		= 'bar';
+const GRAPH_TYPE_TEMP		= 'line';
+const GRAPH_TYPE_LUCHT 		= 'bar';
+
 const FLAG_NUM_FLAGS	= 4;
 
 const FLAG_SHOW_DENDRO 	= 1;
 const FLAG_SHOW_WATER 	= 2;
 const FLAG_SHOW_TEMP 	= 4;
 const FLAG_SHOW_LUCHT 	= 8;
-
-var kleurTemp = 'red';
-var kleurGroei = 'green';
-var kleurLuchtVocht = 'blue';
-var kleurBodemVocht = 'orange';
-
 
 
 // global vars
@@ -69,7 +73,6 @@ $('select[id=slc_soort]').change(function() {
 });
 // checkboxes
 $('input[class=chk_dataset]').change(function() {
-console.log("CHG");
 	var value = $(this).val();
 	if($(this).is(':checked')) {
 		graph_select_flags |= value;
@@ -90,35 +93,41 @@ var chart_out = new Chart(cnv_graph, {
         datasets: [{
 			yAxisID: 'axistemp',
             data: [],
-            borderWidth: 1,
-			backgroundColor: this.kleurTemp,
+			type: GRAPH_TYPE_DENDRO,
+			borderColor: GRAPH_COLOR_DENDRO,
+			fill: false,
 			hoverBorderWidth: 3,
 			hoverBorderColor: '#000000',
+			order: 1,
         },
 		{
 			yAxisID: 'axis1',
             data: [],
-            borderWidth: 1,
-			backgroundColor: '#74ff65',
+			type: GRAPH_TYPE_WATER,
+			backgroundColor: GRAPH_COLOR_WATER,
 			hoverBorderWidth: 3,
 			hoverBorderColor: '#000000',
+			order: 3,
 		},
 		{
 			yAxisID: 'axis1',
 			type: 'line',
             data: [],
-            borderWidth: 1,
-			backgroundColor: '#6574ff',
+			type: GRAPH_TYPE_TEMP,
+			borderColor: GRAPH_COLOR_TEMP,
+			fill: false,
 			hoverBorderWidth: 3,
 			hoverBorderColor: '#000000',
+			order: 2,
 		},
 		{
 			yAxisID: 'axis1',
             data: [],
-            borderWidth: 1,
-			backgroundColor: '#ff74ff',
+			type: GRAPH_TYPE_LUCHT,
+			backgroundColor: GRAPH_COLOR_LUCHT,
 			hoverBorderWidth: 3,
 			hoverBorderColor: '#000000',
+			order: 4,
 		}]
     },
     options: {
@@ -255,6 +264,18 @@ function fill_select_soort() {
 	}})
 }
 
+function chk_span_init() {
+	$('#chk_span_1').css('background-color', GRAPH_COLOR_DENDRO);
+	$('#chk_span_1').html(GRAPH_COLOR_DENDRO);
+	$('#chk_span_2').css('background-color', GRAPH_COLOR_WATER);
+	$('#chk_span_2').html(GRAPH_COLOR_WATER);
+	$('#chk_span_4').css('background-color', GRAPH_COLOR_TEMP);
+	$('#chk_span_4').html(GRAPH_COLOR_TEMP);
+	$('#chk_span_8').css('background-color', GRAPH_COLOR_LUCHT);
+	$('#chk_span_8').html(GRAPH_COLOR_LUCHT);
+}
+
 fetch_data_measure();
 fill_select_soort();
 fill_notifications();
+chk_span_init();
