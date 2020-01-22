@@ -155,8 +155,11 @@ function fill_data_measure(typeid) {
 	success: function(data){
 		data_measure = [];
         $.each(data, function(index, element) {
+			var date = element.date_time;
+			element.date_time = new Date(Date.parse(date));
 			data_measure.push(element);
 		});
+		console.log(data_measure);
 		graph_fill_by_flags();
 	}})
 }
