@@ -22,50 +22,31 @@
 
 		<div class="container-fluid">
 			<div class="row">
-				<div id="div_side" class="col-4">
+				<div id="div_side" class="col-4 d-sm-none d-md-block">
 					<div class="content-title text-center">
 						<h5>Weer & temperatuur vandaag</h5>
 					</div>
-					<div id="div_weather">
-						<div class="row">
-							<div class="col-12">
-								<div>
-									<a href="http://www.buienradar.be" target="_blank">
-										<img border="0" src="http://api.buienradar.nl/image/1.0/radarmapbe?width=550" class="img-fluid">
-									</a>
-								</div>
-								<div class="embed-responsive embed-responsive-16by9">
-							    	<iframe class="embed-responsive-item"  src="https://www.meteo.be/services/widget/.?postcode=3800&nbDay=2&type=4&lang=nl&bgImageId=1&bgColor=567cd2&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
-								</div>
-							</div>
-							<div class="col-12">
-								<img src="res/sunny.svg" class="img-fluid"/>
-							</div>
-							<div class="col" id="tmp_weather">
-								<p> Huidige temperatuur </p>
-								<h1> TEMP </h1>
-							</div>
+					<div id="weather-info">
+						<div id="buienradar-info">
+							<a href="http://www.buienradar.be" target="_blank">
+								<img src="http://api.buienradar.nl/image/1.0/radarmapbe" class="img-fluid">
+							</a>
 						</div>
-						<div class="row">
-							<div class="col">
-								<p> Verwacht laagste </p>
-								<h2> temp lo </h2>
-							</div>
-							<div class="col">
-								<p> Verwacht hoogste </p>
-								<h2> temp hi </h2>
-							</div>
+						<div id="kmi-info">
+							<iframe src="https://www.meteo.be/services/widget/.?postcode=3800&nbDay=2&type=4&lang=nl&bgImageId=1&bgColor=567cd2&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
 						</div>
 					</div>
+					<div class="content-title text-center">
+						<h5>Meldingen</h5>
+					</div>
 					<div id="div_feed">
-						<h2> FEED </h2>
 						<ol id="notificationFeed" class="list-group">
 
 						</ol>
 					</div>
 				</div>
 
-				<div id="div_main" class="col-8">
+				<div id="div_main" class="col-lg-8 col-md-12">
 					<div class="content-title text-center">
 						<h5>Grafieken en statistieken</h5>
 					</div>
