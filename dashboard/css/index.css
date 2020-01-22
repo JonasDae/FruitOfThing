@@ -22,10 +22,24 @@
 #div_side {
 	background-color: white;
 }
-
 #div_main {
 	background-color: white;
 }
+
+/* GRAFIEK */
+.kleur-temp{
+	color: red;
+}
+.kleur-groei{
+	color: green;
+}
+.kleur-luchtvocht{
+	color: blue;
+}
+.kleur-bodemvocht{
+	color: orange;
+}
+
 
 /* TABEL */
 

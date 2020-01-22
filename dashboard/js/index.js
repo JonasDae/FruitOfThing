@@ -7,7 +7,7 @@ const DATASET_LUCHT 	= 3;
 const GRAPH_COLOR_DENDRO 	= '#00ff00';
 const GRAPH_COLOR_WATER		= '#0000ff';
 const GRAPH_COLOR_TEMP		= '#ff0000';
-const GRAPH_COLOR_LUCHT 	= '#ff00ff';
+const GRAPH_COLOR_LUCHT 	= 'orange';
 
 const GRAPH_TYPE_DENDRO 	= 'line';
 const GRAPH_TYPE_WATER		= 'bar';
@@ -89,7 +89,7 @@ var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 var chart_out = new Chart(cnv_graph, {
     type: 'bar',
     data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+        labels: ['Januari', 'Februari', 'Maart', 'April', 'Mei'],
         datasets: [{
 			yAxisID: 'axistemp',
             data: [],
@@ -98,6 +98,7 @@ var chart_out = new Chart(cnv_graph, {
 			fill: false,
 			hoverBorderWidth: 3,
 			hoverBorderColor: '#000000',
+			order: 1,
         },
 		{
 			yAxisID: 'axis1',
@@ -106,6 +107,7 @@ var chart_out = new Chart(cnv_graph, {
 			backgroundColor: GRAPH_COLOR_WATER,
 			hoverBorderWidth: 3,
 			hoverBorderColor: '#000000',
+			order: 3,
 		},
 		{
 			yAxisID: 'axis1',
@@ -116,6 +118,7 @@ var chart_out = new Chart(cnv_graph, {
 			fill: false,
 			hoverBorderWidth: 3,
 			hoverBorderColor: '#000000',
+			order: 2,
 		},
 		{
 			yAxisID: 'axis1',
@@ -124,6 +127,7 @@ var chart_out = new Chart(cnv_graph, {
 			backgroundColor: GRAPH_COLOR_LUCHT,
 			hoverBorderWidth: 3,
 			hoverBorderColor: '#000000',
+			order: 4,
 		}]
     },
     options: {
