@@ -1,33 +1,82 @@
-// graph
-// datasets
-/*
-[0]: dendro
-[1]: water
-[2]: temp
-[3]: lucht
-*/
-var datasets = [];
+// defines
+const DATASET_DENDRO 	= 0;
+const DATASET_WATER 	= 1;
+const DATASET_TEMP 		= 2;
+const DATASET_LUCHT 	= 3;
 
-// init
+const FLAG_NUM_FLAGS	= 4;
+
+const FLAG_SHOW_DENDRO 	= 1;
+const FLAG_SHOW_WATER 	= 2;
+const FLAG_SHOW_TEMP 	= 4;
+const FLAG_SHOW_LUCHT 	= 8;
 
 
+// global vars
+var graph_select_flags = 0;
+var data_measure = [];
+
+// graph data control
+function graph_fill_by_flags() {
+	for(var i=0;i<FLAG_NUM_FLAGS;i++) {
+		if(graph_select_flags & 1<<i) {
+			graph_set_dataset(i);
+		}
+		else {
+			graph_clr_dataset(i);
+		}
+	}
+}
+function graph_set_dataset(setnr) {
+	var data = [];
+	 $.each(data_measure, function(index, element) {
+	 	var val;
+		switch(setnr) {
+			case DATASET_DENDRO:
+				val = element.dendrometer;
+				break;
+			case DATASET_WATER:
+				val = element.watermark;
+				break;
+			case DATASET_TEMP:
+				val = element.temperature;
+				break;
+			case DATASET_LUCHT:
+				val = element.humidity;
+				break;
+		}
+	 	data.push(val);
+	 });
+	chart_out.data.datasets[setnr].data = data;
+	chart_out.update();
+}
+function graph_clr_dataset(setnr) {
+	chart_out.data.datasets[setnr].data = [];
+	chart_out.update();
+}
+
+// ui interaction
+// dropdowns
+$('select[id=slc_soort]').change(function() {
+	var value = $(this).val();
+	fill_data_measure(value);
+});
 // checkboxes
 $('input[class=chk_dataset]').change(function() {
+console.log("CHG");
 	var value = $(this).val();
 	if($(this).is(':checked')) {
-		chart_out.data.datasets[value].data = datasets[value];
-		chart_out.update();
+		graph_select_flags |= value;
 	}
 	else {
-		chart_out.data.datasets[value].data = [];
-		chart_out.update();
+		graph_select_flags &= ~value;
 	}
+	graph_fill_by_flags();
 });
 
-// canvas
-var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 
 // init chart
+var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 var chart_out = new Chart(cnv_graph, {
     type: 'bar',
     data: {
@@ -96,24 +145,34 @@ var chart_out = new Chart(cnv_graph, {
 // ajax
 var BASE_URL = "https://floriandh.sinners.be/pcfruit/";
 var URL_MEASURE = BASE_URL + "api/measurement/read.php";
+var URL_MEASURE_TYPE = BASE_URL + "api/measurement/readByType.php?id=";
 var URL_FRUIT_TYPE = BASE_URL + "api/fruit_type/read.php";
-var URL_NOTIFICATION = BASE_URL + "api/fruit_type/read.php";
+var URL_NOTIFICATION = BASE_URL + "api/notification/read.php";
+
+function fill_data_measure(typeid) {
+   $.ajax({	
+   	url: URL_MEASURE_TYPE+typeid,
+	dataType: 'json',
+	success: function(data){
+		data_measure = [];
+        $.each(data, function(index, element) {
+			var date = element.date_time;
+			element.date_time = new Date(Date.parse(date));
+			data_measure.push(element);
+		});
+		console.log(data_measure);
+		graph_fill_by_flags();
+	}})
+}
 
 function fill_table() {
    $.ajax({	
-   	url: URL_MEASURE,
+	url: URL_MEASURE,
 	dataType: 'json',
 	success: function(data){
-		datasets[0] = [];
-		datasets[1] = [];
-		datasets[2] = [];
-		datasets[3] = [];
 
         $.each(data, function(index, element) {
-			datasets[0].push(element.dendrometer);
-			datasets[1].push(element.watermark);
-			datasets[2].push(element.temperature);
-			datasets[3].push(element.humidity);
+			data_measure.push(element);
 			var content = 	"<tr>";
 			content +=			"<td>";
 			content +=				element.date_time;
@@ -133,6 +192,7 @@ function fill_table() {
 			content +=		"</tr>";
             $('#data_table_body').append(content);
 		});
+		graph_fill_by_flags();
 	}})
 }
 
@@ -175,5 +235,3 @@ function fill_select_soort() {
 fill_table();
 fill_select_soort();
 fill_notifications();
-
-
