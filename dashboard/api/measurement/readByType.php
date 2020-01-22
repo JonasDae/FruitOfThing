@@ -4,22 +4,28 @@ require '../connect.php';
 $id = $_GET['id'];
 
 $sql ="	SELECT *
-		FROM jos_zoomfiles
-		INNER JOIN jos_zoom 
-		ON (jos_zoomfiles.catid = jos_zoom.catid)
-		WHERE jos_zoomfiles.catid = '{$id}'";
+		FROM measurement
+		WHERE measurement.fruit_type_id = '{$id}'";
 
-if($result = mysqli_query($con, $sql))
+if($result = sql_query($con, $sql))
 {
+    $data=[];
     $cr=0;
-    while($row = mysqli_fetch_assoc($result))
+    while($row = sql_fetch_row($result))
     {
-        $fotos[$cr]['id'] = $row['id'];
+		$data[$cr]['id'] = $row['id'];
+		$data[$cr]['fruit_type_id'] = $row['fruit_type_id'];
+		$data[$cr]['module_id'] = $row['module_id'];
+		$data[$cr]['date_time'] = $row['date_time'];
+		$data[$cr]['dendrometer'] = $row['dendrometer'];
+		$data[$cr]['watermark'] = $row['watermark'];
+		$data[$cr]['temperature'] = $row['temperature'];
+		$data[$cr]['humidity'] = $row['humidity'];
 
         $cr++;
     }
 
-    echo json_encode($fotos);
+    echo json_encode($data);
 }
 else
 {
