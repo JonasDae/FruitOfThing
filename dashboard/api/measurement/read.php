@@ -7,7 +7,7 @@
 
     $data = [];
 
-    if($result = sql_query($con, $sql);
+    if($result = sql_query($con, $sql))
     {
         $cr=0;
         while($row = sql_fetch_row($result))
