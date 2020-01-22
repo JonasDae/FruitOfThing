@@ -7,10 +7,10 @@
 
     $data = [];
 
-    if($result = query($con, $sql);
+    if($result = sql_query($con, $sql);
     {
         $cr=0;
-        while($row = fetch_row($result))
+        while($row = sql_fetch_row($result))
         {
             $data[$cr]['id'] = $row['id'];
             $data[$cr]['fruit_type_id'] = $row['fruit_type_id'];

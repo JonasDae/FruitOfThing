@@ -7,7 +7,7 @@ define('DB_PASS', 'yu0p7fOrDc3g');
 define('DB_NAME', 'floriandh_pcfruit');
 
 // connect with the database
-function connect() {
+function sql_connect() {
     $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
     // check connection
@@ -19,11 +19,11 @@ function connect() {
     mysqli_set_charset($conn, "utf8");
     return $conn;    
 }
-function query($connection, $query) {
+function sql_query($connection, $query) {
 	return mysqli_query($connection, $query);
 }
-function fetch_row($result) {
+function sql_fetch_row($result) {
 	return mysqli_fetch_assoc($result);
 }
-$con = connect();
+$con = sql_connect();
 ?>
