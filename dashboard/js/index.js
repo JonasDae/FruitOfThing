@@ -269,7 +269,6 @@ var chart_out = new Chart(cnv_graph, {
 			display: true,
 			position: 'bottom',
 			fullwidth: true,
-			labels: []
 		},
         scales: {
             yAxes: [{
