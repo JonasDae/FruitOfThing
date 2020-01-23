@@ -1,7 +1,3 @@
-/*
-TODO:
-	al dien rommel da we binnekrijge via ajax in nen dommen array zette daar bespare we ure mej
-*/
 // defines
 const DATASET_DENDRO = 0;
 const DATASET_WATER = 1;
@@ -307,8 +303,6 @@ function fetch_data_measure() {
             data_measure_filtered = filter_view(data_measure_view)
             graph_fill_by_flags();
             table_fill();
-// FIXME: remove
-            //data_filter_medium_week();
         }
     })
 }
