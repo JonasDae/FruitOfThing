@@ -413,13 +413,13 @@ function changeDateSelect() {
 
 function ui_init() {
 // checkboxes
-    $('.chk_dataset').each(function (i, obj) {
-        if (obj.checked) {
-            graph_select_flags |= obj.value;
-        } else {
-            graph_select_flags &= ~obj.value;
-        }
-    });
+    // $('.chk_dataset').each(function (i, obj) {
+    //     if (obj.checked) {
+    //         graph_select_flags |= obj.value;
+    //     } else {
+    //         graph_select_flags &= ~obj.value;
+    //     }
+    // });
 	data_measure_view = $('#slc_weergave').val();
 }
 
@@ -463,111 +463,38 @@ function dateFormat(date, time) {
 function weergaveLabels(weergave, data) {
     const labels = [];
     switch (weergave) {
-        case 1 ://Hour
-			hour = element.date_time.getHour();
-			labels.push(hour);
+		case 'hour' ://Hour
+			$.each(data, function (index, element) {
+				hour = element.date_time.getHours();
+				day = element.date_time.getDay() + 1;
+				month =getMonth(element.date_time.getMonth() + 1);
+				labels.push(day + " " + month + " " + hour + ":00");
+			})
             break;
-        case 2 ://Day
+        case 'day' ://Day
             $.each(data, function (index, element) {
                 day = element.date_time.getDay() + 1;
-                i = element.date_time.getMonth() + 1;
-                year = element.date_time.getFullYear();
-                year = year.toString().substr(-2);
-                month = ""
-                switch (i) {
-                    case 1 :
-                        month = "jan";
-                        break;
-                    case 2 :
-                        month = "feb";
-                        break;
-                    case 3 :
-                        month = "mrt";
-                        break;
-                    case 4 :
-                        month = "apr";
-                        break;
-                    case 5 :
-                        month = "mei";
-                        break;
-                    case 6 :
-                        month = "jun";
-                        break;
-                    case 7 :
-                        month = "jul";
-                        break;
-                    case 8 :
-                        month = "aug";
-                        break;
-                    case 9 :
-                        month = "sep";
-                        break;
-                    case 10 :
-                        month = "okt";
-                        break;
-                    case 11 :
-                        month = "nov";
-                        break;
-                    case 12 :
-                        month = "dec";
-                        break;
-                }
-
+                month =getMonth(element.date_time.getMonth() + 1);
+                year = element.date_time.getFullYear().toString().substr(-2);
                 labels.push(day + ' ' + month + ' ' + year);
             });
             break;
-        case 3 ://Week
-
+        case 'week' ://Week
+			$.each(data, function (index, element) {
+				day = element.date_time.getDay() + 1;
+				month =getMonth(element.date_time.getMonth() + 1);
+				year = element.date_time.getFullYear().toString().substr(-2);
+				labels.push(day + ' ' + month + ' ' + year);
+			})
             break;
-        case 4 ://Month
+        case 'month' ://Month
             $.each(data, function (index, element) {
-                i = element.date_time.getMonth() + 1;
-                year = element.date_time.getFullYear();
-                year = year.toString().substr(-2);
-                month = ""
-                switch (i) {
-                    case 1 :
-                        month = "jan";
-                        break;
-                    case 2 :
-                        month = "feb";
-                        break;
-                    case 3 :
-                        month = "mrt";
-                        break;
-                    case 4 :
-                        month = "apr";
-                        break;
-                    case 5 :
-                        month = "mei";
-                        break;
-                    case 6 :
-                        month = "jun";
-                        break;
-                    case 7 :
-                        month = "jul";
-                        break;
-                    case 8 :
-                        month = "aug";
-                        break;
-                    case 9 :
-                        month = "sep";
-                        break;
-                    case 10 :
-                        month = "okt";
-                        break;
-                    case 11 :
-                        month = "nov";
-                        break;
-                    case 12 :
-                        month = "dec";
-                        break;
-                }
-
+                month =getMonth(element.date_time.getMonth() + 1);
+                year = element.date_time.getFullYear().toString().substr(-2);
                 labels.push(month + ' ' + year);
             });
             break;
-        case 5 ://Year
+        case 'year' ://Year
             $.each(data, function (index, element) {
                 year = element.date_time.getFullYear();
                 labels.push(year);
@@ -577,6 +504,47 @@ function weergaveLabels(weergave, data) {
     chart_out.data.labels = labels;
     chart_out.update();
     return labels;
+}
+
+function getMonth(month){
+	switch (month) {
+		case 1 :
+			return "jan";
+			break;
+		case 2 :
+			return "feb";
+			break;
+		case 3 :
+			return "mrt";
+			break;
+		case 4 :
+			return "apr";
+			break;
+		case 5 :
+			return "mei";
+			break;
+		case 6 :
+			return "jun";
+			break;
+		case 7 :
+			return "jul";
+			break;
+		case 8 :
+			return "aug";
+			break;
+		case 9 :
+			return "sep";
+			break;
+		case 10 :
+			return "okt";
+			break;
+		case 11 :
+			return "nov";
+			break;
+		case 12 :
+			return "dec";
+			break;
+	}
 }
 
 fetch_data_measure();
