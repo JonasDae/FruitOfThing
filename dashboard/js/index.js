@@ -201,6 +201,7 @@ function filter_view(view) {
                     cur_object_values[key].push(object[key]);
                 }
             }
+            cur_object["date_time"] = object["date_time"];
 
             //remove objects to prevent infinite loop
             objects.splice(objects.indexOf(object), 1);
@@ -546,8 +547,6 @@ function dateFormat(date, time) {
 
 function weergaveLabels(weergave, data) {
     const labels = [];
-    weergave = 2;
-
     switch (weergave) {
         case 1 ://Hour
 
