@@ -81,7 +81,7 @@ function filter_view(view) {
         /* get the average of all objects in cur_view_objects */
         var cur_object_values = [[]]; //for all values from all objects in the same view window
         var cur_object = []; //for the average calculated value of above multidimentional array
-        var fields = ["id", "date_time", "module_id", "fruit_type_id"]; //fields to be excluded from average calculation
+        var fields = ["id", "date_time", "module_id", "modele_name", "fruit_type_id"]; //fields to be excluded from average calculation
 
         //push all objects from te same view window to cur_object
         $.each(cur_view_objects, function (index, object) {
@@ -164,7 +164,6 @@ $('select[id=slc_weergave]').change(function () {
     data_measure_filtered = filter_view(data_measure_view);
     graph_fill_by_flags();
     table_fill();
-
 });
 //dates
 $('input[id=dte_begin]').change(function () {
@@ -180,12 +179,6 @@ $('input[id=dte_end]').change(function () {
     data_measure_filtered = filter_view(data_measure_view);
     graph_fill_by_flags();
     table_fill();
-});
-// checkboxes
-$('input[class=chk_dataset]').change(function () {
-    var value = $(this).val();
-    // weergaveLabels(value, data_measure);
-    console.log(value)
 });
 
 // init chart
@@ -310,12 +303,15 @@ function fetch_data_measure() {
 function table_fill() {
 	$('#data_table_body').empty();
 	const dataSorted = data_measure_filtered.sort(function(obj2, obj1){return obj1.date_time - obj2.date_time});
-
+	console.log(dataSorted);
     $.each(dataSorted, function (index, element) {
         var content = "<tr>";
         content += "<td>";
         content += dateFormat(element.date_time, true);
         content += "</td>";
+		content += "<td>";
+		content += element.module_name.toString();
+		content += "</td>";
         content += "<td>";
         content += element.dendrometer != null ? element.dendrometer.toFixed(2) : "";
         content += "</td>";
@@ -408,7 +404,6 @@ function ui_init() {
 	if(!(date_high instanceof Date) || isNaN(date_high)) {
 		date_high = Date.parse("1/1/2030");
 		$('#dte_end').valueAsDate = date_high;
-		console.log("ya");
 	}
 		
 	if(!(date_low instanceof Date) || isNaN(date_low)) {
