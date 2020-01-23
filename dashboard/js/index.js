@@ -317,16 +317,16 @@ function table_fill() {
         content += dateFormat(element.date_time, true);
         content += "</td>";
         content += "<td>";
-        content += element.dendrometer != null ? element.dendrometer : "";
+        content += element.dendrometer != null ? element.dendrometer.toFixed(2) : "";
         content += "</td>";
         content += "<td>";
-        content += element.watermark != null ? element.watermark : "";
+        content += element.watermark != null ? element.watermark.toFixed(2) : "";
         content += "</td>";
         content += "<td>";
-        content += element.temperature != null ? element.temperature : "";
+        content += element.temperature != null ? element.temperature.toFixed(2) : "";
         content += "</td>";
         content += "<td>";
-        content += element.humidity != null ? element.humidity : "";
+        content += element.humidity != null ? element.humidity.toFixed(2) : "";
         content += "</td>";
         content += "</tr>";
         $('#data_table_body').append(content);
@@ -456,7 +456,6 @@ function dateFormat(date, time) {
 
 function weergaveLabels(weergave, data) {
     const labels = [];
-    
     switch (weergave) {
         case 'hour' ://Hour
             $.each(data, function (index, element) {
