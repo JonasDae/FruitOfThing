@@ -500,7 +500,7 @@ function weergaveLabels(weergave, data) {
         case 'hour' ://Hour
             $.each(data, function (index, element) {
                 labels.push(day + " " + month + " " + hour + ":00");
-            })
+            });
             break;
         case 'day' ://Day
             $.each(data, function (index, element) {
@@ -510,7 +510,7 @@ function weergaveLabels(weergave, data) {
         case 'week' ://Week
             $.each(data, function (index, element) {
                 labels.push(day + ' ' + month + ' ' + year);
-            })
+            });
             break;
         case 'month' ://Month
             $.each(data, function (index, element) {
