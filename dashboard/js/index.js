@@ -268,8 +268,8 @@ var chart_out = new Chart(cnv_graph, {
     },
     options: {
 		title: {
-			display: true,
-			text: "prototype",
+			display: false,
+			text: "Grafiek  titel",
 			fontSize: 23,
 		},
 		legend: {
@@ -338,7 +338,8 @@ function table_fill() {
 	$.each(data_measure, function(index, element) {
 		var content = 	"<tr>";
 		content +=			"<td>";
-		content +=				element.date_time != null ? element.date_time : "";
+		// content +=			element.date_time != null ? element.date_time : "";
+		content +=				dateFormat(element.date_time, true) ;
 		content +=			"</td>";
 		content +=			"<td>";
 		content +=				element.dendrometer != null ? element.dendrometer : "";
@@ -402,6 +403,24 @@ function fill_select_soort() {
 	}})
 }
 
+function changeDateSelect() {
+	$.ajax({	
+		url: URL_FRUIT_TYPE,
+	 dataType: 'json',
+	 success: function(data){
+ 
+		 $.each(data, function(index, element) {
+			 var content = 	"<option";
+			 content +=			" value=\""+element.id+"\"";
+			 content +=			">";
+			 content +=			element.name;
+			 content +=		"</option>";
+			 $('#slc_soort').append(content);
+		 });
+	 }})
+ }
+
+
 function ui_init() {
 // span colors
 	$('#chk_span_1').css('background-color', GRAPH_COLOR_DENDRO);
@@ -422,6 +441,33 @@ function ui_init() {
 		}
 	});
 	graph_fill_by_flags();
+}
+
+function dateFormat(date, time){
+	var day =  date.getDate();
+	var month = date.getMonth() +1;
+	var year = date.getFullYear();
+
+	var dayZero = "";
+	var monthZero = "";
+
+	if(day < 10){
+		dayZero = "0";
+	}
+
+	if(month < 10){
+		monthZero = "0";
+	}
+
+	if (time == true){
+		var hour = date.getHours();
+		var minute = date.getMinutes()+1;
+		return dayZero + day + "/" + monthZero + month + "/" + year + " " + hour + ":" + minute;
+
+	}else {
+		return dayZero + day + "/" + monthZero + month + "/" + year;
+	}
+
 }
 
 fetch_data_measure();

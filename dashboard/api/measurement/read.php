@@ -2,7 +2,8 @@
     require '../connect.php';
 
     $sql = "SELECT * 
-            FROM measurement";
+            FROM measurement
+            ORDER BY date_time DESC";
 
     $data = [];
 
