@@ -308,24 +308,25 @@ function fetch_data_measure() {
 }
 
 function table_fill() {
-    $('#data_table_body').empty();
-    $.each(data_measure_filtered, function (index, element) {
+	$('#data_table_body').empty();
+	const dataSorted = data_measure_filtered.sort(function(obj2, obj1){return obj1.date_time - obj2.date_time});
+
+    $.each(dataSorted, function (index, element) {
         var content = "<tr>";
         content += "<td>";
-        // content +=			element.date_time != null ? element.date_time : "";
         content += dateFormat(element.date_time, true);
         content += "</td>";
         content += "<td>";
-        content += element.dendrometer != null ? element.dendrometer : "";
+        content += element.dendrometer != null ? element.dendrometer.toFixed(2) : "";
         content += "</td>";
         content += "<td>";
-        content += element.watermark != null ? element.watermark : "";
+        content += element.watermark != null ? element.watermark.toFixed(2) : "";
         content += "</td>";
         content += "<td>";
-        content += element.temperature != null ? element.temperature : "";
+        content += element.temperature != null ? element.temperature.toFixed(2) : "";
         content += "</td>";
         content += "<td>";
-        content += element.humidity != null ? element.humidity : "";
+        content += element.humidity != null ? element.humidity.toFixed(2) : "";
         content += "</td>";
         content += "</tr>";
         $('#data_table_body').append(content);
@@ -421,7 +422,7 @@ function dateFormat(date, time) {
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
     var hour = date.getHours();
-    var minute = date.getMinutes() + 1;
+    var minute = date.getMinutes();
 
     var dayZero = "";
     var monthZero = "";
@@ -455,19 +456,18 @@ function dateFormat(date, time) {
 
 function weergaveLabels(weergave, data) {
     const labels = [];
-    
     switch (weergave) {
         case 'hour' ://Hour
             $.each(data, function (index, element) {
                 hour = element.date_time.getHours();
-                day = element.date_time.getDay() + 1;
+                day = element.date_time.getDate();
                 month = getMonth(element.date_time.getMonth() + 1);
                 labels.push(day + " " + month + " " + hour + ":00");
             });
             break;
         case 'day' ://Day
             $.each(data, function (index, element) {
-                day = element.date_time.getDay() + 1;
+                day = element.date_time.getDate();
                 month = getMonth(element.date_time.getMonth() + 1);
                 year = element.date_time.getFullYear().toString().substr(-2);
                 labels.push(day + ' ' + month + ' ' + year);
@@ -475,7 +475,7 @@ function weergaveLabels(weergave, data) {
             break;
         case 'week' ://Week
             $.each(data, function (index, element) {
-                day = element.date_time.getDay() + 1;
+                day = element.date_time.getDate();
                 month = getMonth(element.date_time.getMonth() + 1);
                 year = element.date_time.getFullYear().toString().substr(-2);
                 labels.push(day + ' ' + month + ' ' + year);
