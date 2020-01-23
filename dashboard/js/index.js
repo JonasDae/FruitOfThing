@@ -38,6 +38,12 @@ unchanged:
 	date_time
 	module_id
 */
+function week_of_year(date) {
+	date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+	date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+	var year_start = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+	return Math.ceil((((date-year_start)/86400000)+1)/7);
+}
 function data_add(comp , data2) {
 	var out = comp;
 // fucking JS
@@ -76,15 +82,8 @@ function data_div(comp) {
 	out.data.watermark /= out.div.watermark;
 	return out;
 }
-function week_of_year(date) {
-	date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-	date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
-	var year_start = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-	return Math.ceil((((date-year_start)/86400000)+1)/7);
-}
 function data_filter_medium_week() {
 // TODO: zet datum etc
-	var i = 0;
 	var out = [];
 	var cur_comp = {
 		data: {},
@@ -98,55 +97,98 @@ function data_filter_medium_week() {
 	var cur_week = -1;
 
 	$.each(data_measure, function(index, element) {
+		console.log(cur_week + " " + week_of_year(element.date_time));
 		if(week_of_year(element.date_time) == cur_week) {
-			cur_comp = data_add(cur_comp, element);
-			i++
+			if(element.dendrometer != null) {
+				cur_comp.data.dendrometer += element.dendrometer;
+				cur_comp.div.dendrometer++;
+			}
+			if(element.humidity != null) {
+				cur_comp.data.humidity += element.humidity;
+				cur_comp.div.humidity++;
+			}
+			if(element.temperature != null) {
+				cur_comp.data.temperature += element.temperature;
+				cur_comp.div.temperature++;
+			}
+			console.log(cur_comp.data.watermark + "+= " + element.watermark);
+			if(element.watermark != null) {
+				cur_comp.data.watermark = parseFloat(element.watermark) + parseFloat(cur_comp.data.watermark);
+				cur_comp.div.watermark++;
+			}
 		}
 		else {
-			if(i > 0) {
-				cur_comp= data_div(cur_comp);
-				i = 0;
-				cur_comp.div = {
+// push old
+			console.log(cur_comp);
+			cur_comp.data.dendrometer /= cur_comp.div.dendrometer;
+			cur_comp.data.humidity /= cur_comp.div.humidity;
+			cur_comp.data.temperature /= cur_comp.div.temperature;
+			cur_comp.data.watermark /= cur_comp.div.watermark;
+			out.push(cur_comp);
+// init new
+			cur_week = week_of_year(element.date_time);
+			cur_comp = {
+				data: {
+					id: element.id,
+					fruit_type_id: element.fruit_type_id,
+					module_id: element.module_id,
+					date_time: element.date_time,
 					dendrometer: 0,
 					humidity: 0,
 					temperature: 0,
 					watermark: 0,
-				};
-				out.push(cur_comp.data);
+				},
+				div: {
+					dendrometer: 0,
+					humidity: 0,
+					temperature: 0,
+					watermark: 0,
+				},
+			};
+
+			if(element.dendrometer != null) {
+				cur_comp.data.dendrometer = element.dendrometer;
+				cur_comp.div.dendrometer = 1;
 			}
 			else {
-
-				cur_comp.data = element;
-				cur_comp.div = {
-					dendrometer: 1,
-					humidity: 1,
-					temperature: 1,
-					watermark: 1,
-				};
-				if(cur_comp.data.dendrometer == null) {
-					cur_comp.data.dendrometer = 0;
-					cur_comp.div.dendrometer = 0;
-				}
-				if(cur_comp.data.humidty == null) {
-					cur_comp.data.humidity = 0;
-					cur_comp.div.humidity = 0;
-				}
-				if(cur_comp.data.temperature == null) {
-					cur_comp.data.temperature = 0;
-					cur_comp.div.temperature = 0;
-				}
-				if(cur_comp.data.watermark == null) {
-					cur_comp.data.watermark = 0;
-					cur_comp.div.watermark = 0;
-				}
-				cur_week = week_of_year(cur_comp.data.date_time);
-				i = 1;
+				cur_comp.data.dendrometer = 0;
+				cur_comp.div.dendrometer = 0;
+			}
+			if(element.humidity != null) {
+				cur_comp.data.humidity = element.humidity;
+				cur_comp.div.humidity = 1;
+			}
+			else {
+				cur_comp.data.humidity= 0;
+				cur_comp.div.humidity = 0;
+			}
+			if(element.temperature != null) {
+				cur_comp.data.temperature = element.temperature;
+				cur_comp.div.temperature = 1;
+			}
+			else {
+				cur_comp.data.temperature = 0;
+				cur_comp.div.temperature = 0;
+			}
+			if(element.watermark != null) {
+				cur_comp.data.watermark = element.watermark;
+				cur_comp.div.watermark = 1;
+			}
+			else {
+				cur_comp.data.watermark = 0;
+				cur_comp.div.watermark = 0;
 			}
 		}
 	})
 
-	cur_comp = data_div(cur_comp);
-	out.push(cur_comp.data);
+//	cur_comp = data_div(cur_comp);
+//	out.push(cur_comp.data);
+// push last
+	cur_comp.data.dendrometer /= cur_comp.div.dendrometer;
+	cur_comp.data.humidity /= cur_comp.div.humidity;
+	cur_comp.data.temperature /= cur_comp.div.temperature;
+	cur_comp.data.watermark /= cur_comp.div.watermark;
+	out.push(cur_comp);
 	console.log(out);
 	return out;
 }
@@ -160,7 +202,6 @@ function graph_fill_by_flags() {
 			graph_clr_dataset(i);
 		}
 	}
-	weergaveLabels(4, data_measure);
 }
 function graph_set_dataset(setnr) {
 	var data = [];
@@ -214,7 +255,7 @@ var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 var chart_out = new Chart(cnv_graph, {
     type: 'bar',
     data: {
-        labels: [],
+        labels: ['Januari', 'Februari', 'Maart', 'April', 'Mei'],
         datasets: [{
 			yAxisID: 'axistemp',
             data: [],
@@ -262,7 +303,7 @@ var chart_out = new Chart(cnv_graph, {
 			fontSize: 23,
 		},
 		legend: {
-			display: true
+			display: false
 		},
         scales: {
             yAxes: [{
@@ -300,10 +341,6 @@ function fetch_data_measure_by_type(typeid) {
 			element.date_time = new Date(Date.parse(date));
 			data_measure.push(element);
 		});
-
-		// data_measure = data_measure.sort(function(obj2, obj1){return obj1.date_time - obj2.date_time});
-
-
 		graph_fill_by_flags();
 		table_fill();
 	}})
@@ -319,9 +356,6 @@ function fetch_data_measure() {
 			element.date_time = new Date(Date.parse(date));
 			data_measure.push(element);
 		});
-
-		// data_measure = data_measure.sort(function(obj2, obj1){return obj1.date_time - obj2.date_time});
-
 		graph_fill_by_flags();
 		table_fill();
 // FIXME: remove
@@ -331,10 +365,7 @@ data_filter_medium_week();
 
 function table_fill() {
 	$('#data_table_body').empty();
-
-	dataSorted = data_measure.sort(function(obj2, obj1){return obj1.date_time - obj2.date_time});
-
-	$.each(dataSorted, function(index, element) {
+	$.each(data_measure, function(index, element) {
 		var content = 	"<tr>";
 		content +=			"<td>";
 		// content +=			element.date_time != null ? element.date_time : "";
@@ -421,7 +452,15 @@ function changeDateSelect() {
 
 
 function ui_init() {
-
+// span colors
+	$('#chk_span_1').css('background-color', GRAPH_COLOR_DENDRO);
+	$('#chk_span_1').html(GRAPH_COLOR_DENDRO);
+	$('#chk_span_2').css('background-color', GRAPH_COLOR_WATER);
+	$('#chk_span_2').html(GRAPH_COLOR_WATER);
+	$('#chk_span_4').css('background-color', GRAPH_COLOR_TEMP);
+	$('#chk_span_4').html(GRAPH_COLOR_TEMP);
+	$('#chk_span_8').css('background-color', GRAPH_COLOR_LUCHT);
+	$('#chk_span_8').html(GRAPH_COLOR_LUCHT);
 // checkboxes
 	$('.chk_dataset').each(function(i, obj) {
 		if(obj.checked) {
