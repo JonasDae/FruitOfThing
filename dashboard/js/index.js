@@ -81,7 +81,7 @@ function filter_view(view) {
         /* get the average of all objects in cur_view_objects */
         var cur_object_values = [[]]; //for all values from all objects in the same view window
         var cur_object = []; //for the average calculated value of above multidimentional array
-        var fields = ["id", "date_time", "module_id", "modele_name", "fruit_type_id"]; //fields to be excluded from average calculation
+        var fields = ["id", "date_time", "module_id", "module_name", "fruit_type_id"]; //fields to be excluded from average calculation
 
         //push all objects from te same view window to cur_object
         $.each(cur_view_objects, function (index, object) {
@@ -310,7 +310,7 @@ function table_fill() {
         content += dateFormat(element.date_time, true);
         content += "</td>";
 		content += "<td>";
-		content += element.module_name.toString();
+		content += element.module_name;
 		content += "</td>";
         content += "<td>";
         content += element.dendrometer != null ? element.dendrometer.toFixed(2) : "";
