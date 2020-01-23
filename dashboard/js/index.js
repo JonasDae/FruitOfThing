@@ -192,6 +192,75 @@ function data_filter_medium_week() {
 	console.log(out);
 	return out;
 }
+
+
+function view_of_year(date, view) {
+	if (view == "hour") {
+		return date.getFullYear() + " " + date.getMonth() + " " + date.getDate() + " " + date.getHours();
+	}
+	if (view == "day") {
+		return date.getFullYear() + " " + date.getMonth() + " " + date.getDate();
+	}
+	if (view == "week") {
+		date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+		date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+		var year_start = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+		return Math.ceil((((date - year_start) / 86400000) + 1) / 7);
+	}
+	if (view == "year") {
+		return date.getFullYear();
+	}
+	return date.getMonth();
+}
+
+function filter_view(view) {
+	var objects = data_measure;
+	var cur_view = 0;
+	var cur_view_objects = [];
+	var out = []; //output for average values for each view
+
+	while (objects.length > 0) {
+		cur_view = view_of_year(objects[0].date_time, view);
+
+		/* get all objects from the same view */
+		$.each(objects, function (index, element) {
+			if (view_of_year(element.date_time, view) == cur_view) {
+				cur_view_objects.push(element);
+			}
+		});
+
+		/* get the average of all objects in cur_view_objects */
+		var cur_object_values = [[]]; //for all values from all objects in the same view window
+		var cur_object = []; //for the average calculated value of above multidimentional array
+		var fields = ["id", "date_time", "module_id", "fruit_type_id"]; //fields to be excluded from average calculation
+
+		//push all objects from te same view window to cur_object
+		$.each(cur_view_objects, function (index, object) {
+			for (var key in object) {
+				if (object[key] !== null && !fields.includes(key)) {
+					if (cur_object_values[key] == null)
+						cur_object_values[key] = [];
+					cur_object_values[key].push(object[key]);
+				}
+			}
+
+			//remove objects to prevent infinite loop
+			objects.splice(objects.indexOf(object), 1);
+		});
+
+		//calculate average values from cur_object
+		for (var key in cur_object_values) {
+			var sum = 0; //summation of all values
+			$.each(cur_object_values[key], function (index, value) {
+				sum += parseFloat(value);
+			});
+			cur_object[key] = sum / cur_object_values[key].length;
+		}
+
+		cur_view_objects = []; //empty view window
+	}
+}
+
 // graph data control
 function graph_fill_by_flags() {
 	for(var i=0;i<FLAG_NUM_FLAGS;i++) {
