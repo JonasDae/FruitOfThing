@@ -5,7 +5,8 @@ $id = $_GET['id'];
 
 $sql ="	SELECT *
 		FROM measurement
-		WHERE measurement.fruit_type_id = '{$id}'";
+		WHERE measurement.fruit_type_id = '{$id}'
+		ORDER BY date_time ASC";
 
 if($result = sql_query($con, $sql))
 {
