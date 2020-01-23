@@ -201,6 +201,7 @@ function filter_view(view) {
                     cur_object_values[key].push(object[key]);
                 }
             }
+            cur_object["date_time"] = object["date_time"];
 
             //remove objects to prevent infinite loop
             objects.splice(objects.indexOf(object), 1);
