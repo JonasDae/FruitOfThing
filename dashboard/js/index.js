@@ -226,12 +226,13 @@ function filter_view(view) {
 // graph data control
 function graph_fill_by_flags() {
 	for(var i=0;i<FLAG_NUM_FLAGS;i++) {
-		if(graph_select_flags & 1<<i) {
-			graph_set_dataset(i);
-		}
-		else {
-			graph_clr_dataset(i);
-		}
+		graph_set_dataset(i);
+		// if(graph_select_flags & 1<<i) {
+		// 	graph_set_dataset(i);
+		// }
+		// else {
+		// 	graph_clr_dataset(i);
+		// }
 	}
 	weergaveLabels(4, data_measure);
 }
@@ -486,15 +487,6 @@ function changeDateSelect() {
 
 
 function ui_init() {
-// span colors
-	$('#chk_span_1').css('background-color', GRAPH_COLOR_DENDRO);
-	$('#chk_span_1').html(GRAPH_COLOR_DENDRO);
-	$('#chk_span_2').css('background-color', GRAPH_COLOR_WATER);
-	$('#chk_span_2').html(GRAPH_COLOR_WATER);
-	$('#chk_span_4').css('background-color', GRAPH_COLOR_TEMP);
-	$('#chk_span_4').html(GRAPH_COLOR_TEMP);
-	$('#chk_span_8').css('background-color', GRAPH_COLOR_LUCHT);
-	$('#chk_span_8').html(GRAPH_COLOR_LUCHT);
 // checkboxes
 	$('.chk_dataset').each(function(i, obj) {
 		if(obj.checked) {
