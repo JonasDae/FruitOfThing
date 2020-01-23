@@ -421,15 +421,7 @@ function changeDateSelect() {
 
 
 function ui_init() {
-// span colors
-	$('#chk_span_1').css('background-color', GRAPH_COLOR_DENDRO);
-	$('#chk_span_1').html(GRAPH_COLOR_DENDRO);
-	$('#chk_span_2').css('background-color', GRAPH_COLOR_WATER);
-	$('#chk_span_2').html(GRAPH_COLOR_WATER);
-	$('#chk_span_4').css('background-color', GRAPH_COLOR_TEMP);
-	$('#chk_span_4').html(GRAPH_COLOR_TEMP);
-	$('#chk_span_8').css('background-color', GRAPH_COLOR_LUCHT);
-	$('#chk_span_8').html(GRAPH_COLOR_LUCHT);
+
 // checkboxes
 	$('.chk_dataset').each(function(i, obj) {
 		if(obj.checked) {
