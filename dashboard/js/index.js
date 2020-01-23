@@ -225,7 +225,7 @@ function filter_view(view) {
 }
 
 // graph data control
-function graph_fill_by_flags() {
+function graph_fill_by_flags(typeid) {
 	for(var i=0;i<FLAG_NUM_FLAGS;i++) {
 		graph_set_dataset(i);
 		// if(graph_select_flags & 1<<i) {
@@ -235,7 +235,6 @@ function graph_fill_by_flags() {
 		// 	graph_clr_dataset(i);
 		// }
 	}
-	weergaveLabels(4, data_measure);
 }
 
 function graph_set_dataset(setnr) {
@@ -273,16 +272,21 @@ $('select[id=slc_soort]').change(function () {
     var value = $(this).val();
     fetch_data_measure_by_type(value);
 });
-// checkboxes
-$('input[class=chk_dataset]').change(function () {
+$('select[id=slc_weergave]').change(function () {
     var value = $(this).val();
-    if ($(this).is(':checked')) {
-        graph_select_flags |= value;
-    } else {
-        graph_select_flags &= ~value;
-    }
-    graph_fill_by_flags();
+	// weergaveLabels(value, data_measure);
+	console.log(value)
 });
+// checkboxes
+// $('input[class=chk_dataset]').change(function () {
+//     var value = $(this).val();
+//     if ($(this).is(':checked')) {
+//         graph_select_flags |= value;
+//     } else {
+//         graph_select_flags &= ~value;
+//     }
+//     graph_fill_by_flags();
+// });
 
 
 // init chart
@@ -377,11 +381,13 @@ function fetch_data_measure_by_type(typeid) {
                 var date = element.date_time;
                 element.date_time = new Date(Date.parse(date));
                 data_measure.push(element);
-            });
+			});
+			
             graph_fill_by_flags();
             table_fill();
         }
-    })
+	})
+	weergaveLabels(typeid, data_measure);
 }
 
 function fetch_data_measure() {
@@ -497,13 +503,13 @@ function changeDateSelect() {
 
 function ui_init() {
 // checkboxes
-    $('.chk_dataset').each(function (i, obj) {
-        if (obj.checked) {
-            graph_select_flags |= obj.value;
-        } else {
-            graph_select_flags &= ~obj.value;
-        }
-    });
+    // $('.chk_dataset').each(function (i, obj) {
+    //     if (obj.checked) {
+    //         graph_select_flags |= obj.value;
+    //     } else {
+    //         graph_select_flags &= ~obj.value;
+    //     }
+    // });
     graph_fill_by_flags();
 }
 
