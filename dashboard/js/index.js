@@ -26,14 +26,7 @@ const GRAPH_DATASET_LABLE = [
 ];
 const FLAG_NUM_FLAGS = 4;
 
-const FLAG_SHOW_DENDRO = 1;
-const FLAG_SHOW_WATER = 2;
-const FLAG_SHOW_TEMP = 4;
-const FLAG_SHOW_LUCHT = 8;
-
-
 // global vars
-var graph_select_flags = 0;
 var data_measure_view = "month";
 var data_measure = [];
 var date_low;
@@ -47,12 +40,6 @@ unchanged:
 	date_time
 	module_id
 */
-function week_of_year(date) {
-    date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
-    var year_start = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-    return Math.ceil((((date - year_start) / 86400000) + 1) / 7);
-}
 
 function view_of_year(date, view) {
     if (view == "hour") {
@@ -135,12 +122,6 @@ function filter_view(view) {
 function graph_fill_by_flags(typeid) {
     for (var i = 0; i < FLAG_NUM_FLAGS; i++) {
         graph_set_dataset(i);
-        // if(graph_select_flags & 1<<i) {
-        // 	graph_set_dataset(i);
-        // }
-        // else {
-        // 	graph_clr_dataset(i);
-        // }
     }
     weergaveLabels(data_measure_view, data_measure_filtered);
 }
@@ -210,17 +191,6 @@ $('input[class=chk_dataset]').change(function () {
     // weergaveLabels(value, data_measure);
     console.log(value)
 });
-// checkboxes
-// $('input[class=chk_dataset]').change(function () {
-//     var value = $(this).val();
-//     if ($(this).is(':checked')) {
-//         graph_select_flags |= value;
-//     } else {
-//         graph_select_flags &= ~value;
-//     }
-//     graph_fill_by_flags();
-// });
-
 
 // init chart
 var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
