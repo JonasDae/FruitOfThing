@@ -34,20 +34,6 @@
     background-color: #2B9482;
 }
 
-/* GRAFIEK */
-.kleur-temp{
-	color: red;
-}
-.kleur-groei{
-	color: green;
-}
-.kleur-luchtvocht{
-	color: blue;
-}
-.kleur-bodemvocht{
-	color: orange;
-}
-
 
 /* TABEL */
 .table-responsive {
