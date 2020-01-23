@@ -202,6 +202,7 @@ function graph_fill_by_flags() {
 			graph_clr_dataset(i);
 		}
 	}
+	weergaveLabels(4, data_measure);
 }
 function graph_set_dataset(setnr) {
 	var data = [];
@@ -255,7 +256,7 @@ var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 var chart_out = new Chart(cnv_graph, {
     type: 'bar',
     data: {
-        labels: ['Januari', 'Februari', 'Maart', 'April', 'Mei'],
+        labels: [],
         datasets: [{
 			yAxisID: 'axistemp',
             data: [],
