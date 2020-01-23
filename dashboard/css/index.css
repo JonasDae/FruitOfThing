@@ -28,6 +28,7 @@
 }
 
 #div_foot {
+    
     height: 75px;
     padding: 25px;
     text-align: center;
@@ -36,6 +37,11 @@
     margin-top: 12px;
 }
 
+/* NOTIFICATIONS */
+
+li:hover {
+    border: 2px solid #000;
+}
 
 /* TABEL */
 .table-responsive {
