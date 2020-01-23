@@ -19,11 +19,11 @@ const GRAPH_TYPE_TEMP = 'line';
 const GRAPH_TYPE_LUCHT = 'bar';
 
 const GRAPH_DATASET_LABLE = [
-		"Vruchtgrootte",
-		"Bodemvochtigheid",
-		"Temperatuur",
-		"Luchtvochtigheid",
-		];
+    "Vruchtgrootte",
+    "Bodemvochtigheid",
+    "Temperatuur",
+    "Luchtvochtigheid",
+];
 const FLAG_NUM_FLAGS = 4;
 
 const FLAG_SHOW_DENDRO = 1;
@@ -75,11 +75,11 @@ function view_of_year(date, view) {
 
 function filter_view(view) {
     var objects = [];
-	$.each(data_measure, function (index, element) {
-		if(element.date_time >= date_low && element.date_time <= date_high) {
-			objects.push(element);
-		}
-	});
+    $.each(data_measure, function (index, element) {
+        if (element.date_time >= date_low && element.date_time <= date_high) {
+            objects.push(element);
+        }
+    });
 //	var objects = data_measure.slice();
     var cur_view = 0;
     var cur_view_objects = [];
@@ -133,16 +133,16 @@ function filter_view(view) {
 
 // graph data control
 function graph_fill_by_flags(typeid) {
-	for(var i=0;i<FLAG_NUM_FLAGS;i++) {
-		graph_set_dataset(i);
-		// if(graph_select_flags & 1<<i) {
-		// 	graph_set_dataset(i);
-		// }
-		// else {
-		// 	graph_clr_dataset(i);
-		// }
-	}
-	weergaveLabels(data_measure_view, data_measure_filtered);
+    for (var i = 0; i < FLAG_NUM_FLAGS; i++) {
+        graph_set_dataset(i);
+        // if(graph_select_flags & 1<<i) {
+        // 	graph_set_dataset(i);
+        // }
+        // else {
+        // 	graph_clr_dataset(i);
+        // }
+    }
+    weergaveLabels(data_measure_view, data_measure_filtered);
 }
 
 function graph_set_dataset(setnr) {
@@ -183,32 +183,32 @@ $('select[id=slc_soort]').change(function () {
 });
 $('select[id=slc_weergave]').change(function () {
     var value = $(this).val();
-	data_measure_view = value;
-	data_measure_filtered = filter_view(data_measure_view);
-	graph_fill_by_flags();
-	table_fill();
+    data_measure_view = value;
+    data_measure_filtered = filter_view(data_measure_view);
+    graph_fill_by_flags();
+    table_fill();
 
 });
 //dates
 $('input[id=dte_begin]').change(function () {
     var value = $(this).val();
-	date_low = new Date(value);
-	data_measure_filtered = filter_view(data_measure_view);
-	graph_fill_by_flags();
-	table_fill();
+    date_low = new Date(value);
+    data_measure_filtered = filter_view(data_measure_view);
+    graph_fill_by_flags();
+    table_fill();
 });
 $('input[id=dte_end]').change(function () {
     var value = $(this).val();
-	date_high = new Date(value);
-	data_measure_filtered = filter_view(data_measure_view);
-	graph_fill_by_flags();
-	table_fill();
+    date_high = new Date(value);
+    data_measure_filtered = filter_view(data_measure_view);
+    graph_fill_by_flags();
+    table_fill();
 });
 // checkboxes
 $('input[class=chk_dataset]').change(function () {
     var value = $(this).val();
-	// weergaveLabels(value, data_measure);
-	console.log(value)
+    // weergaveLabels(value, data_measure);
+    console.log(value)
 });
 // checkboxes
 // $('input[class=chk_dataset]').change(function () {
@@ -269,16 +269,16 @@ var chart_out = new Chart(cnv_graph, {
             }]
     },
     options: {
-		title: {
-			display: false,
-			text: "Grafiek  titel",
-			fontSize: 23,
-		},
-		legend: {
-			display: true,
-			position: 'bottom',
-			fullwidth: true,
-		},
+        title: {
+            display: false,
+            text: "Grafiek  titel",
+            fontSize: 23,
+        },
+        legend: {
+            display: true,
+            position: 'bottom',
+            fullwidth: true,
+        },
         scales: {
             yAxes: [{
                 id: 'axis1',
@@ -319,8 +319,8 @@ function fetch_data_measure_by_type(typeid) {
             graph_fill_by_flags();
             table_fill();
         }
-	})
-	weergaveLabels(typeid, data_measure);
+    })
+    weergaveLabels(typeid, data_measure);
 }
 
 function fetch_data_measure() {
@@ -435,18 +435,21 @@ function changeDateSelect() {
 
 
 function ui_init() {
-// checkboxes
-    // $('.chk_dataset').each(function (i, obj) {
-    //     if (obj.checked) {
-    //         graph_select_flags |= obj.value;
-    //     } else {
-    //         graph_select_flags &= ~obj.value;
-    //     }
-    // });
 	data_measure_view = $('#slc_weergave').val();
 	
 	date_high = new Date($('#dte_end').val());
 	date_low = new Date($('#dte_begin').val());
+
+	if(!(date_high instanceof Date) || isNaN(date_high)) {
+		date_high = Date.parse("1/1/2030");
+		$('#dte_end').valueAsDate = date_high;
+		console.log("ya");
+	}
+		
+	if(!(date_low instanceof Date) || isNaN(date_low)) {
+		date_low= Date.parse("1/1/2000");
+		$('#dte_begin').valueAsDate = date_low;
+	}
 }
 
 function dateFormat(date, time) {
@@ -489,33 +492,33 @@ function dateFormat(date, time) {
 function weergaveLabels(weergave, data) {
     const labels = [];
     switch (weergave) {
-		case 'hour' ://Hour
-			$.each(data, function (index, element) {
-				hour = element.date_time.getHours();
-				day = element.date_time.getDay() + 1;
-				month =getMonth(element.date_time.getMonth() + 1);
-				labels.push(day + " " + month + " " + hour + ":00");
-			})
+        case 'hour' ://Hour
+            $.each(data, function (index, element) {
+                hour = element.date_time.getHours();
+                day = element.date_time.getDay() + 1;
+                month = getMonth(element.date_time.getMonth() + 1);
+                labels.push(day + " " + month + " " + hour + ":00");
+            })
             break;
         case 'day' ://Day
             $.each(data, function (index, element) {
                 day = element.date_time.getDay() + 1;
-                month =getMonth(element.date_time.getMonth() + 1);
+                month = getMonth(element.date_time.getMonth() + 1);
                 year = element.date_time.getFullYear().toString().substr(-2);
                 labels.push(day + ' ' + month + ' ' + year);
             });
             break;
         case 'week' ://Week
-			$.each(data, function (index, element) {
-				day = element.date_time.getDay() + 1;
-				month =getMonth(element.date_time.getMonth() + 1);
-				year = element.date_time.getFullYear().toString().substr(-2);
-				labels.push(day + ' ' + month + ' ' + year);
-			})
+            $.each(data, function (index, element) {
+                day = element.date_time.getDay() + 1;
+                month = getMonth(element.date_time.getMonth() + 1);
+                year = element.date_time.getFullYear().toString().substr(-2);
+                labels.push(day + ' ' + month + ' ' + year);
+            })
             break;
         case 'month' ://Month
             $.each(data, function (index, element) {
-                month =getMonth(element.date_time.getMonth() + 1);
+                month = getMonth(element.date_time.getMonth() + 1);
                 year = element.date_time.getFullYear().toString().substr(-2);
                 labels.push(month + ' ' + year);
             });
@@ -532,45 +535,9 @@ function weergaveLabels(weergave, data) {
     return labels;
 }
 
-function getMonth(month){
-	switch (month) {
-		case 1 :
-			return "jan";
-			break;
-		case 2 :
-			return "feb";
-			break;
-		case 3 :
-			return "mrt";
-			break;
-		case 4 :
-			return "apr";
-			break;
-		case 5 :
-			return "mei";
-			break;
-		case 6 :
-			return "jun";
-			break;
-		case 7 :
-			return "jul";
-			break;
-		case 8 :
-			return "aug";
-			break;
-		case 9 :
-			return "sep";
-			break;
-		case 10 :
-			return "okt";
-			break;
-		case 11 :
-			return "nov";
-			break;
-		case 12 :
-			return "dec";
-			break;
-	}
+function getMonth(month) {
+    var months = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+    return months[month - 1];
 }
 
 fetch_data_measure();
