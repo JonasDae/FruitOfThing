@@ -316,16 +316,16 @@ function table_fill() {
         content += dateFormat(element.date_time, true);
         content += "</td>";
         content += "<td>";
-        content += element.dendrometer != null ? element.dendrometer : "";
+        content += element.dendrometer != null ? element.dendrometer.toFixed(2) : "";
         content += "</td>";
         content += "<td>";
-        content += element.watermark != null ? element.watermark : "";
+        content += element.watermark != null ? element.watermark.toFixed(2) : "";
         content += "</td>";
         content += "<td>";
-        content += element.temperature != null ? element.temperature : "";
+        content += element.temperature != null ? element.temperature.toFixed(2) : "";
         content += "</td>";
         content += "<td>";
-        content += element.humidity != null ? element.humidity : "";
+        content += element.humidity != null ? element.humidity.toFixed(2) : "";
         content += "</td>";
         content += "</tr>";
         $('#data_table_body').append(content);
@@ -456,37 +456,29 @@ function dateFormat(date, time) {
 function weergaveLabels(weergave, data) {
     const labels = [];
 
+            $.each(data, function (index, element) {
     hour = element.date_time.getHours();
     day = element.date_time.getDay() + 1;
     month = getMonth(element.date_time.getMonth() + 1);
     year = element.date_time.getFullYear().toString().substr(-2);
     switch (weergave) {
         case 'hour' ://Hour
-            $.each(data, function (index, element) {
                 labels.push(day + " " + month + " " + hour + ":00");
-            });
             break;
         case 'day' ://Day
-            $.each(data, function (index, element) {
                 labels.push(day + ' ' + month + ' ' + year);
-            });
             break;
         case 'week' ://Week
-            $.each(data, function (index, element) {
                 labels.push(day + ' ' + month + ' ' + year);
-            });
             break;
         case 'month' ://Month
-            $.each(data, function (index, element) {
                 labels.push(month + ' ' + year);
-            });
             break;
         case 'year' ://Year
-            $.each(data, function (index, element) {
                 labels.push(year);
-            });
             break;
     }
+            });
     chart_out.data.labels = labels;
     chart_out.update();
     return labels;
