@@ -225,7 +225,7 @@ var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 var chart_out = new Chart(cnv_graph, {
     type: 'bar',
     data: {
-        labels: ['Januari', 'Februari', 'Maart', 'April', 'Mei'],
+        labels: weergaveLabels(4),
         datasets: [{
 			yAxisID: 'axistemp',
             data: [],
@@ -273,7 +273,7 @@ var chart_out = new Chart(cnv_graph, {
 			fontSize: 23,
 		},
 		legend: {
-			display: false
+			display: true
 		},
         scales: {
             yAxes: [{
@@ -478,6 +478,35 @@ function dateFormat(date, time){
 		return dayZero + day + "/" + monthZero + month + "/" + year;
 	}
 
+}
+
+
+
+function weergaveLabels(weergave){
+	const labels = [];
+
+	switch(weergave){
+		case 1 ://Hour
+
+		break;
+		case 2 ://Day
+
+		break;
+		case 3 ://Week
+
+		break;
+		case 4 ://Month
+			for (i = 0; i < 10; i++) {
+				labels.push(i);
+			}
+
+		break;
+		case 5 ://Year
+
+		break;
+	}
+
+	return labels;
 }
 
 fetch_data_measure();
