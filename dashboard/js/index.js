@@ -435,18 +435,21 @@ function changeDateSelect() {
 
 
 function ui_init() {
-// checkboxes
-    // $('.chk_dataset').each(function (i, obj) {
-    //     if (obj.checked) {
-    //         graph_select_flags |= obj.value;
-    //     } else {
-    //         graph_select_flags &= ~obj.value;
-    //     }
-    // });
-    data_measure_view = $('#slc_weergave').val();
+	data_measure_view = $('#slc_weergave').val();
+	
+	date_high = new Date($('#dte_end').val());
+	date_low = new Date($('#dte_begin').val());
 
-    date_high = new Date($('#dte_end').val());
-    date_low = new Date($('#dte_begin').val());
+	if(!(date_high instanceof Date) || isNaN(date_high)) {
+		date_high = Date.parse("1/1/2030");
+		$('#dte_end').valueAsDate = date_high;
+		console.log("ya");
+	}
+		
+	if(!(date_low instanceof Date) || isNaN(date_low)) {
+		date_low= Date.parse("1/1/2000");
+		$('#dte_begin').valueAsDate = date_low;
+	}
 }
 
 function dateFormat(date, time) {
