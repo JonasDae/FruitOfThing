@@ -36,6 +36,8 @@ const FLAG_SHOW_LUCHT = 8;
 var graph_select_flags = 0;
 var data_measure_view = "month";
 var data_measure = [];
+var date_low;
+var date_high;
 var data_measure_filtered = [];
 
 /*
@@ -72,7 +74,13 @@ function view_of_year(date, view) {
 }
 
 function filter_view(view) {
-    var objects = data_measure.slice();
+    var objects = [];
+	$.each(data_measure, function (index, element) {
+		if(element.date_time >= date_low && element.date_time <= date_high) {
+			objects.push(element);
+		}
+	});
+//	var objects = data_measure.slice();
     var cur_view = 0;
     var cur_view_objects = [];
     var out = []; //output for average values for each view
@@ -180,6 +188,21 @@ $('select[id=slc_weergave]').change(function () {
 	graph_fill_by_flags();
 	table_fill();
 
+});
+//dates
+$('input[id=dte_begin]').change(function () {
+    var value = $(this).val();
+	date_low = new Date(value);
+	data_measure_filtered = filter_view(data_measure_view);
+	graph_fill_by_flags();
+	table_fill();
+});
+$('input[id=dte_end]').change(function () {
+    var value = $(this).val();
+	date_high = new Date(value);
+	data_measure_filtered = filter_view(data_measure_view);
+	graph_fill_by_flags();
+	table_fill();
 });
 // checkboxes
 $('input[class=chk_dataset]').change(function () {
@@ -421,6 +444,9 @@ function ui_init() {
     //     }
     // });
 	data_measure_view = $('#slc_weergave').val();
+	
+	date_high = new Date($('#dte_end').val());
+	date_low = new Date($('#dte_begin').val());
 }
 
 function dateFormat(date, time) {
