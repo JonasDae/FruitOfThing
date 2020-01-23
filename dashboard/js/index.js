@@ -18,6 +18,12 @@ const GRAPH_TYPE_WATER = 'bar';
 const GRAPH_TYPE_TEMP = 'line';
 const GRAPH_TYPE_LUCHT = 'bar';
 
+const GRAPH_DATASET_LABLE = [
+		"Vruchtgrootte",
+		"Bodemvochtigheid",
+		"Temperatuur",
+		"Luchtvochtigheid",
+		];
 const FLAG_NUM_FLAGS = 4;
 
 const FLAG_SHOW_DENDRO = 1;
@@ -152,6 +158,7 @@ function graph_set_dataset(setnr) {
         data.push(val);
     });
     chart_out.data.datasets[setnr].data = data;
+    chart_out.data.datasets[setnr].label = GRAPH_DATASET_LABLE[setnr];
     chart_out.update();
 }
 
@@ -406,7 +413,7 @@ function ui_init() {
             graph_select_flags &= ~obj.value;
         }
     });
-    graph_fill_by_flags();
+	data_measure_view = $('#slc_weergave').val();
 }
 
 function dateFormat(date, time) {
