@@ -131,6 +131,57 @@ function data_filter_medium_week() {
 	console.log(out);
 	return out;
 }
+
+function filter_view(view) {
+	var objects = data_measure;
+	var cur_view = 0;
+	var cur_view_objects = [];
+	var out = []; //output for average values for each view
+
+	while (objects.length > 0) {
+		cur_view = week_of_year(objects[0].date_time);
+
+		/* get all objects from the same view */
+		$.each(objects, function (index, element) {
+			if (week_of_year(element.date_time) == cur_view) {
+				cur_view_objects.push(element);
+			}
+		});
+
+		/* get the average of all objects in cur_view_objects */
+		var cur_object_values = [[]]; //for all values from all objects in the same view window
+		var cur_object = []; //for the average calculated value of above multidimentional array
+		var fields = ["id", "date_time", "module_id", "fruit_type_id"]; //fields to be excluded from average calculation
+
+		//push all objects from te same view window to cur_object
+		$.each(cur_view_objects, function (index, object) {
+			for (var key in object) {
+				if (object[key] !== null && !fields.includes(key)) {
+					if (cur_object_values[key] == null)
+						cur_object_values[key] = [];
+					cur_object_values[key].push(object[key]);
+				}
+			}
+
+			//remove objects to prevent infinite loop
+			objects.splice(objects.indexOf(object), 1);
+		});
+
+		//calculate average values from cur_object
+		for (var key in cur_object_values) {
+			var sum = 0; //summation of all values
+			$.each(cur_object_values[key], function (index, value) {
+				sum += parseFloat(value);
+			});
+			cur_object[key] = sum / cur_object_values[key].length;
+			console.log(cur_object);
+		}
+
+		cur_view_objects = []; //empty view window
+		console.log('SPLITTING');
+	}
+}
+
 /*
 function data_filter_medium_month() {
 // TODO: zet datum etc
