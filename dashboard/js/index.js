@@ -546,8 +546,6 @@ function dateFormat(date, time) {
 
 function weergaveLabels(weergave, data) {
     const labels = [];
-    weergave = 2;
-
     switch (weergave) {
         case 1 ://Hour
 
