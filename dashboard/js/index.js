@@ -38,10 +38,8 @@ unchanged:
 	date_time
 	module_id
 */
-function data_add(data1, data2, div) {
-	var out = {};
-	out.data = data1;
-	out.div = div;
+function data_add(comp , data2) {
+	var out = comp;
 // fucking JS
 	if(data2.dendrometer == null) {
 		data2.dendrometer = 0.0;
@@ -64,18 +62,18 @@ function data_add(data1, data2, div) {
 	else
 		out.div.watermark++;
 
-	out.data.dendrometer = parseFloat(data1.dendrometer) + parseFloat(data2.dendrometer);
-	out.data.humidity = parseFloat(data1.humidity) + parseFloat(data2.humidity);
-	out.data.temperature = parseFloat(data1.temperature) + parseFloat(data2.temperature);
-	out.data.watermark = parseFloat(data1.watermark ) + parseFloat(data2.watermark);
+	out.data.dendrometer = parseFloat(comp.data.dendrometer) + parseFloat(data2.dendrometer);
+	out.data.humidity = parseFloat(comp.data.humidity) + parseFloat(data2.humidity);
+	out.data.temperature = parseFloat(comp.data.temperature) + parseFloat(data2.temperature);
+	out.data.watermark = parseFloat(comp.data.watermark ) + parseFloat(data2.watermark);
 	return out;
 }
-function data_div(data, div) {
-	var out = data;
-	out.dendrometer /= div.dendrometer;
-	out.humidity /= div.humidity;
-	out.temperature /= div.temperature;
-	out.watermark /= div.watermark;
+function data_div(comp) {
+	var out = comp;
+	out.data.dendrometer /= out.div.dendrometer;
+	out.data.humidity /= out.div.humidity;
+	out.data.temperature /= out.div.temperature;
+	out.data.watermark /= out.div.watermark;
 	return out;
 }
 function week_of_year(date) {
@@ -88,80 +86,70 @@ function data_filter_medium_week() {
 // TODO: zet datum etc
 	var i = 0;
 	var out = [];
-	var cur_comp = {};
-	var cur_data = {};
-	var cur_div = {};
+	var cur_comp = {
+		data: {},
+		div: {
+			dendrometer: 0,
+			humidity: 0,
+			temperature: 0,
+			watermark: 0,
+		}
+	};
 	var cur_week = -1;
 
 	$.each(data_measure, function(index, element) {
 		if(week_of_year(element.date_time) == cur_week) {
-			cur_comp = data_add(cur_data, element, cur_div);
-			cur_data = cur_comp.data;
-			cur_div = cur_comp.div;
-			console.log(cur_data);
-			console.log(cur_div);
+			cur_comp = data_add(cur_comp, element);
 			i++
 		}
 		else {
 			if(i > 0) {
-				cur_data = data_div(cur_data, cur_div);
+				cur_comp= data_div(cur_comp);
 				i = 0;
-				cur_div = {
+				cur_comp.div = {
 					dendrometer: 0,
 					humidity: 0,
 					temperature: 0,
 					watermark: 0,
 				};
-				out.push(cur_data);
+				out.push(cur_comp.data);
 			}
-			cur_data = element;
-			cur_week = week_of_year(cur_data.date_time);
-			cur_div = {
-				dendrometer: 1,
-				humidity: 1,
-				temperature: 1,
-				watermark: 1,
-			};
-			i = 1;
+			else {
+
+				cur_comp.data = element;
+				cur_comp.div = {
+					dendrometer: 1,
+					humidity: 1,
+					temperature: 1,
+					watermark: 1,
+				};
+				if(cur_comp.data.dendrometer == null) {
+					cur_comp.data.dendrometer = 0;
+					cur_comp.div.dendrometer = 0;
+				}
+				if(cur_comp.data.humidty == null) {
+					cur_comp.data.humidity = 0;
+					cur_comp.div.humidity = 0;
+				}
+				if(cur_comp.data.temperature == null) {
+					cur_comp.data.temperature = 0;
+					cur_comp.div.temperature = 0;
+				}
+				if(cur_comp.data.watermark == null) {
+					cur_comp.data.watermark = 0;
+					cur_comp.div.watermark = 0;
+				}
+				cur_week = week_of_year(cur_comp.data.date_time);
+				i = 1;
+			}
 		}
 	})
 
-	cur_data = data_div(cur_data, cur_div);
-	out.push(cur_data);
+	cur_comp = data_div(cur_comp);
+	out.push(cur_comp.data);
 	console.log(out);
 	return out;
 }
-/*
-function data_filter_medium_month() {
-// TODO: zet datum etc
-	var i = 0;
-	var out = [];
-	var cur_data = {};
-	var cur_month = -1;
-
-	$.each(data_measure, function(index, element) {
-		if(week_of_year(element.date_time) == cur_month) {
-			cur_data = data_add(cur_data, element);
-			i++
-		}
-		else {
-			if(i > 0) {
-				cur_data = data_div(cur_data, i);
-				i = 0;
-				out.push(cur_data);
-			}
-			cur_data = element;
-			cur_month = week_of_year(cur_data.date_time);
-			i = 1;
-		}
-	})
-
-	cur_data = data_div(cur_data, i);
-	out.push(cur_data);
-	console.log(out);
-	return out;
-}
-*/
 // graph data control
 function graph_fill_by_flags() {
 	for(var i=0;i<FLAG_NUM_FLAGS;i++) {
