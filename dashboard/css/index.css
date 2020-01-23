@@ -50,11 +50,16 @@
 
 
 /* TABEL */
-
+.table-responsive {
+    height: 500px;
+    overflow-y: auto;
+}
 
 th {
     background-color: #6F9F3E;
     text-align: center;
+    top: 0;
+    position: sticky;
 }
 
 td {
