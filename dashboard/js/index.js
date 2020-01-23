@@ -44,44 +44,6 @@ function week_of_year(date) {
 	var year_start = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
 	return Math.ceil((((date-year_start)/86400000)+1)/7);
 }
-function data_add(comp , data2) {
-	var out = comp;
-// fucking JS
-	if(data2.dendrometer == null) {
-		data2.dendrometer = 0.0;
-	}
-	else
-		out.div.dendrometer++;
-	if(data2.humidity == null) {
-		data2.humidity = 0.0;
-	}
-	else
-		out.div.humidity++;
-	if(data2.temperature == null) {
-		data2.temperature = 0.0;
-	}
-	else
-		out.div.temperature++;
-	if(data2.watermark == null) {
-		data2.watermark = 0.0;
-	}
-	else
-		out.div.watermark++;
-
-	out.data.dendrometer = parseFloat(comp.data.dendrometer) + parseFloat(data2.dendrometer);
-	out.data.humidity = parseFloat(comp.data.humidity) + parseFloat(data2.humidity);
-	out.data.temperature = parseFloat(comp.data.temperature) + parseFloat(data2.temperature);
-	out.data.watermark = parseFloat(comp.data.watermark ) + parseFloat(data2.watermark);
-	return out;
-}
-function data_div(comp) {
-	var out = comp;
-	out.data.dendrometer /= out.div.dendrometer;
-	out.data.humidity /= out.div.humidity;
-	out.data.temperature /= out.div.temperature;
-	out.data.watermark /= out.div.watermark;
-	return out;
-}
 function data_filter_medium_week() {
 // TODO: zet datum etc
 	var out = [];
@@ -97,21 +59,19 @@ function data_filter_medium_week() {
 	var cur_week = -1;
 
 	$.each(data_measure, function(index, element) {
-		console.log(cur_week + " " + week_of_year(element.date_time));
 		if(week_of_year(element.date_time) == cur_week) {
 			if(element.dendrometer != null) {
-				cur_comp.data.dendrometer += element.dendrometer;
+				cur_comp.data.dendrometer = parseFloat(element.dendrometer) + parseFloat(cur_comp.data.dendrometer);
 				cur_comp.div.dendrometer++;
 			}
 			if(element.humidity != null) {
-				cur_comp.data.humidity += element.humidity;
+				cur_comp.data.humidity = parseFloat(element.humidity) + parseFloat(cur_comp.data.humidity);
 				cur_comp.div.humidity++;
 			}
 			if(element.temperature != null) {
-				cur_comp.data.temperature += element.temperature;
+				cur_comp.data.temperature = parseFloat(element.temperature) + parseFloat(cur_comp.data.temperature);
 				cur_comp.div.temperature++;
 			}
-			console.log(cur_comp.data.watermark + "+= " + element.watermark);
 			if(element.watermark != null) {
 				cur_comp.data.watermark = parseFloat(element.watermark) + parseFloat(cur_comp.data.watermark);
 				cur_comp.div.watermark++;
@@ -119,12 +79,13 @@ function data_filter_medium_week() {
 		}
 		else {
 // push old
-			console.log(cur_comp);
-			cur_comp.data.dendrometer /= cur_comp.div.dendrometer;
-			cur_comp.data.humidity /= cur_comp.div.humidity;
-			cur_comp.data.temperature /= cur_comp.div.temperature;
-			cur_comp.data.watermark /= cur_comp.div.watermark;
-			out.push(cur_comp);
+			if(cur_week >= 0) {
+				cur_comp.data.dendrometer /= cur_comp.div.dendrometer;
+				cur_comp.data.humidity /= cur_comp.div.humidity;
+				cur_comp.data.temperature /= cur_comp.div.temperature;
+				cur_comp.data.watermark /= cur_comp.div.watermark;
+				out.push(cur_comp.data);
+			}
 // init new
 			cur_week = week_of_year(element.date_time);
 			cur_comp = {
@@ -181,14 +142,15 @@ function data_filter_medium_week() {
 		}
 	})
 
-//	cur_comp = data_div(cur_comp);
-//	out.push(cur_comp.data);
 // push last
 	cur_comp.data.dendrometer /= cur_comp.div.dendrometer;
 	cur_comp.data.humidity /= cur_comp.div.humidity;
 	cur_comp.data.temperature /= cur_comp.div.temperature;
 	cur_comp.data.watermark /= cur_comp.div.watermark;
-	out.push(cur_comp);
+	out.push(cur_comp.data);
+	 $.each(out, function(index, element) { 
+	 	console.log(element);
+	 });
 	console.log(out);
 	return out;
 }
@@ -202,6 +164,7 @@ function graph_fill_by_flags() {
 			graph_clr_dataset(i);
 		}
 	}
+	weergaveLabels(4, data_measure);
 }
 function graph_set_dataset(setnr) {
 	var data = [];
@@ -255,7 +218,7 @@ var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 var chart_out = new Chart(cnv_graph, {
     type: 'bar',
     data: {
-        labels: ['Januari', 'Februari', 'Maart', 'April', 'Mei'],
+        labels: [],
         datasets: [{
 			yAxisID: 'axistemp',
             data: [],
