@@ -491,41 +491,34 @@ function dateFormat(date, time) {
 
 function weergaveLabels(weergave, data) {
     const labels = [];
+
+    hour = element.date_time.getHours();
+    day = element.date_time.getDay() + 1;
+    month = getMonth(element.date_time.getMonth() + 1);
+    year = element.date_time.getFullYear().toString().substr(-2);
     switch (weergave) {
         case 'hour' ://Hour
             $.each(data, function (index, element) {
-                hour = element.date_time.getHours();
-                day = element.date_time.getDay() + 1;
-                month = getMonth(element.date_time.getMonth() + 1);
                 labels.push(day + " " + month + " " + hour + ":00");
             })
             break;
         case 'day' ://Day
             $.each(data, function (index, element) {
-                day = element.date_time.getDay() + 1;
-                month = getMonth(element.date_time.getMonth() + 1);
-                year = element.date_time.getFullYear().toString().substr(-2);
                 labels.push(day + ' ' + month + ' ' + year);
             });
             break;
         case 'week' ://Week
             $.each(data, function (index, element) {
-                day = element.date_time.getDay() + 1;
-                month = getMonth(element.date_time.getMonth() + 1);
-                year = element.date_time.getFullYear().toString().substr(-2);
                 labels.push(day + ' ' + month + ' ' + year);
             })
             break;
         case 'month' ://Month
             $.each(data, function (index, element) {
-                month = getMonth(element.date_time.getMonth() + 1);
-                year = element.date_time.getFullYear().toString().substr(-2);
                 labels.push(month + ' ' + year);
             });
             break;
         case 'year' ://Year
             $.each(data, function (index, element) {
-                year = element.date_time.getFullYear();
                 labels.push(year);
             });
             break;
