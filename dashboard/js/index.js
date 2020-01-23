@@ -1,3 +1,7 @@
+/*
+TODO:
+	al dien rommel da we binnekrijge via ajax in nen dommen array zette daar bespare we ure mej
+*/
 // defines
 const DATASET_DENDRO 	= 0;
 const DATASET_WATER 	= 1;
@@ -34,20 +38,44 @@ unchanged:
 	date_time
 	module_id
 */
-function data_add(data1, data2) {
-	var out = data1;
-	out.dendrometer += data2.dendrometer;
-	out.humidity += data2.humidity;
-	out.temperature += data2.temperature;
-	out.watermark += data2.watermark;
+function data_add(data1, data2, div) {
+	var out = {};
+	out.data = data1;
+	out.div = div;
+// fucking JS
+	if(data2.dendrometer == null) {
+		data2.dendrometer = 0.0;
+	}
+	else
+		out.div.dendrometer++;
+	if(data2.humidity == null) {
+		data2.humidity = 0.0;
+	}
+	else
+		out.div.humidity++;
+	if(data2.temperature == null) {
+		data2.temperature = 0.0;
+	}
+	else
+		out.div.temperature++;
+	if(data2.watermark == null) {
+		data2.watermark = 0.0;
+	}
+	else
+		out.div.watermark++;
+
+	out.data.dendrometer = parseFloat(data1.dendrometer) + parseFloat(data2.dendrometer);
+	out.data.humidity = parseFloat(data1.humidity) + parseFloat(data2.humidity);
+	out.data.temperature = parseFloat(data1.temperature) + parseFloat(data2.temperature);
+	out.data.watermark = parseFloat(data1.watermark ) + parseFloat(data2.watermark);
 	return out;
 }
 function data_div(data, div) {
 	var out = data;
-	out.dendrometer /= div;
-	out.humidity /= div;
-	out.temperature /= div;
-	out.watermark /= div;
+	out.dendrometer /= div.dendrometer;
+	out.humidity /= div.humidity;
+	out.temperature /= div.temperature;
+	out.watermark /= div.watermark;
 	return out;
 }
 function week_of_year(date) {
@@ -57,30 +85,83 @@ function week_of_year(date) {
 	return Math.ceil((((date-year_start)/86400000)+1)/7);
 }
 function data_filter_medium_week() {
+// TODO: zet datum etc
+	var i = 0;
+	var out = [];
+	var cur_comp = {};
+	var cur_data = {};
+	var cur_div = {};
+	var cur_week = -1;
+
+	$.each(data_measure, function(index, element) {
+		if(week_of_year(element.date_time) == cur_week) {
+			cur_comp = data_add(cur_data, element, cur_div);
+			cur_data = cur_comp.data;
+			cur_div = cur_comp.div;
+			console.log(cur_data);
+			console.log(cur_div);
+			i++
+		}
+		else {
+			if(i > 0) {
+				cur_data = data_div(cur_data, cur_div);
+				i = 0;
+				cur_div = {
+					dendrometer: 0,
+					humidity: 0,
+					temperature: 0,
+					watermark: 0,
+				};
+				out.push(cur_data);
+			}
+			cur_data = element;
+			cur_week = week_of_year(cur_data.date_time);
+			cur_div = {
+				dendrometer: 1,
+				humidity: 1,
+				temperature: 1,
+				watermark: 1,
+			};
+			i = 1;
+		}
+	})
+
+	cur_data = data_div(cur_data, cur_div);
+	out.push(cur_data);
+	console.log(out);
+	return out;
+}
+/*
+function data_filter_medium_month() {
+// TODO: zet datum etc
 	var i = 0;
 	var out = [];
 	var cur_data = {};
-	var cur_week = -1;
-	$.each(data_measure, function(index, element) {
+	var cur_month = -1;
 
-		console.log(week_of_year(element.date_time))
-		if(week_of_year(element.date_time) == cur_week) {
+	$.each(data_measure, function(index, element) {
+		if(week_of_year(element.date_time) == cur_month) {
 			cur_data = data_add(cur_data, element);
 			i++
 		}
 		else {
-			if(i != 0) {
-		console.log(i);
+			if(i > 0) {
 				cur_data = data_div(cur_data, i);
 				i = 0;
 				out.push(cur_data);
 			}
 			cur_data = element;
-			cur_week = week_of_year(cur_data.date_time);
+			cur_month = week_of_year(cur_data.date_time);
+			i = 1;
 		}
 	})
+
+	cur_data = data_div(cur_data, i);
+	out.push(cur_data);
 	console.log(out);
+	return out;
 }
+*/
 // graph data control
 function graph_fill_by_flags() {
 	for(var i=0;i<FLAG_NUM_FLAGS;i++) {
