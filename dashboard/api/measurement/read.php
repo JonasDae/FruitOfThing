@@ -24,8 +24,6 @@
             $data[$cr]['temperature'] = $row['temperature'];
             $data[$cr]['humidity'] = $row['humidity'];
             $cr++;
-
-            printf("%s\n",$data[$cr]['module_name']);
         }
 
         echo json_encode($data);

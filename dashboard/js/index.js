@@ -303,7 +303,6 @@ function fetch_data_measure() {
 function table_fill() {
 	$('#data_table_body').empty();
 	const dataSorted = data_measure_filtered.sort(function(obj2, obj1){return obj1.date_time - obj2.date_time});
-	console.log(dataSorted);
     $.each(dataSorted, function (index, element) {
         var content = "<tr>";
         content += "<td>";
@@ -335,6 +334,8 @@ function fill_notifications() {
         dataType: 'json',
         success: function (data) {
             $.each(data, function (index, element) {
+				var date = element.date_time;
+                element.date_time = new Date(Date.parse(date));
                 var bg = element.severity == "alert" ? "rgba(220, 53, 69, 0.5)" : "rgba(255, 193, 7, 0.5)";
                 var text = element.severity == "alert" ? "text-light" : "text-muted";
                 var content = "<li class='mb-1' style='background-color: " + bg + "'>";
@@ -348,7 +349,7 @@ function fill_notifications() {
                 content += "</div>";
                 content += "</div>";
                 content += "<div class='col-auto'>";
-                content += "<p>" + element.date_time + "</p>";
+                content += "<p>" + dateFormat(element.date_time, false) + "</p>";
                 content += "</div>";
                 content += "</div>";
                 content += "</li>";

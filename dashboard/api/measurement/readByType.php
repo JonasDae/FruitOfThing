@@ -27,8 +27,6 @@ if($result = sql_query($con, $sql))
 		$data[$cr]['humidity'] = $row['humidity'];
 
 		$cr++;
-		
-		printf("%s\n",$data[$cr]['module_name']);
     }
 
     echo json_encode($data);

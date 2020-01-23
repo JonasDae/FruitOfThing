@@ -2,7 +2,8 @@
     require '../connect.php';
 
     $sql = "SELECT * 
-            FROM notification";
+            FROM notification
+            ORDER BY date_time DESC";
 
     $data = [];
 
