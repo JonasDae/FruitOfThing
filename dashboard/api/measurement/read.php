@@ -3,7 +3,7 @@
 
     $sql = "SELECT * 
             FROM measurement
-            ORDER BY date_time DESC";
+            ORDER BY date_time ASC";
 
     $data = [];
 
