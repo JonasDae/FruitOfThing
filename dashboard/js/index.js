@@ -28,6 +28,7 @@ const FLAG_SHOW_LUCHT = 8;
 
 // global vars
 var graph_select_flags = 0;
+var data_measure_view = "month";
 var data_measure = [];
 var data_measure_filtered = [];
 
@@ -44,113 +45,6 @@ function week_of_year(date) {
     var year_start = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
     return Math.ceil((((date - year_start) / 86400000) + 1) / 7);
 }
-
-function data_filter_medium_week() {
-// TODO: zet datum etc
-    var out = [];
-    var cur_comp = {
-        data: {},
-        div: {
-            dendrometer: 0,
-            humidity: 0,
-            temperature: 0,
-            watermark: 0,
-        }
-    };
-    var cur_week = -1;
-
-    $.each(data_measure, function (index, element) {
-        if (week_of_year(element.date_time) == cur_week) {
-            if (element.dendrometer != null) {
-                cur_comp.data.dendrometer = parseFloat(element.dendrometer) + parseFloat(cur_comp.data.dendrometer);
-                cur_comp.div.dendrometer++;
-            }
-            if (element.humidity != null) {
-                cur_comp.data.humidity = parseFloat(element.humidity) + parseFloat(cur_comp.data.humidity);
-                cur_comp.div.humidity++;
-            }
-            if (element.temperature != null) {
-                cur_comp.data.temperature = parseFloat(element.temperature) + parseFloat(cur_comp.data.temperature);
-                cur_comp.div.temperature++;
-            }
-            if (element.watermark != null) {
-                cur_comp.data.watermark = parseFloat(element.watermark) + parseFloat(cur_comp.data.watermark);
-                cur_comp.div.watermark++;
-            }
-        } else {
-// push old
-            if (cur_week >= 0) {
-                cur_comp.data.dendrometer /= cur_comp.div.dendrometer;
-                cur_comp.data.humidity /= cur_comp.div.humidity;
-                cur_comp.data.temperature /= cur_comp.div.temperature;
-                cur_comp.data.watermark /= cur_comp.div.watermark;
-                out.push(cur_comp.data);
-            }
-// init new
-            cur_week = week_of_year(element.date_time);
-            cur_comp = {
-                data: {
-                    id: element.id,
-                    fruit_type_id: element.fruit_type_id,
-                    module_id: element.module_id,
-                    date_time: element.date_time,
-                    dendrometer: 0,
-                    humidity: 0,
-                    temperature: 0,
-                    watermark: 0,
-                },
-                div: {
-                    dendrometer: 0,
-                    humidity: 0,
-                    temperature: 0,
-                    watermark: 0,
-                },
-            };
-
-            if (element.dendrometer != null) {
-                cur_comp.data.dendrometer = element.dendrometer;
-                cur_comp.div.dendrometer = 1;
-            } else {
-                cur_comp.data.dendrometer = 0;
-                cur_comp.div.dendrometer = 0;
-            }
-            if (element.humidity != null) {
-                cur_comp.data.humidity = element.humidity;
-                cur_comp.div.humidity = 1;
-            } else {
-                cur_comp.data.humidity = 0;
-                cur_comp.div.humidity = 0;
-            }
-            if (element.temperature != null) {
-                cur_comp.data.temperature = element.temperature;
-                cur_comp.div.temperature = 1;
-            } else {
-                cur_comp.data.temperature = 0;
-                cur_comp.div.temperature = 0;
-            }
-            if (element.watermark != null) {
-                cur_comp.data.watermark = element.watermark;
-                cur_comp.div.watermark = 1;
-            } else {
-                cur_comp.data.watermark = 0;
-                cur_comp.div.watermark = 0;
-            }
-        }
-    })
-
-// push last
-    cur_comp.data.dendrometer /= cur_comp.div.dendrometer;
-    cur_comp.data.humidity /= cur_comp.div.humidity;
-    cur_comp.data.temperature /= cur_comp.div.temperature;
-    cur_comp.data.watermark /= cur_comp.div.watermark;
-    out.push(cur_comp.data);
-    $.each(out, function (index, element) {
-        console.log(element);
-    });
-    console.log(out);
-    return out;
-}
-
 
 function view_of_year(date, view) {
     if (view == "hour") {
@@ -172,7 +66,7 @@ function view_of_year(date, view) {
 }
 
 function filter_view(view) {
-    var objects = data_measure;
+    var objects = data_measure.slice();
     var cur_view = 0;
     var cur_view_objects = [];
     var out = []; //output for average values for each view
@@ -201,6 +95,7 @@ function filter_view(view) {
                     cur_object_values[key].push(object[key]);
                 }
             }
+            cur_object["date_time"] = object["date_time"];
 
             //remove objects to prevent infinite loop
             objects.splice(objects.indexOf(object), 1);
@@ -219,8 +114,6 @@ function filter_view(view) {
         out.push(cur_object);
         cur_view_objects = []; //empty view window
     }
-
-    console.log(out);
     return out;
 }
 
@@ -235,11 +128,12 @@ function graph_fill_by_flags(typeid) {
 		// 	graph_clr_dataset(i);
 		// }
 	}
+	weergaveLabels(4, data_measure_filtered);
 }
 
 function graph_set_dataset(setnr) {
     var data = [];
-    $.each(data_measure, function (index, element) {
+    $.each(data_measure_filtered, function (index, element) {
         var val;
         switch (setnr) {
             case DATASET_DENDRO:
@@ -273,6 +167,15 @@ $('select[id=slc_soort]').change(function () {
     fetch_data_measure_by_type(value);
 });
 $('select[id=slc_weergave]').change(function () {
+    var value = $(this).val();
+	data_measure_view = value;
+	data_measure_filtered = filter_view(data_measure_view);
+	graph_fill_by_flags();
+	table_fill();
+
+});
+// checkboxes
+$('input[class=chk_dataset]').change(function () {
     var value = $(this).val();
 	// weergaveLabels(value, data_measure);
 	console.log(value)
@@ -381,8 +284,8 @@ function fetch_data_measure_by_type(typeid) {
                 var date = element.date_time;
                 element.date_time = new Date(Date.parse(date));
                 data_measure.push(element);
-			});
-			
+            });
+            data_measure_filtered = filter_view(data_measure_view);
             graph_fill_by_flags();
             table_fill();
         }
@@ -401,18 +304,18 @@ function fetch_data_measure() {
                 element.date_time = new Date(Date.parse(date));
                 data_measure.push(element);
             });
+            data_measure_filtered = filter_view(data_measure_view)
             graph_fill_by_flags();
             table_fill();
 // FIXME: remove
             //data_filter_medium_week();
-            filter_view('month');
         }
     })
 }
 
 function table_fill() {
     $('#data_table_body').empty();
-    $.each(data_measure, function (index, element) {
+    $.each(data_measure_filtered, function (index, element) {
         var content = "<tr>";
         content += "<td>";
         // content +=			element.date_time != null ? element.date_time : "";
