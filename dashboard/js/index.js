@@ -160,6 +160,7 @@ function graph_fill_by_flags() {
 			graph_clr_dataset(i);
 		}
 	}
+	weergaveLabels(4, data_measure);
 }
 function graph_set_dataset(setnr) {
 	var data = [];
@@ -213,7 +214,7 @@ var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 var chart_out = new Chart(cnv_graph, {
     type: 'bar',
     data: {
-        labels: weergaveLabels(4),
+        labels: [],
         datasets: [{
 			yAxisID: 'axistemp',
             data: [],
@@ -299,6 +300,10 @@ function fetch_data_measure_by_type(typeid) {
 			element.date_time = new Date(Date.parse(date));
 			data_measure.push(element);
 		});
+
+		// data_measure = data_measure.sort(function(obj2, obj1){return obj1.date_time - obj2.date_time});
+
+
 		graph_fill_by_flags();
 		table_fill();
 	}})
@@ -314,6 +319,9 @@ function fetch_data_measure() {
 			element.date_time = new Date(Date.parse(date));
 			data_measure.push(element);
 		});
+
+		// data_measure = data_measure.sort(function(obj2, obj1){return obj1.date_time - obj2.date_time});
+
 		graph_fill_by_flags();
 		table_fill();
 // FIXME: remove
@@ -323,7 +331,10 @@ data_filter_medium_week();
 
 function table_fill() {
 	$('#data_table_body').empty();
-	$.each(data_measure, function(index, element) {
+
+	dataSorted = data_measure.sort(function(obj2, obj1){return obj1.date_time - obj2.date_time});
+
+	$.each(dataSorted, function(index, element) {
 		var content = 	"<tr>";
 		content +=			"<td>";
 		// content +=			element.date_time != null ? element.date_time : "";
@@ -470,30 +481,75 @@ function dateFormat(date, time){
 
 
 
-function weergaveLabels(weergave){
+function weergaveLabels(weergave, data){
 	const labels = [];
-
+	weergave = 2;
+	
 	switch(weergave){
 		case 1 ://Hour
 
 		break;
 		case 2 ://Day
+			$.each(data, function(index, element) {
+				day = element.date_time.getDay()+1;
+				i = element.date_time.getMonth()+1;
+				year = element.date_time.getFullYear();
+				year = year.toString().substr(-2);
+				month = ""
+				switch(i){
+					case 1 : month = "jan"; break;
+					case 2 : month = "feb"; break;
+					case 3 : month = "mrt"; break;
+					case 4 : month = "apr"; break;
+					case 5 : month = "mei"; break;
+					case 6 : month = "jun"; break;
+					case 7 : month = "jul"; break;
+					case 8 : month = "aug"; break;
+					case 9 : month = "sep"; break;
+					case 10 : month = "okt"; break;
+					case 11 : month = "nov"; break;
+					case 12 : month = "dec"; break;
+				}
 
+				labels.push(day + ' ' + month + ' ' + year);
+			});
 		break;
 		case 3 ://Week
 
 		break;
 		case 4 ://Month
-			for (i = 0; i < 10; i++) {
-				labels.push(i);
-			}
+			$.each(data, function(index, element) {
+				i = element.date_time.getMonth()+1;
+				year = element.date_time.getFullYear();
+				year = year.toString().substr(-2);
+				month = ""
+				switch(i){
+					case 1 : month = "jan"; break;
+					case 2 : month = "feb"; break;
+					case 3 : month = "mrt"; break;
+					case 4 : month = "apr"; break;
+					case 5 : month = "mei"; break;
+					case 6 : month = "jun"; break;
+					case 7 : month = "jul"; break;
+					case 8 : month = "aug"; break;
+					case 9 : month = "sep"; break;
+					case 10 : month = "okt"; break;
+					case 11 : month = "nov"; break;
+					case 12 : month = "dec"; break;
+				}
 
+			 	labels.push(month + ' ' + year);
+		 	 });
 		break;
 		case 5 ://Year
-
+			$.each(data, function(index, element) {
+				year = element.date_time.getFullYear();
+				labels.push(year);
+			});
 		break;
 	}
-
+	chart_out.data.labels = labels;
+	chart_out.update();
 	return labels;
 }
 
