@@ -26,6 +26,14 @@
 	background-color: white;
 }
 
+#div_foot {
+    height: 50px;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    background-color: #2B9482;
+}
+
 /* GRAFIEK */
 .kleur-temp{
 	color: red;

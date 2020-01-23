@@ -447,9 +447,13 @@ function dateFormat(date, time){
 	var day =  date.getDate();
 	var month = date.getMonth() +1;
 	var year = date.getFullYear();
+    var hour = date.getHours();
+    var minute = date.getMinutes()+1;
 
 	var dayZero = "";
 	var monthZero = "";
+    var hourZero = "";
+    var minuteZero = "";
 
 	if(day < 10){
 		dayZero = "0";
@@ -458,11 +462,17 @@ function dateFormat(date, time){
 	if(month < 10){
 		monthZero = "0";
 	}
+    
+    if(hour < 10){
+		hourZero = "0";
+	}
+
+	if(minute < 10){
+		minuteZero = "0";
+	}
 
 	if (time == true){
-		var hour = date.getHours();
-		var minute = date.getMinutes()+1;
-		return dayZero + day + "/" + monthZero + month + "/" + year + " " + hour + ":" + minute;
+		return dayZero + day + "/" + monthZero + month + "/" + year + " " + hourZero + hour + ":" + minuteZero + minute;
 
 	}else {
 		return dayZero + day + "/" + monthZero + month + "/" + year;
