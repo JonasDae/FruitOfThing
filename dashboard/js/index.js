@@ -128,7 +128,7 @@ function graph_fill_by_flags(typeid) {
 		// 	graph_clr_dataset(i);
 		// }
 	}
-	weergaveLabels(4, data_measure_filtered);
+	weergaveLabels(data_measure_view, data_measure_filtered);
 }
 
 function graph_set_dataset(setnr) {
@@ -457,7 +457,8 @@ function weergaveLabels(weergave, data) {
     const labels = [];
     switch (weergave) {
         case 1 ://Hour
-
+			hour = element.date_time.getHour();
+			labels.push(hour);
             break;
         case 2 ://Day
             $.each(data, function (index, element) {
