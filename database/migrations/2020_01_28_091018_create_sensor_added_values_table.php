@@ -16,8 +16,11 @@ class CreateSensorAddedValuesTable extends Migration
         Schema::create('sensor_added_values', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('module_sensor_id');
-            $table->string('value');
+            $table->float('value');
             $table->dateTime('start_date');
+
+            $table->index('module_sensor_id');
+            $table->foreign('module_sensor_id')->references('id')->on('module_sensors')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

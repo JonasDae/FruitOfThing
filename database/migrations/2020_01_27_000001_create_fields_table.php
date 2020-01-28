@@ -16,9 +16,12 @@ class CreateFieldsTable extends Migration
         Schema::create('fields', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('fruit_type_id');
+            $table->unsignedBigInteger('fruit_type_id')->unsigned()->nullable();
             $table->string('adres')->nullable();
-            $table->unsignedBigInteger('postcode');
+            $table->unsignedBigInteger('postcode')->nullable();
+
+            $table->index('fruit_type_id');
+            $table->foreign('fruit_type_id')->references('id')->on('fruit_types')->onDelete('set null')->onUpdate('cascade');
         });
     }
 

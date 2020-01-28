@@ -15,9 +15,9 @@ class CreateSensorsTable extends Migration
     {
         Schema::create('sensors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('module_id');
-            $table->unsignedBigInteger('sensor_type_id');
-            $table->dateTime('last_connection');
+            $table->string('name');
+            $table->string('name_alias')->nullable();
+            $table->string('measuring_unit')->nullable();
         });
     }
 

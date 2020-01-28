@@ -18,6 +18,11 @@ class CreateModuleSensorsTable extends Migration
             $table->unsignedBigInteger('module_id');
             $table->unsignedBigInteger('sensor_id');
             $table->dateTime('last_connection');
+
+            $table->index('module_id');
+            $table->index('sensor_id');
+            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('sensor_id')->references('id')->on('sensors')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
