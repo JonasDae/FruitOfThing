@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Module;
-use App\User;
+use App\Sensor;
 use Illuminate\Http\Request;
 
-class ModuleController extends Controller
+class SensorController extends Controller
 {
     //prevent non authorized access
     public function __construct()
@@ -14,12 +13,13 @@ class ModuleController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() {
+    public function index()
+    {
         //get modules
-        $modules = Module::get();
+        $sensors = Sensor::get();
 
         return view('modules', array(
-            'modules' => $modules,
+            'sensors' => $sensors,
         ));
     }
 }

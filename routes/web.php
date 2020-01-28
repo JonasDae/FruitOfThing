@@ -20,4 +20,6 @@ Route::get('/modules', 'ModuleController@index')->name('modules');
 
 Route::get('/fields', 'FieldController@index')->name('fields');
 
+Route::get('/sensors', 'SensorController@index')->name('sensors');
+
 Route::get('/profile', 'ProfileController@index')->name('profile');

@@ -39,14 +39,30 @@ iframe {
 	background-color: white;
 }
 
+/* FOOTER */
 #div_foot {
-
     height: 75px;
     padding: 25px;
     text-align: center;
     color: white;
     background-color: #2B9482;
     margin-top: 12px;
+}
+
+/* footer fixed to bottom */
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    margin: 0 0 125px; /* bottom = footer height */
+}
+footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100px;
+    width: 100%;
 }
 
 /* TABEL */

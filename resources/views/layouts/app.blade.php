@@ -41,6 +41,9 @@
                     <li class="nav-item">
                         <a href="{{ route('fields') }}" class="nav-link">{{ __('Velden') }}</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('sensors') }}" class="nav-link">{{ __('Sensoren') }}</a>
+                    </li>
                 @endauth
             </ul>
 
@@ -84,15 +87,17 @@
     </nav>
 </header>
 
-<div class="container-fluid">
-    @yield('content')
+<div id="content">
+    <div class="container-fluid">
+        @yield('content')
+    </div>
 </div>
 
 <footer id="div_foot">
     <p>&copy; Copyright {{ date('Y') }} Fruit Of Things</p>
 </footer>
 
-<script src="{{ asset('js/index.js') }}"></script>
+<script src="{{ asset('js/index.js') }}" defer></script>
 
 </body>
 </html>
