@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <h1 class="mt-5 text-center">Andere profielen</h1>
+        <h1 class="mt-5 text-md-left text-center">Andere profielen</h1>
         <div class="row mt-3 font-weight-bold d-none d-md-flex">
             <div class="col-lg-4 col-md-4">Naam</div>
             <div class="col-lg-6 col-md-5">Email</div>
@@ -52,13 +52,13 @@
         @foreach ($users as $user)
             @if ($user->email !== $profile->email)
                 <div class="row">
-                    <div class="col-lg-4 col-md-4 col-auto border">
+                    <div class="col-lg-4 col-md-4 col-auto">
                         {{ $user->name }}
                     </div>
-                    <div class="col-lg-6 col-md-5 col border">
+                    <div class="col-lg-6 col-md-5 col">
                         {{ $user->email }}
                     </div>
-                    <div class="col-lg-2 col-md-3 col-auto text-md-center text-right border">
+                    <div class="col-lg-2 col-md-3 col-auto text-md-center text-right">
                         @if (empty($user->email_verified_at))
                             <i class="fas fa-times text-danger"></i>
                         @else
