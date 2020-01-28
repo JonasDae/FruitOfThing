@@ -89,3 +89,25 @@ tr:hover {
 table, td {
     border: 1px solid #6F9F3E;
 }
+
+
+/* SENSOREN */
+.content-header{
+
+}
+.headerButtons{
+    z-index: 2;
+    position: absolute;
+    right: 0px;
+    bottom: 10px;
+}
+.headerButtons button{
+    background-color: transparent;
+    border: 0px;
+    color: tomato;
+    margin: 4px;
+}
+.headerButtons button:hover{
+    background-color: lightslategray;
+    color: white;
+}
