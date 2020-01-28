@@ -16,7 +16,7 @@ class CreateModuleSensorsTable extends Migration
         Schema::create('module_sensors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('module_id');
-            $table->unsignedBigInteger('module_sensor_id');
+            $table->unsignedBigInteger('sensor_id');
             $table->dateTime('last_connection');
         });
     }
