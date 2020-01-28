@@ -18,7 +18,7 @@ class SensorController extends Controller
         //get modules
         $sensors = Sensor::get();
 
-        return view('modules', array(
+        return view('sensor', array(
             'sensors' => $sensors,
         ));
     }
