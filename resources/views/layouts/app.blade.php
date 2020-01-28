@@ -36,16 +36,16 @@
                 </li>
                 @auth
                     <li class="nav-item">
-                        <a href="{{ route('modules') }}" class="nav-link">{{ __('Modules') }}</a>
+                        <a href="{{ route('fruits') }}" class="nav-link">{{ __('Fruitsoorten') }}</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('fields') }}" class="nav-link">{{ __('Velden') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('sensors') }}" class="nav-link">{{ __('Sensoren') }}</a>
+                        <a href="{{ route('modules') }}" class="nav-link">{{ __('Modules') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('fruits') }}" class="nav-link">{{ __('Fruitsoorten') }}</a>
+                        <a href="{{ route('sensors') }}" class="nav-link">{{ __('Sensoren') }}</a>
                     </li>
                 @endauth
             </ul>
