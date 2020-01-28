@@ -11,9 +11,6 @@ class Measurement extends Model
     }
 
     public function module_sensor() {
-        return $this->belongsTo('App\Module_sensor');
-    }
-    public function sensor() {
-        return $this->hasOne(Sensor::class);
+        return $this->belongsTo(Module_sensor::class);
     }
 }

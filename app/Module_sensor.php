@@ -8,7 +8,7 @@ class Module_sensor extends Model
 {
     //
 	public function sensor() {
-		return $this->hasOne(Sensor::class);
+		return $this->belongsTo(Sensor::class);
 	}
 
 }
