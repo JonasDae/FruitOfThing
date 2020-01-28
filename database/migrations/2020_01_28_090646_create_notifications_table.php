@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMeasurementsTable extends Migration
+class CreateNotificationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateMeasurementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('measurements', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('severity');
+            $table->string('title');
+            $table->text('description');
             $table->unsignedBigInteger('module_id');
-            $table->unsignedBigInteger('module_sensor_id');
-            $table->string('value');
-            $table->string('measure_date');
+            $table->dateTime('send_date');
         });
     }
 
@@ -29,6 +30,6 @@ class CreateMeasurementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('measurements');
+        Schema::dropIfExists('notifications');
     }
 }

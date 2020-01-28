@@ -18,6 +18,7 @@ class CreateModulesTable extends Migration
             $table->string('name');
             $table->unsignedBigInteger('field_id');
             $table->unsignedBigInteger('battery_level');
+            $table->string('phone_number');
             $table->dateTime('uptime');
             $table->date('last_connection');
         });

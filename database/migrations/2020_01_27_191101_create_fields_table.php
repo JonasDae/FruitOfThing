@@ -19,7 +19,6 @@ class CreateFieldsTable extends Migration
             $table->string('fruit_type_id');
             $table->string('adres')->nullable();
             $table->unsignedBigInteger('postcode');
-            $table->timestamps();
         });
     }
 
