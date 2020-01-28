@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row mt-3 font-weight-bold d-none d-md-flex">
             <div class="col-lg-2 col-md-3">Naam</div>
-            <div class="col-lg-2 col-md-3">Type</div>
+            <div class="col-lg-2 col-md-3">Fruitsoort</div>
             <div class="col-lg-7 col-md-5">Adres</div>
             <div class="col-lg-1 col-md-1 text-right">Postcode</div>
         </div>
