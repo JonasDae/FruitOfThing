@@ -20,7 +20,7 @@
                     {{ $module->field->name }}
                 </div>
                 <div class="col-lg-1 col-md-1 col-auto">
-                    {{ $module->battery_level }}
+                    {{ $module->battery_level }}%
                 </div>
                 <div class="col-lg-2 col-md-2 col-auto">
                     {{ $module->phone_number }}
