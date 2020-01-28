@@ -92,9 +92,6 @@ table, td {
 
 
 /* SENSOREN */
-.content-header{
-
-}
 .headerButtons{
     z-index: 2;
     position: absolute;
@@ -109,5 +106,23 @@ table, td {
 }
 .headerButtons button:hover{
     background-color: lightslategray;
+    color: white;
+}
+
+/* NOTIFICATIONS */
+.severity-{
+    background-color: gainsboro;
+    color: black;
+}
+.severity-info{
+    background-color: #5eabce;
+    color: white;
+}
+.severity-danger{
+    background-color: #ce6564;
+    color: white;
+}
+.severity-warning{
+    background-color: #d69e37;
     color: white;
 }
