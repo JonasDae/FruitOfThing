@@ -44,6 +44,9 @@
                     <li class="nav-item">
                         <a href="{{ route('sensors') }}" class="nav-link">{{ __('Sensoren') }}</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('fruits') }}" class="nav-link">{{ __('Fruitsoorten') }}</a>
+                    </li>
                 @endauth
             </ul>
 

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Sensor;
+use App\Fruit_type;
 use Illuminate\Http\Request;
 
-class SensorController extends Controller
+class Fruit_typeController extends Controller
 {
     //prevent non authorized access
     public function __construct()
@@ -15,11 +15,11 @@ class SensorController extends Controller
 
     public function index()
     {
-        //get sensors
-        $sensors = Sensor::get();
+        //get fruit types
+        $fruit_types = Fruit_type::get();
 
-        return view('sensor', array(
-            'sensors' => $sensors,
+        return view('fruits', array(
+            'fruit_types' => $fruit_types,
         ));
     }
 }
