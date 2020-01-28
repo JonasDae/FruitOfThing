@@ -97,4 +97,10 @@
             </div>
         </div>
     </div>
+	<script>
+		var out = {!! json_encode($chart_data) !!};
+		console.log(out);
+		out = {!! json_encode($measurements) !!};
+		console.log(out);
+	</script>
 @endsection

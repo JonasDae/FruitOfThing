@@ -187,16 +187,17 @@ var chart_out = new Chart(cnv_graph, {
     type: 'bar',
     data: {
         labels: [],
-        datasets: [{
-            yAxisID: 'axistemp',
-            data: [],
-            type: GRAPH_TYPE_DENDRO,
-            borderColor: GRAPH_COLOR_DENDRO,
-            fill: false,
-            hoverBorderWidth: 3,
-            hoverBorderColor: '#000000',
-            order: 1,
-        },
+        datasets: [
+			{
+				yAxisID: 'axistemp',
+				data: [],
+				type: GRAPH_TYPE_DENDRO,
+				borderColor: GRAPH_COLOR_DENDRO,
+				fill: false,
+				hoverBorderWidth: 3,
+				hoverBorderColor: '#000000',
+				order: 1,
+			},
             {
                 yAxisID: 'axis1',
                 data: [],
@@ -247,11 +248,11 @@ var chart_out = new Chart(cnv_graph, {
                 type: 'linear',
                 position: 'left',
             },
-                {
-                    id: 'axistemp',
-                    type: 'linear',
-                    position: 'right',
-                }]
+			{
+				id: 'axistemp',
+				type: 'linear',
+				position: 'right',
+			}]
         }
     }
 });
