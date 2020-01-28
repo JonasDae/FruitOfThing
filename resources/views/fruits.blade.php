@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container pt-3">
         <div class="row mt-3 font-weight-bold d-none d-md-flex">
             <div class="col-lg-12 col-md-12">Naam</div>
         </div>
