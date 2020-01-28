@@ -41,6 +41,9 @@
                     <li class="nav-item">
                         <a href="{{ route('fields') }}" class="nav-link">{{ __('Velden') }}</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('sensors') }}" class="nav-link">{{ __('Sensoren') }}</a>
+                    </li>
                 @endauth
             </ul>
 
@@ -84,15 +87,43 @@
     </nav>
 </header>
 
-<div class="container-fluid">
-    @yield('content')
+<div id="content">
+    <div class="container-fluid">
+        @yield('content')
+    </div>
 </div>
 
 <footer id="div_foot">
     <p>&copy; Copyright {{ date('Y') }} Fruit Of Things</p>
 </footer>
 
-<script src="{{ asset('js/index.js') }}"></script>
+<script src="{{ asset('js/index.js') }}" defer></script>
+<script>
+    $(function () {
+        /* footer onderaan de pagina krijgen. Kan niet met css gedaan worden omdat de footer te groot is om absolute te maken */
+        function adjustFooter() {
+            var contentHeight = document.getElementById("content").offsetHeight;
+            var footerHeight = document.getElementById("div_foot").offsetHeight;
+            var windowHeight = window.innerHeight;
+            if ((windowHeight - (contentHeight + footerHeight)) > 0) {
+                document.getElementById("content").setAttribute("style", "margin-bottom: " + (windowHeight - (contentHeight + footerHeight)) + ";");
+            } else {
+                document.getElementById("content").removeAttribute("style");
+            }
+        }
+
+        //call onload
+        adjustFooter();
+
+        //call on window resize
+        $(window).resize(function () {
+            adjustFooter();
+        });
+
+        //call when content changes
+        new ResizeObserver(adjustFooter).observe(content);
+    });
+</script>
 
 </body>
 </html>
