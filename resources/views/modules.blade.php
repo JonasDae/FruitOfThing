@@ -5,7 +5,7 @@
         <div class="row mt-3 font-weight-bold d-none d-md-flex">
             <div class="col-lg-2 col-md-3">Naam</div>
             <div class="col-lg-2 col-md-2">Veld</div>
-            <div class="col-lg-1 col-md-1">Batterij</div>
+            <div class="col-lg-1 col-md-1">Batterij <i class="fas fa-battery-full"></i></div>
             <div class="col-lg-2 col-md-2">GSM nummer</div>
             <div class="col-lg-2 col-md-2">Uptime</div>
             <div class="col-lg-2 col-md-2">Laatste connectie</div>
