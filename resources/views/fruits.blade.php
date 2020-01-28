@@ -9,7 +9,7 @@
         @foreach ($fruit_types as $fruit_type)
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-12">
-                    <span class="font-weight-bolder">{{ $fruit_type->name }}</span>
+                    {{ $fruit_type->name }}
                 </div>
             </div>
             <hr>
