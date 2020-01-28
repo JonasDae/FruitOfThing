@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Fruit_type;
 use App\Measurement;
 use App\Module;
 use Illuminate\Http\Request;
@@ -10,11 +11,13 @@ class HomeController extends Controller
 {
     public function index()
     {
-        //get measurements
+        //get measurements & fruit_types
         $measurements = Measurement::get();
+        $fruit_types = Fruit_type::get();
 
         return view('home', array(
             'measurements' => $measurements,
+            'fruit_types' => $fruit_types,
         ));
     }
 }

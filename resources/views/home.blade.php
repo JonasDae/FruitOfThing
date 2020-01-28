@@ -36,6 +36,9 @@
                 <div class="col-sm-6 col-lg-3 form-group">
                     <label for="slc_soort">Vruchtsoort</label>
                     <select id="slc_soort" class="form-control">
+                        @foreach($fruit_types as $fruit_type)
+                            <option value="{{ $fruit_type->id }}">{{ $fruit_type->name }}</option>
+                            @endforeach
                     </select>
                 </div>
                 <div class="col-sm-6 col-lg-3 form-group">

@@ -398,7 +398,7 @@ function changeDateSelect() {
 
 function ui_init() {
 	data_measure_view = $('#slc_weergave').val();
-	
+
 	date_high = new Date($('#dte_end').val());
 	date_low = new Date($('#dte_begin').val());
 
@@ -406,7 +406,7 @@ function ui_init() {
 		date_high = Date.parse("1/1/2030");
 		$('#dte_end').valueAsDate = date_high;
 	}
-		
+
 	if(!(date_low instanceof Date) || isNaN(date_low)) {
 		date_low= Date.parse("1/1/2000");
 		$('#dte_begin').valueAsDate = date_low;

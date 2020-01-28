@@ -18,7 +18,6 @@ class CreateSensorsTable extends Migration
             $table->unsignedBigInteger('module_id');
             $table->unsignedBigInteger('sensor_type_id');
             $table->dateTime('last_connection');
-            $table->timestamps();
         });
     }
 
