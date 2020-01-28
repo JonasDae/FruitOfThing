@@ -16,9 +16,14 @@ class CreateMeasurementsTable extends Migration
         Schema::create('measurements', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('module_id');
-            $table->unsignedBigInteger('module_sensor_id');
+            $table->unsignedBigInteger('module_sensor_id')->unsigned()->nullable();
             $table->float('value');
             $table->string('measure_date');
+
+            $table->index('module_id');
+            $table->index('module_sensor_id');
+            $table->foreign('module_id')->references('id')->on('modules')->onUpdate('cascade');
+            $table->foreign('module_sensor_id')->references('id')->on('module_sensors')->onDelete('set null')->onUpdate('cascade');
         });
     }
 

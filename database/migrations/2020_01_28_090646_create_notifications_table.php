@@ -17,9 +17,12 @@ class CreateNotificationsTable extends Migration
             $table->bigIncrements('id');
             $table->string('severity');
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->unsignedBigInteger('module_id');
             $table->dateTime('send_date');
+
+            $table->index('module_id');
+            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
