@@ -91,12 +91,14 @@
                             </thead>
                             <tbody id="data_table_body">
                             @foreach($measurements as $measurement)
-                                <td></td>
-                                <td></td>
-                                <td>{{ $measurement->value }}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{ $measurement->value }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
                             @endforeach
                             </tbody>
                         </table>

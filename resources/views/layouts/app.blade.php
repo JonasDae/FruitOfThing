@@ -44,6 +44,9 @@
                     <li class="nav-item">
                         <a href="{{ route('sensors') }}" class="nav-link">{{ __('Sensoren') }}</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('fruits') }}" class="nav-link">{{ __('Fruitsoorten') }}</a>
+                    </li>
                 @endauth
             </ul>
 
@@ -98,6 +101,19 @@
 </footer>
 
 <script src="{{ asset('js/index.js') }}" defer></script>
+<script>
+    //enable popovers in the modules page
+    $(function () {
+        $('[data-toggle="popover"]').popover();
+
+        //close popover on click outside
+        $('body').on('click', function (e) {
+            if ($(e.target).data('toggle') !== 'popover' && $(e.target).parents('.popover.in').length === 0) {
+                $('[data-toggle="popover"]').popover('hide');
+            }
+        });
+    })
+</script>
 
 </body>
 </html>
