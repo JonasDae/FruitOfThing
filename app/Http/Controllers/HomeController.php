@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Fruit_type;
 use App\Measurement;
+use App\Sensor;
+use App\Module_sensor;
 use App\Module;
 use Illuminate\Http\Request;
 use stdClass;
@@ -34,9 +36,18 @@ class HomeController extends Controller
 		$out->data = new stdClass();
 		$out->data->labels = ["ASD", "BCD", "DJKLD"]; 
 		$out->data->datasets = [];
-		$data = new stdClass();
-		$out->data->datasets[0] = $this->chart_dataset("data alias", "axis1", "bartype", "#FF00FF", 3, $data);
-		return $out;
+		$measures = Measurement::get();
+		$sensors = Sensor::get();
+		$module_sensors = Module_sensor::get();
+		$sensor_data = [];
+		$modsen = new stdClass();
+
+		dd($measures[1]);
+		dd($module_sensors[3]);
+//		dd($modsen);
+
+		return $modsen;
+//		return $out;
 	}
     public function index()
     {
