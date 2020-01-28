@@ -91,9 +91,7 @@
 </header>
 
 <div id="content">
-    <div class="container-fluid">
-        @yield('content')
-    </div>
+    @yield('content')
 </div>
 
 <footer id="div_foot">
