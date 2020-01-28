@@ -98,32 +98,6 @@
 </footer>
 
 <script src="{{ asset('js/index.js') }}" defer></script>
-<script>
-    $(function () {
-        /* footer onderaan de pagina krijgen. Kan niet met css gedaan worden omdat de footer te groot is om absolute te maken */
-        function adjustFooter() {
-            var contentHeight = document.getElementById("content").offsetHeight;
-            var footerHeight = document.getElementById("div_foot").offsetHeight;
-            var windowHeight = window.innerHeight;
-            if ((windowHeight - (contentHeight + footerHeight)) > 0) {
-                document.getElementById("content").setAttribute("style", "margin-bottom: " + (windowHeight - (contentHeight + footerHeight)) + ";");
-            } else {
-                document.getElementById("content").removeAttribute("style");
-            }
-        }
-
-        //call onload
-        adjustFooter();
-
-        //call on window resize
-        $(window).resize(function () {
-            adjustFooter();
-        });
-
-        //call when content changes
-        new ResizeObserver(adjustFooter).observe(content);
-    });
-</script>
 
 </body>
 </html>
