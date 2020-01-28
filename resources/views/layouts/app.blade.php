@@ -94,7 +94,7 @@
     @yield('content')
 </div>
 
-<footer id="div_foot">
+<footer>
     <p>&copy; Copyright {{ date('Y') }} Fruit Of Things</p>
 </footer>
 
