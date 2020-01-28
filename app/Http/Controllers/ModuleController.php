@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Module;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -13,8 +14,12 @@ class ModuleController extends Controller
         $this->middleware('auth');
     }
 
-    //load modules view
     public function index() {
-        return view('modules');
+        //get modules
+        $modules = Module::get();
+
+        return view('modules', array(
+            'modules' => $modules,
+        ));
     }
 }
