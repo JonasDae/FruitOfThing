@@ -21,13 +21,14 @@ iframe {
 }
 
 /* ALGEMEEN */
-.content-title{
+.content-title {
 	background-color: #2B9482;
 	color: white;
 	padding: 8px 0px 8px 0px;
 	margin-bottom: 12px;
     margin-top: 12px;
 }
+
 .content-title h5{
 	margin: 0px;
 	padding: 0px;
@@ -102,14 +103,6 @@ table, td {
 }
 
 /* CONTENT */
-body {
-    min-height: calc(100vh - 75px);
-    border: 1px solid red;
-}
-.container {
-    height: 100%;
-    border: 1px solid yellow;
-}
 
 /* FOOTER */
 /* footer fixed to bottom */

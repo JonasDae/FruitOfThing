@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container pt-3">
         <div class="row mt-3 font-weight-bold d-none d-md-flex">
             <div class="col-lg-2 col-md-3">Naam</div>
             <div class="col-lg-2 col-md-2">Veld <a href="{{ route('fields') }}"><i class="fas fa-external-link-alt"></i></a></div>
