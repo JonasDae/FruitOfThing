@@ -18,7 +18,7 @@ class CreateMeasurementsTable extends Migration
             $table->unsignedBigInteger('module_id');
             $table->unsignedBigInteger('module_sensor_id')->unsigned()->nullable();
             $table->float('value');
-            $table->string('measure_date');
+            $table->dateTime('measure_date');
 
             $table->index('module_id');
             $table->index('module_sensor_id');
