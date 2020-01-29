@@ -108,6 +108,11 @@ table, td {
     color: white;
 }
 
+/* MODULES */
+.module:hover {
+    background-color: #eee;
+}
+
 /* PROFILE */
 .fa-user-circle {
     color: #007b5e;
