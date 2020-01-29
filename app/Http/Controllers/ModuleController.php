@@ -16,8 +16,9 @@ class ModuleController extends Controller
     }
 
     public function index() {
-        //get modules
+        //get modules & fields
         $modules = Module::get();
+        $fields = Field::get();
 
         /* change uptime value */
         foreach ($modules as $module) {
@@ -37,22 +38,29 @@ class ModuleController extends Controller
             $module->uptime = $uptime;
         }
 
-        return view('modules.index', array(
-            'modules' => $modules,
-        ));
+        return view('modules.index', compact('modules', 'fields'));
     }
 
-    public function create() {
-        $fields = Field::get();
+    public function update(Request $request) {
+        $module = Module::find($request->get('id'));
 
-        return view('modules.create', array(
-            'fields' => $fields,
+        $data = $request->validate(array(
+            'name' => array('required', 'string', 'max:255'),
+            'field' => array('required'),
+            'phone_number' => array('required', 'min:10', 'max:11'),
         ));
+
+        $module->name = $data['name'];
+        $module->field_id = (int)$data['field'];
+        $module->phone_number = $data['phone_number'];
+        $module->timestamps = false; //don't update the updated_at column on save()
+        $module->save();
+
+        return redirect(route('modules.index'));
     }
 
-    public function store() {
-        $data = request()->validate(array(
-
-        ));
+    public function destroy(Module $module) {
+        $module->delete();
+        return redirect(route('modules.index'));
     }
 }

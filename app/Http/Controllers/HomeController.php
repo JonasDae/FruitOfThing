@@ -81,7 +81,7 @@ class HomeController extends Controller
 
 		$sensor_data = [];
 		$sensor_date = [];
-		
+
 		for($i = 0; $i < count($sensors); $i++)
 		{
 			$sensor_data[$sensors[$i]->name_alias] = [];;
@@ -114,7 +114,7 @@ class HomeController extends Controller
 					$avg[$j] = null;
 				$data_out[$j] = $avg[$j];
 				$j++;
-				
+
 			}
 			$out->data->datasets[$i] = $this->chart_dataset($sensor_name, "axisleft", "bar", $graph_colors[$i], 3, $data_out);
 			$i++;
@@ -126,7 +126,7 @@ class HomeController extends Controller
 	}
     public function index()
     {
-        //get measurements & fruit_types
+        //get measurements & fruit_types & notifications
         $notifications = Notification::get()->sortByDesc('send_date');
         $measurements = Measurement::get()->sortByDesc('measure_date');
         $fruit_types = Fruit_type::get();
