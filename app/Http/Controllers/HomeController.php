@@ -29,80 +29,58 @@ class HomeController extends Controller
 	private function chart_build()
 	{
         $measurements = Measurement::get();
+        $sensors = Sensor::get();
 
 		$out = new stdClass();
 		$out->type = 'bar';
 		$out->data = new stdClass();
-		$out->data->labels = ["ASD", "BCD", "DJKLD"]; 
-		$out->data->datasets = [];
 
-		$measures = Measurement::get();
+		$out->data->datasets = [];
 		$out->labels = [];
 
 		$sensor_data = [];
-		$sensor_names = [];
-
-		for($i = 0; $i < count($measures); $i++)
+		$sensor_date = [];
+		
+		for($i = 0; $i < count($sensors); $i++)
 		{
-			if(!in_array($measures[$i]->measure_date, $out->labels))
-				array_push($out->labels, $measures[$i]->measure_date);
-			if(!in_array($measures[$i]->module_sensor->sensor->name_alias,$sensor_names))
-				$sensor_names[$measures[$i]->module_sensor->sensor_id] = $measures[$i]->module_sensor->sensor->name_alias;
-
-// per date per sensor
-			if(!isset($sensor_data[$measures[$i]->measure_date] ))
-				$sensor_data[$measures[$i]->measure_date] = [];
-			if(!isset($sensor_data[$measures[$i]->measure_date][$measures[$i]->module_sensor->sensor->name_alias] ))
-				$sensor_data[$measures[$i]->measure_date][$measures[$i]->module_sensor->sensor->name_alias] = [];
-			array_push($sensor_data[$measures[$i]->measure_date][$measures[$i]->module_sensor->sensor->name_alias], $measures[$i]->value);
-
-// per sensor per date
-/*
-			if(!isset($sensor_data[$measures[$i]->module_sensor->sensor->name_alias] ))
-				$sensor_data[$measures[$i]->module_sensor->sensor->name_alias] = [];
-
-			if(!isset($sensor_data[$measures[$i]->module_sensor->sensor->name_alias][$measures[$i]->measure_date] ))
-				$sensor_data[$measures[$i]->module_sensor->sensor->name_alias][$measures[$i]->measure_date] = [];
-
-			array_push($sensor_data[$measures[$i]->module_sensor->sensor->name_alias][$measures[$i]->measure_date], $measures[$i]->value );
-*/
+			$sensor_data[$sensors[$i]->name_alias] = [];;
 		}
-		$data = [];
-		foreach($sensor_names as $s)
-			$data[$s] = [];
-		foreach($sensor_data as $sensor_date => $val_by_sensor)
-		{
-			
-			dd($sensor_data);
-			$dates[$i] = $sensor_date;
 
-			foreach($val_by_sensor as $sensor_name => $sensor_val)
+		for($i = 0; $i < count($measurements); $i++)
+		{
+			if(!in_array($measurements[$i]->measure_date, $sensor_date))
+				array_push($sensor_date,$measurements[$i]->measure_date);
+			foreach($sensor_data as $sensor_name => $emptyarr)
 			{
-		dd($val_by_sensor);
-				array_push($data[$i], $sensor_val);
+				if(!isset($sensor_data[$sensor_name][$measurements[$i]->measure_date] ))
+					$sensor_data[$sensor_name][$measurements[$i]->measure_date] = [];
 			}
+			array_push($sensor_data[$measurements[$i]->module_sensor->sensor->name_alias][$measurements[$i]->measure_date], $measurements[$i]->value);
 
-			
 		}
-		for($i = 0; $i < count($data); $i++)
-			$out->data->datasets[$i] = $this->chart_dataset($names[$i], "axis1", "bar", "#FF00FF", 3, $data[$i]);
-
 		$i = 0;
-		foreach($sensor_data as $sensorname => $val)
+		foreach($sensor_data as $sensor_name => $data_by_date)
 		{
-			$data = [];
-
-			foreach($val as $key2 => $val2)
+			$avg_per_date = [];
+			$avg = [];
+			$j = 0;
+			$data_out = [];
+			foreach($data_by_date as $data_date => $datapoints)
 			{
-				foreach($val2 as $key3 => $val3)
-				{
-					array_push($data, $val3);
-				}
+				if(count($datapoints))
+					$avg[$j] = array_sum($datapoints)/count($datapoints);
+				else
+					$avg[$j] = null;
+				$data_out[$j] = $avg[$j];
+				$j++;
+				
 			}
-
-			$out->data->datasets[$i] = $this->chart_dataset($sensorname, "axis1", "bar", "#FF00FF", 3, $data);
+//			$sensor_data[$sensor_name][];
+			$out->data->datasets[$i] = $this->chart_dataset($sensor_name, "axis1", "bar", "#FF00FF", 3, $data_out);
 			$i++;
 		}
+		$out->data->labels = $sensor_date;
+
 
 		return $out;
 	}

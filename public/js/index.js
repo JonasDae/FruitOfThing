@@ -182,6 +182,7 @@ $('input[id=dte_end]').change(function () {
 });
 
 // init chart
+/*
 var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 var chart_out = new Chart(cnv_graph, {
     type: 'bar',
@@ -256,6 +257,7 @@ var chart_out = new Chart(cnv_graph, {
         }
     }
 });
+*/
 
 // ajax
 var BASE_URL = "https://floriandh.sinners.be/pcfruit/";

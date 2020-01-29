@@ -100,7 +100,42 @@
 	<script>
 		var out = {!! json_encode($chart_data) !!};
 		console.log(out);
-		out = {!! json_encode($measurements) !!};
-		console.log(out);
+		var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
+		console.log(cnv_graph);
+		var chart_out = new Chart(cnv_graph, {
+			type: 'bar',
+			data: {
+				labels: out.data.labels,
+				datasets: out.data.datasets,
+			},
+			options: {
+				title: {
+					display: false,
+					text: "Grafiek  titel",
+					fontSize: 23,
+				},
+				legend: {
+					display: true,
+					position: 'bottom',
+					fullwidth: true,
+				},
+				scales: {
+					yAxes: [{
+						id: 'axis1',
+						ticks: {
+							beginAtZero: true
+						},
+						type: 'linear',
+						position: 'left',
+					},
+					{
+						id: 'axistemp',
+						type: 'linear',
+						position: 'right',
+					}]
+				}
+			}
+		});
+
 	</script>
 @endsection
