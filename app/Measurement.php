@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Measurement extends Model
 {
     public function module() {
-        return $this->hasOne(Module::class);
+        return $this->belongsTo(Module::class);
     }
 
-    public function sensor() {
-        return $this->hasOne(Sensor::class);
+    public function module_sensor() {
+        return $this->belongsTo(Module_sensor::class);
     }
 }

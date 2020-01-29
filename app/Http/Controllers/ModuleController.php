@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Field;
 use App\Module;
 use App\User;
 use Illuminate\Http\Request;
@@ -36,8 +37,22 @@ class ModuleController extends Controller
             $module->uptime = $uptime;
         }
 
-        return view('modules', array(
+        return view('modules.index', array(
             'modules' => $modules,
+        ));
+    }
+
+    public function create() {
+        $fields = Field::get();
+
+        return view('modules.create', array(
+            'fields' => $fields,
+        ));
+    }
+
+    public function store() {
+        $data = request()->validate(array(
+
         ));
     }
 }
