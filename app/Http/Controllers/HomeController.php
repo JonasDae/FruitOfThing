@@ -122,6 +122,7 @@ $graph_colors = [
         $measurements = Measurement::get()->sortByDesc('measure_date');
         $fruit_types = Fruit_type::get();
 
+
         return view('home', array(
             'notifications' => $notifications,
             'measurements' => $measurements,
