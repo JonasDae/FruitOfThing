@@ -33,18 +33,18 @@ class HomeController extends Controller
 	{
 		$out = [];
 
-		if($fruittype >= 0)
+		for($i=0; $i < count($measurements); $i++)
 		{
-			for($i=0; $i < count($measurements); $i++)
+			if(		$measurements[$i]->module->field->fruit_type->id == $fruittype)
+			/*
+			   && 	$measurements[$i]->measure_date < enddate
+			   && 	$measurements[$i]->measure_date > $startdate)
+			)
+			*/
 			{
-				if($measurements[$i]->module->field->fruit_type->id == $fruittype)
-				{
-					array_push($out, $measurements[$i]);
-				}
+				array_push($out, $measurements[$i]);
 			}
 		}
-		else
-			$out = $measurements;
 		return $out;
 	}
 	public function chart_build($fruittype)
