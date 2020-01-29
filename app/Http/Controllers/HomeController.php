@@ -89,7 +89,7 @@ class HomeController extends Controller
     {
         //get measurements & fruit_types
         $notifications = Notification::get()->sortByDesc('send_date');
-        $measurements = Measurement::get();
+        $measurements = Measurement::get()->sortByDesc('measure_date');
         $fruit_types = Fruit_type::get();
 
         return view('home', array(
