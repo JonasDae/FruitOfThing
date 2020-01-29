@@ -108,15 +108,13 @@
         </div>
     </div>
 	<script>
-		var out = {!! json_encode($chart_data) !!};
-		console.log(out);
+		var out = {!! json_encode($chart_data ?? "") !!};
 		var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
-		console.log(cnv_graph);
 		var chart_out = new Chart(cnv_graph, {
 			type: 'bar',
 			data: {
-				labels: out.data.labels,
-				datasets: out.data.datasets,
+				labels: [],
+				datasets: [],
 			},
 			options: {
 				title: {
@@ -131,7 +129,7 @@
 				},
 				scales: {
 					yAxes: [{
-						id: 'axis1',
+						id: 'axisleft',
 						ticks: {
 							beginAtZero: true
 						},
@@ -139,13 +137,30 @@
 						position: 'left',
 					},
 					{
-						id: 'axistemp',
+						id: 'axisright',
 						type: 'linear',
 						position: 'right',
 					}]
 				}
 			}
 		});
-
+// init graph
+		$.get( "/public/home/chart_build/"+ $("#slc_soort").val(), function(response) {
+			graph_update(response);
+		})
+function graph_update(data)
+{
+	chart_out.data.labels = data.data.labels;
+	chart_out.data.datasets = data.data.datasets;
+	chart_out.update();
+}
+		// ui interaction
+// dropdowns
+$('select[id=slc_soort]').change(function () {
+    var value = $(this).val();
+	$.get( "/public/home/chart_build/"+ value, function(response) {
+		graph_update(response);
+	})
+});
 	</script>
 @endsection
