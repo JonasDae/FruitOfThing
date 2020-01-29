@@ -53,11 +53,11 @@
                     <div class="col-sm-6 col-lg-3 form-group">
                         <label for="slc_weergave">Weergave</label>
                         <select id="slc_weergave" class="form-control">
-                            <option value="hour">uur</option>
-                            <option value="day">dag</option>
-                            <option value="week">week</option>
-                            <option selected value="month">maand</option>
-                            <option value="year">jaar</option>
+                            <option value="0">uur</option>
+                            <option value="1">dag</option>
+                            <option value="2">week</option>
+                            <option selected value="3">maand</option>
+                            <option value="4">jaar</option>
                         </select>
                     </div>
                     <div class="col-sm-6 col-lg-3 form-group">
@@ -108,6 +108,8 @@
         </div>
     </div>
 	<script>
+		console.log($('#dte_begin'))
+
 		var out = {!! json_encode($chart_data ?? "") !!};
 		var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 		var chart_out = new Chart(cnv_graph, {
@@ -145,22 +147,19 @@
 			}
 		});
 // init graph
-		$.get( "/public/home/chart_build/"+ $("#slc_soort").val(), function(response) {
-			graph_update(response);
-		})
-function graph_update(data)
+	graph_update();
+function graph_update()
 {
-	chart_out.data.labels = data.data.labels;
-	chart_out.data.datasets = data.data.datasets;
-	chart_out.update();
+	$.get( "/public/home/chart_build/"+ $("#slc_soort").val()+"/"+ $("#slc_weergave").val(), function(response) {
+		chart_out.data.labels = response.data.labels;
+		chart_out.data.datasets = response.data.datasets;
+		chart_out.update();
+	})
 }
 		// ui interaction
 // dropdowns
-$('select[id=slc_soort]').change(function () {
-    var value = $(this).val();
-	$.get( "/public/home/chart_build/"+ value, function(response) {
-		graph_update(response);
-	})
+$('select').change(function () {
+	graph_update();
 });
 	</script>
 @endsection

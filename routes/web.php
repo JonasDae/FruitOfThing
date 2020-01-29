@@ -16,7 +16,7 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home'); //give route a name so it can be addressed from a view
 Route::redirect('/home', '/');
 
-Route::get('/home/chart_build/{fruittype}', 'HomeController@chart_build')->name('home.chart_build');
+Route::get('/home/chart_build/{fruittype}/{date_display}', 'HomeController@chart_build')->name('home.chart_build');
 
 Route::get('/modules', 'ModuleController@index')->name('modules.index');
 Route::get('/modules/create', 'ModuleController@create')->name('modules.create');
