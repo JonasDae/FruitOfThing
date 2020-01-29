@@ -11,6 +11,8 @@ use App\Module;
 use Illuminate\Http\Request;
 use stdClass;
 
+
+
 class HomeController extends Controller
 {
 	private function chart_dataset($label, $axis, $type, $color, $order, $data)
@@ -21,15 +23,43 @@ class HomeController extends Controller
 		$out->data = $data;
 		$out->type = $type;
 		$out->borderColor = $color;
-		$out->fill = $color;
+		$out->backgroundColor = $color;
 		$out->hoverBorderWidth = 3;
 		$out->hoverBorderColor = $color;
 		$out->order = $order;
 		return $out;
 	}
-	private function chart_build()
+	private function sort_measurements($measurements, $fruittype)
 	{
-        $measurements = Measurement::get();
+		$out = [];
+
+		for($i=0; $i < count($measurements); $i++)
+		{
+			if(		$measurements[$i]->module->field->fruit_type->id == $fruittype)
+			/*
+			   && 	$measurements[$i]->measure_date < enddate
+			   && 	$measurements[$i]->measure_date > $startdate)
+			)
+			*/
+			{
+				array_push($out, $measurements[$i]);
+			}
+		}
+		return $out;
+	}
+	public function chart_build($fruittype)
+	{
+$graph_colors = [
+		"#FF0000",
+		"#00FF00",
+		"#0000FF",
+		"#FFFF00",
+		"#00FFFF",
+		"#FAFAFA",
+	];
+		$measurements = Measurement::get();
+		$measurements = $this->sort_measurements($measurements, $fruittype);
+
         $sensors = Sensor::get();
 
 		$out = new stdClass();
@@ -77,26 +107,26 @@ class HomeController extends Controller
 				
 			}
 //			$sensor_data[$sensor_name][];
-			$out->data->datasets[$i] = $this->chart_dataset($sensor_name, "axis1", "bar", "#FF00FF", 3, $data_out);
+			$out->data->datasets[$i] = $this->chart_dataset($sensor_name, "axisleft", "bar", $graph_colors[$i], 3, $data_out);
 			$i++;
 		}
 		$out->data->labels = $sensor_date;
 
 
-		return $out;
+		return response()->json($out);
 	}
     public function index()
     {
         //get measurements & fruit_types
         $notifications = Notification::get()->sortByDesc('send_date');
-        $measurements = Measurement::get();
+        $measurements = Measurement::get()->sortByDesc('measure_date');
         $fruit_types = Fruit_type::get();
 
         return view('home', array(
             'notifications' => $notifications,
             'measurements' => $measurements,
             'fruit_types' => $fruit_types,
-            'chart_data' => $this->chart_build(),
+//            'chart_data' => $this->chart_build(-1),
         ));
     }
 }

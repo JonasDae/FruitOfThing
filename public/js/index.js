@@ -1,3 +1,4 @@
+/*
 // defines
 const DATASET_DENDRO = 0;
 const DATASET_WATER = 1;
@@ -29,13 +30,6 @@ var date_low;
 var date_high;
 var data_measure_filtered = [];
 
-/*
-unchanged:
-	id
-	fruit_type
-	date_time
-	module_id
-*/
 
 function view_of_year(date, view) {
     if (view == "hour") {
@@ -71,14 +65,14 @@ function filter_view(view) {
     while (objects.length > 0) {
         cur_view = view_of_year(objects[0].date_time, view);
 
-        /* get all objects from the same view */
+        / get all objects from the same view /
         $.each(objects, function (index, element) {
             if (view_of_year(element.date_time, view) == cur_view) {
                 cur_view_objects.push(element);
             }
         });
 
-        /* get the average of all objects in cur_view_objects */
+        / get the average of all objects in cur_view_objects /
         var cur_object_values = [[]]; //for all values from all objects in the same view window
         var cur_object = []; //for the average calculated value of above multidimentional array
         var fields = ["id", "date_time", "module_id", "module_name", "fruit_type_id"]; //fields to be excluded from average calculation
@@ -107,7 +101,7 @@ function filter_view(view) {
             cur_object[key] = sum / cur_object_values[key].length;
         }
 
-        /* Push object to out and cleanup variables */
+        / Push object to out and cleanup variables /
         out.push(cur_object);
         cur_view_objects = []; //empty view window
     }
@@ -182,7 +176,7 @@ $('input[id=dte_end]').change(function () {
 });
 
 // init chart
-/*
+/
 var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
 var chart_out = new Chart(cnv_graph, {
     type: 'bar',
@@ -257,7 +251,7 @@ var chart_out = new Chart(cnv_graph, {
         }
     }
 });
-*/
+/
 
 // ajax
 var BASE_URL = "https://floriandh.sinners.be/pcfruit/";
@@ -508,3 +502,4 @@ fetch_data_measure();
 fill_select_soort();
 fill_notifications();
 ui_init();
+*/

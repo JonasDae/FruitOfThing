@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Measurement extends Model
 {
     public function module() {
-        return $this->hasOne(Module::class);
+        return $this->belongsTo(Module::class);
     }
 
     public function module_sensor() {
