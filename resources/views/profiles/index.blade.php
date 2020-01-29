@@ -8,20 +8,19 @@
                 <i class="fas fa-user-circle h-75 w-75"></i>
             </div>
             <div class="col-lg-8 col-md-6 col-12">
-                <form action="{{ route('profile.update') }}" class="p-3">
-
-                    <input type="hidden" name="token" value="{{ $token }}">
-
+                <form action="{{ route('profile.update') }}" method="post" class="p-3">
+                    @csrf
+                    @method('PATCH') {{--PATCH to update an existing source (method="patch" won't work so we do it this way)--}}
                     <div class="form-group row">
                         <label for="name" class="col-md-4 col-form-label">Naam</label>
                         <div class="col-md-6">
-                            <input id="name" type="text" class="form-control" name="name" value="{{ $profile->name }}" required autocomplete="name" autofocus>
+                            <input id="name" type="text" class="form-control" name="name" value="{{ old('name') || $profile->name }}" required autocomplete="name" autofocus>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="email" class="col-md-4 col-form-label">E-Mail</label>
                         <div class="col-md-6">
-                            <input id="email" type="email" class="form-control" name="email @error('email') is-invalid @enderror" value="{{ $profile->email }}" required autocomplete="email">
+                            <input id="email" type="email" class="form-control" name="email @error('email') is-invalid @enderror" value="{{ old('email') || $profile->email }}" required autocomplete="email">
                             @error('email')
                             <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

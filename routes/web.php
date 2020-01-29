@@ -26,4 +26,5 @@ Route::get('/fruit_types', 'Fruit_typeController@index')->name('fruits');
 
 Route::get('/sensors', 'SensorController@index')->name('sensors');
 
-Route::get('/profile', 'ProfileController@index')->name('profile');
+Route::get('/profile', 'ProfileController@index')->name('profile.index');
+Route::patch('/profile', 'ProfileController@update')->name('profile.update');

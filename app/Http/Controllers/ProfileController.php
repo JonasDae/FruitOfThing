@@ -20,9 +20,12 @@ class ProfileController extends Controller
         $profile = Auth::user();
         $users = User::get();
 
-        return view('profile', array(
-            'profile' => $profile,
-            'users' => $users,
-        ));
+        return view('profiles.index', compact('profile', 'users'));
+    }
+
+    public function edit(User $user)
+    {
+        dd($user);
+        return view('profiles.edit', compact('user'));
     }
 }
