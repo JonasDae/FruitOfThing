@@ -29,8 +29,15 @@ class HomeController extends Controller
 		$out->order = $order;
 		return $out;
 	}
-	private function sort_measurements($measurements, $fruittype)
+	private function sort_measurements($measurements, $fruittype, $date_display)
 	{
+		$date_format = [
+				"Y/m/d H:00",
+				"Y/m/d",
+				"Y \w\k W",
+				"Y/m",
+				"Y",
+			];
 		$out = [];
 
 		for($i=0; $i < count($measurements); $i++)
@@ -42,25 +49,27 @@ class HomeController extends Controller
 			)
 			*/
 			{
+				$date = new \DateTime($measurements[$i]->measure_date);
+				$measurements[$i]->measure_date = $date->format($date_format[$date_display]);
 				array_push($out, $measurements[$i]);
 			}
 		}
 		return $out;
 	}
-	public function chart_build($fruittype)
+	public function chart_build($fruittype, $date_display)
 	{
-$graph_colors = [
-		"#FF0000",
-		"#00FF00",
-		"#0000FF",
-		"#FFFF00",
-		"#00FFFF",
-		"#FAFAFA",
-	];
-		$measurements = Measurement::get();
-		$measurements = $this->sort_measurements($measurements, $fruittype);
+		$graph_colors = [
+				"#FF0000",
+				"#00FF00",
+				"#0000FF",
+				"#FFFF00",
+				"#00FFFF",
+				"#FAFAFA",
+			];
 
         $sensors = Sensor::get();
+		$measurements = Measurement::get();
+		$measurements = $this->sort_measurements($measurements, $fruittype, $date_display);
 
 		$out = new stdClass();
 		$out->type = 'bar';
@@ -106,7 +115,6 @@ $graph_colors = [
 				$j++;
 
 			}
-//			$sensor_data[$sensor_name][];
 			$out->data->datasets[$i] = $this->chart_dataset($sensor_name, "axisleft", "bar", $graph_colors[$i], 3, $data_out);
 			$i++;
 		}
