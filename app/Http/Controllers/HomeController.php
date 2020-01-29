@@ -8,6 +8,7 @@ use App\Sensor;
 use App\Module_sensor;
 use App\Notification;
 use App\Module;
+use App\Sensor_added_value;
 use Illuminate\Http\Request;
 use stdClass;
 
@@ -129,7 +130,6 @@ class HomeController extends Controller
         $notifications = Notification::get()->sortByDesc('send_date');
         $measurements = Measurement::get()->sortByDesc('measure_date');
         $fruit_types = Fruit_type::get();
-
 
         return view('home', array(
             'notifications' => $notifications,

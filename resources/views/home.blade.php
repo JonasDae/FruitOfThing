@@ -94,7 +94,7 @@
                                     <tr>
                                         <td>{{ $measurement->measure_date }}</td>
                                         <td>{{ $measurement->module_id }}</td>
-                                        <td>@if ($measurement->module_sensor->sensor->name_alias == "Vruchtgrootte") {{ $measurement->value }} {{ $measurement->module_sensor->sensor->measuring_unit }}@endif</td>
+                                        <td>@if ($measurement->module_sensor->sensor->name_alias == "Vruchtgrootte") {{ $measurement->value}} {{ $measurement->module_sensor->sensor->measuring_unit }}@endif</td>
                                         <td>{{ $measurement->module_sensor->sensor->name_alias }}</td>
                                         <td>{{ $measurement->value }} {{$measurement->module_sensor->sensor->measuring_unit }}</td>
                                     </tr>
