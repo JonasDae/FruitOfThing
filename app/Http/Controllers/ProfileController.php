@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -23,9 +24,16 @@ class ProfileController extends Controller
         return view('profiles.index', compact('profile', 'users'));
     }
 
-    public function edit(User $user)
+    public function update(Request $request)
     {
-        dd($user);
-        return view('profiles.edit', compact('user'));
+        $user = Auth::user();
+
+        $data = $request->validate(array(
+            'name' => array('required', 'string', 'max:255'),
+        ));
+        
+        $user->update($data);
+
+        return redirect(route('profile.index'));
     }
 }
