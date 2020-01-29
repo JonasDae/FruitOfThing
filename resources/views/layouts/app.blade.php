@@ -32,17 +32,20 @@
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a href="{{ route('home') }}" class="nav-link">{{ __('Home') }}</a>
+                    <a href="{{ route('home') }}" class="nav-link{{ Request::path() == '/' ? ' active' : '' }}">{{ __('Home') }}</a>
                 </li>
                 @auth
                     <li class="nav-item">
-                        <a href="{{ route('modules') }}" class="nav-link">{{ __('Modules') }}</a>
+                        <a href="{{ route('fruits') }}" class="nav-link{{ Request::path() == 'fruit_types' ? ' active' : '' }}">{{ __('Fruitsoorten') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('fields') }}" class="nav-link">{{ __('Velden') }}</a>
+                        <a href="{{ route('fields') }}" class="nav-link{{ Request::path() == 'fields' ? ' active' : '' }}">{{ __('Velden') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('sensors') }}" class="nav-link">{{ __('Sensoren') }}</a>
+                        <a href="{{ route('modules') }}" class="nav-link{{ Request::path() == 'modules' ? ' active' : '' }}">{{ __('Modules') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('sensors') }}" class="nav-link{{ Request::path() == 'sensors' ? ' active' : '' }}">{{ __('Sensoren') }}</a>
                     </li>
                 @endauth
             </ul>
@@ -67,18 +70,16 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('profile') }}">{{ __('Profiel') }}</a>
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
                             </a>
-
                             <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                   style="display: none;">
                                 @csrf
                             </form>
-
-                            <a class="dropdown-item" href="{{ route('profile') }}">{{ __('Profiel') }}</a>
                         </div>
                     </li>
                 @endguest
@@ -88,16 +89,20 @@
 </header>
 
 <div id="content">
-    <div class="container-fluid">
-        @yield('content')
-    </div>
+    @yield('content')
 </div>
 
-<footer id="div_foot">
+<footer>
     <p>&copy; Copyright {{ date('Y') }} Fruit Of Things</p>
 </footer>
 
 <script src="{{ asset('js/index.js') }}" defer></script>
+<script>
+    //enable popovers in the modules page
+    $(function () {
+        $('[data-toggle="popover"]').popover();
+    })
+</script>
 
 </body>
 </html>

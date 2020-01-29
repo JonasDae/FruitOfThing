@@ -8,6 +8,7 @@
 require('./popper.min');
 require('./bootstrap');
 require('./chart.min');
+require('./all.min'); //Font Awesome
 
 window.Vue = require('vue');
 
