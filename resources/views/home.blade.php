@@ -85,18 +85,16 @@
                                     <th scope="col" width=auto> Datum</th>
                                     <th scope="col"> Module</th>
                                     <th scope="col"> Grootte</th>
-                                    <th scope="col"> Bodemvochtigheid</th>
-                                    <th scope="col"> Temperatuur</th>
-                                    <th scope="col"> Luchtvochtigheid</th>
+                                    <th scope="col"> Type</th>
+                                    <th scope="col"> Waarde</th>
                                 </tr>
                                 </thead>
                                 <tbody id="data_table_body">
                                 @foreach($measurements as $measurement)
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td>{{ $measurement->value }}</td>
-                                        <td></td>
+                                        <td>{{ $measurement->measure_date }}</td>
+                                        <td>{{ $measurement->module_id }}</td>
+                                        <td>{{ $measurement->module_sensor->sensor->name_alias }}</td>
                                         <td></td>
                                         <td></td>
                                     </tr>
