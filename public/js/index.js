@@ -503,3 +503,8 @@ fill_select_soort();
 fill_notifications();
 ui_init();
 */
+
+//enable popovers in the modules page
+$(function () {
+    $('[data-toggle="popover"]').popover();
+});
