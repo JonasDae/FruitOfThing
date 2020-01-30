@@ -29,6 +29,10 @@ a, a:hover, a:focus {
     color: #007b5e;
 }
 
+.record:hover {
+    background-color: #eee;
+}
+
 /* HEADER */
 .navbar{
 	background-color: white;
@@ -106,11 +110,6 @@ table, td {
 .severity-warning{
     background-color: #d69e37;
     color: white;
-}
-
-/* MODULES */
-.module:hover {
-    background-color: #eee;
 }
 
 /* PROFILE */

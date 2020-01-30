@@ -36,16 +36,16 @@
                 </li>
                 @auth
                     <li class="nav-item">
-                        <a href="{{ route('fruits') }}" class="nav-link{{ Request::path() == 'fruit_types' ? ' active' : '' }}">{{ __('Fruitsoorten') }}</a>
+                        <a href="{{ route('fruits.index') }}" class="nav-link{{ Request::path() == 'fruit_types' ? ' active' : '' }}">{{ __('Fruitsoorten') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('fields') }}" class="nav-link{{ Request::path() == 'fields' ? ' active' : '' }}">{{ __('Velden') }}</a>
+                        <a href="{{ route('fields.index') }}" class="nav-link{{ Request::path() == 'fields' ? ' active' : '' }}">{{ __('Velden') }}</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('modules.index') }}" class="nav-link{{ Request::path() == 'modules' ? ' active' : '' }}">{{ __('Modules') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('sensors') }}" class="nav-link{{ Request::path() == 'sensors' ? ' active' : '' }}">{{ __('Sensoren') }}</a>
+                        <a href="{{ route('sensors.index') }}" class="nav-link{{ Request::path() == 'sensors' ? ' active' : '' }}">{{ __('Sensoren') }}</a>
                     </li>
                 @endauth
             </ul>
