@@ -30,7 +30,10 @@ Route::post('/fruit_types', 'Fruit_typeController@store')->name('fruits.store');
 Route::patch('/fruit_types', 'Fruit_typeController@update')->name('fruits.update');
 Route::delete('/fruit_types/{fruit_type}', 'Fruit_typeController@destroy')->name('fruits.destroy');
 
-Route::get('/sensors', 'SensorController@index')->name('sensors');
+Route::get('/sensors', 'SensorController@index')->name('sensors.index');
+Route::patch('/sensors', 'SensorController@update')->name('sensors.update');
+Route::delete('/sensors/{sensor}', 'SensorController@destroy')->name('sensors.destroy');
+
 
 Route::get('/profile', 'ProfileController@index')->name('profile.index');
 Route::patch('/profile', 'ProfileController@update')->name('profile.update');
