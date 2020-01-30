@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container pt-3">
+    <div class="container-lg pt-3">
         <div class="row mt-3 mx-0 font-weight-bold d-none d-md-flex">
             <div class="col-lg-2 col-md-2">Naam</div>
             <div class="col-lg-2 col-md-2">Veld <a href="{{ route('fields.index') }}"><i class="fas fa-external-link-alt"></i></a>
@@ -10,7 +10,7 @@
             <div class="col-lg-1 col-md-1">Batterij</div>
             <div class="col-lg-2 col-md-2">Uptime</div>
             <div class="col-lg-2 col-md-2">Laatste connectie</div>
-            <div class="col-lg-1 col-md-1"></div>
+            <div class="col-md-1"></div>
         </div>
         <hr class="mb-0">
 
@@ -23,10 +23,7 @@
                             <span class="font-weight-bolder">{{ $module->name }}</span>
                         </div>
                         <div class="col-lg-2 col-md-2 col-4">
-                            <a href="javascript:void" data-toggle="popover" title="{{ $module->field->name }}"
-                               data-html="true"
-                               data-trigger="hover"
-                               data-content="Type: {{ $module->field->fruit_type->name }}<br>
+                            <a href="javascript:void" data-toggle="popover" title="{{ $module->field->name }}" data-html="true" data-trigger="hover" data-content="Type: {{ $module->field->fruit_type->name }}<br>
                        Adres: {{ $module->field->adres }}<br>
                        Postcode: {{ $module->field->postcode }}">{{ $module->field->name }}
                             </a>
@@ -35,8 +32,7 @@
                             {{ $module->phone_number }}
                         </div>
                         <div class="col-lg-1 col-md-1 col-4 text-md-left text-right">
-                            <span class="d-md-none"><i
-                                    class="fas fa-battery-full"></i> </span>{{ $module->battery_level }}%
+                            <span class="d-md-none"><i class="fas fa-battery-full"></i> </span>{{ $module->battery_level }}%
                         </div>
                         <div class="col-lg-2 col-md-2 col-auto">
                             {{ $module->uptime }}
@@ -45,7 +41,7 @@
                             {{ date_create_from_format('Y-m-d H:i:s', $module->last_connection)->format('d/m/Y H:i:s') }}
                         </div>
                         {{--CRUD--}}
-                        <div class="col-lg-1 col-md-1 col-6">
+                        <div class="col-lg-1 col-md-1 col-12 text-md-center text-right">
                             <a href="javascript:void" data-toggle="collapse" data-target="#collapse{{ $module->id }}"
                                aria-expanded="true" aria-controls="collapse{{ $module->id }}"><i
                                     class="fas fa-edit text-warning mx-1"></i></a>
