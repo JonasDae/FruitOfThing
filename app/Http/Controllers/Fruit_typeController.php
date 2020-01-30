@@ -21,10 +21,6 @@ class Fruit_typeController extends Controller
         return view('fruits.index', compact('fruit_types'));
     }
 
-    public function create() {
-        return view('fruits.create');
-    }
-
     public function store(Request $request) {
         $data = $request->validate(array(
             'name' => array('required', 'string', 'max:255'),

@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use App\Fruit_type;
 use App\Measurement;
 use App\Sensor;
-use App\Module_sensor;
 use App\Notification;
-use App\Module;
 use App\Sensor_added_value;
-use Illuminate\Http\Request;
 use stdClass;
 
 
