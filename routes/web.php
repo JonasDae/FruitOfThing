@@ -26,6 +26,7 @@ Route::get('/fields/create', 'FieldController@create')->name('fields.create');
 
 Route::get('/fruit_types', 'Fruit_typeController@index')->name('fruits.index');
 Route::get('/fruit_types/create', 'Fruit_typeController@create')->name('fruits.create');
+Route::post('/fruit_types', 'Fruit_typeController@store')->name('fruits.store');
 
 Route::get('/sensors', 'SensorController@index')->name('sensors');
 
