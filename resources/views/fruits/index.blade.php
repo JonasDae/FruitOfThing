@@ -50,8 +50,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <a href="javascript:void"
-                                       onclick="document.getElementById('form{{ $fruit_type->id }}').submit();""><i
-                                        class='far fa-trash-alt text-danger mx-1'></i></a>
+                                       onclick="confirm('\'{{ $fruit_type->name }}\' verwijderen?') ? document.getElementById('form{{ $fruit_type->id }}').submit() : ''"><i class='far fa-trash-alt text-danger mx-1'></i></a>
                                 </form>
                             </div>
                         </div>

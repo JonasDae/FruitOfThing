@@ -10,13 +10,14 @@
     <title>{{ config('app.name', 'Fruit of Things') }}</title>
 
     <!-- Scripts --> {{--app.js includes jQuery, Popper, Bootstrap and chart.js (check resources > js > app.js)--}}
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Styles --> {{--app.css includes bootstrap (check resources > css > app.css)--}}
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/index.css') }}" rel="stylesheet">
 </head>
 <body>
+<div id='app'></div>{{--VUE error fix--}}
 <header>
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <a class="navbar-brand" href="https://www.pcfruit.be/nl">
@@ -97,12 +98,6 @@
 </footer>
 
 <script src="{{ asset('js/index.js') }}" defer></script>
-<script>
-    //enable popovers in the modules page
-    $(function () {
-        $('[data-toggle="popover"]').popover();
-    })
-</script>
 
 </body>
 </html>
