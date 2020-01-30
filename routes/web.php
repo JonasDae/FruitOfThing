@@ -21,9 +21,12 @@ Route::get('/modules', 'ModuleController@index')->name('modules.index');
 Route::patch('/modules', 'ModuleController@update')->name('modules.update');
 Route::delete('/modules/{module}', 'ModuleController@destroy')->name('modules.destroy');
 
-Route::get('/fields', 'FieldController@index')->name('fields');
+Route::get('/fields', 'FieldController@index')->name('fields.index');
+Route::get('/fields/create', 'FieldController@create')->name('fields.create');
 
-Route::get('/fruit_types', 'Fruit_typeController@index')->name('fruits');
+Route::get('/fruit_types', 'Fruit_typeController@index')->name('fruits.index');
+Route::get('/fruit_types/create', 'Fruit_typeController@create')->name('fruits.create');
+Route::post('/fruit_types', 'Fruit_typeController@store')->name('fruits.store');
 
 Route::get('/sensors', 'SensorController@index')->name('sensors.index');
 Route::patch('/sensors', 'SensorController@update')->name('sensors.update');

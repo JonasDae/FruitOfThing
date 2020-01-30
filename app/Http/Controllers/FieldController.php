@@ -18,8 +18,6 @@ class FieldController extends Controller
         //get fields
         $fields = Field::get();
 
-        return view('fields', array(
-            'fields' => $fields,
-        ));
+        return view('fields.index', compact('fields'));
     }
 }
