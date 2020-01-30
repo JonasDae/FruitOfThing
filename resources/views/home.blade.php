@@ -84,9 +84,9 @@
                                 <tr>
                                     <th scope="col" width=auto> Datum</th>
                                     <th scope="col"> Module</th>
-                                    <th scope="col"> Grootte</th>
                                     <th scope="col"> Type</th>
                                     <th scope="col"> Waarde</th>
+                                    <th scope="col"> Huidige vruchtgrootte</th>
                                 </tr>
                                 </thead>
                                 <tbody id="data_table_body">
@@ -94,9 +94,9 @@
                                     <tr>
                                         <td>{{ $measurement->measure_date }}</td>
                                         <td>{{ $measurement->module_id }}</td>
-                                        <td>@if ($measurement->module_sensor->sensor->name_alias == "Vruchtgrootte") {{ $measurement->value}} {{ $measurement->module_sensor->sensor->measuring_unit }}@endif</td>
                                         <td>{{ $measurement->module_sensor->sensor->name_alias }}</td>
                                         <td>{{ $measurement->value }} {{$measurement->module_sensor->sensor->measuring_unit }}</td>
+                                        <td>@if ($measurement->module_sensor->sensor->name == "Dendrometer") {{ $measurement->value}} {{ $measurement->module_sensor->sensor->measuring_unit }}@endif</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -150,7 +150,7 @@
 	graph_update();
 function graph_update()
 {
-	$.get( "/public/home/chart_build/"+ $("#slc_soort").val()+"/"+ $("#slc_weergave").val(), function(response) {
+	$.get( "/FruitOfThing/public/home/chart_build/"+ $("#slc_soort").val()+"/"+ $("#slc_weergave").val(), function(response) {
 		chart_out.data.labels = response.data.labels;
 		chart_out.data.datasets = response.data.datasets;
 		chart_out.update();
