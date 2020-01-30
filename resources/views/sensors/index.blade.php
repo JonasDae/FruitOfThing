@@ -7,7 +7,7 @@
             <div class="col">Naam</div>
             <div class="col">Alias</div>
             <div class="col">Eenheid</div>
-            <div class="col">Kleur</div>
+            <div class="col-1">Kleur</div>
             <div class="col">Diagram type</div>
             <div class="col-1 text-right">
                 <a href="javascript:void" data-toggle="collapse" data-target="#collapseNew" aria-expanded="true" aria-controls="collapseNew">
@@ -30,8 +30,8 @@
                         <div class="col-lg col-md col-12">
                             <input name="measuring_unit" type="text" class="form-control">
                         </div>
-                        <div class="col-lg col-md col-12">
-                            <input name="color" type="color" class="form-control" value="#000000" required>   
+                        <div class="col-lg-1 col-md-1 col-12">
+                            <input name="color" type="color" class="form-control" value="#FF0000" required>   
                         </div>
                         <div class="col-lg col-md col-12">
                             <select name="graph_type" id="graph_type" class="form-control">
@@ -63,8 +63,8 @@
                 <div class="col">
                     {{ $sensor->measuring_unit }}
                 </div>
-                <div class="col">
-                    {{ $sensor->color }}
+                <div class="col-1">
+                    <div style="background-color: {{$sensor->color}}; width: 100%; height: 20px"></div>
                 </div>
                 <div class="col">
                     {{ $sensor->graph_type }}
@@ -109,8 +109,8 @@
                                     class="form-control"
                                     required>
                         </div>
-                        <div class="col-lg col-md col-12">
-                            <input name="color" type="text" value="{{ old('color') ?? $sensor->color }}"
+                        <div class="col-lg-1 col-md-1 col-12">
+                            <input name="color" type="color" value="{{ old('color') ?? $sensor->color }}"
                                     class="form-control"
                                     required>
                         </div>
