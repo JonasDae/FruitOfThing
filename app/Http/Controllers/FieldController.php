@@ -58,7 +58,7 @@ class FieldController extends Controller
         $field->adres = $data['adres'];
         $field->postcode = $data['postcode'];
         $field->timestamps = false; //don't update the updated_at column on save()
-        $field->save();
+        $field->update();
 
         return redirect(route('fields.index'));
     }
