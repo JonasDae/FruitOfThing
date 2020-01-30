@@ -33,13 +33,14 @@ class SensorController extends Controller
             'graph_type' => array('required'),
         ));
 
+        $sensor = new Sensor();
         $sensor->name = $data['name'];
         $sensor->name_alias = $data['name_alias'];
         $sensor->measuring_unit = $data['measuring_unit'];
         $sensor->color = $data['color'];
         $sensor->graph_type = $data['graph_type'];
         $sensor->timestamps = false;
-        $sensor->create();
+        $sensor->save();
 
         return redirect(route('sensors.index'));
     }
@@ -61,7 +62,7 @@ class SensorController extends Controller
         $sensor->color = $data['color'];
         $sensor->graph_type = $data['graph_type'];
         $sensor->timestamps = false;
-        $sensor->save();
+        $sensor->update();
 
         return redirect(route('sensors.index'));
     }
