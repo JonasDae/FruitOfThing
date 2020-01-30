@@ -37,4 +37,23 @@ class Fruit_typeController extends Controller
 
         return redirect(route('fruits.index'));
     }
+
+    public function update(Request $request) {
+        $fruit_type = Fruit_type::find($request->get('id'));
+
+        $data = $request->validate(array(
+            'name' => array('required', 'string', 'max:255'),
+        ));
+
+        $fruit_type->name = $data['name'];
+        $fruit_type->timestamps = false; //don't update the updated_at column on save()
+        $fruit_type->save();
+
+        return redirect(route('fruits.index'));
+    }
+
+    public function destroy(Fruit_type $fruit_type) {
+        $fruit_type->delete();
+        return redirect(route('fruits.index'));
+    }
 }

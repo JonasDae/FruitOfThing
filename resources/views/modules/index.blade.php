@@ -4,7 +4,7 @@
     <div class="container pt-3">
         <div class="row mt-3 mx-0 font-weight-bold d-none d-md-flex">
             <div class="col-lg-2 col-md-2">Naam</div>
-            <div class="col-lg-2 col-md-2">Veld <a href="{{ route('fields') }}"><i class="fas fa-external-link-alt"></i></a>
+            <div class="col-lg-2 col-md-2">Veld <a href="{{ route('fields.index') }}"><i class="fas fa-external-link-alt"></i></a>
             </div>
             <div class="col-lg-2 col-md-2">GSM nummer</div>
             <div class="col-lg-1 col-md-1">Batterij</div>
@@ -16,7 +16,7 @@
 
         <div id="moduleAccordion">
             @foreach ($modules as $module)
-                <div class="module">
+                <div class="record">
                     <div class="row py-3 mx-0">
                         <div class="col-lg-2 col-md-2 col-12">
                             <span class="font-weight-bolder">{{ $module->name }}</span>
