@@ -11,7 +11,7 @@
                 <div class="col-lg-1 col-md-1 text-right">Postcode</div>
                 <div class="col-1 text-right">
                     <a href="javascript:void" data-toggle="collapse" data-target="#collapseNew" aria-expanded="true"
-                       aria-controls="collapseNew"><i class="fas fa-plus-circle text-success mx-1"></i></a>
+                       aria-controls="collapseNew"><i class="fas fa-plus-circle text-success mx-3"></i></a>
                 </div>
             </div>
 
