@@ -11,7 +11,7 @@
         <div class="col">Grafiek type</div>
         <div class="col-1 text-right">
             <a href="javascript:void" data-toggle="collapse" data-target="#collapseNew" aria-expanded="true" aria-controls="collapseNew">
-                <i class="fas fa-plus-circle text-succes mx-1"></i>
+                <i class="fas fa-plus-circle text-success mx-1"></i>
             </a>
         </div>
     </div>
@@ -55,7 +55,7 @@
             </div>
         </div>
 </div>
-    
+
     <hr class="mb-0"/>
     <div id="sensorAccordion">
         @foreach ($sensors as $sensor)
