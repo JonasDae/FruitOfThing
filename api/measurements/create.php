@@ -3,7 +3,7 @@ require '../connect.php';
 
 $postdata = file_get_contents("php://input");
 
-$postdata = {'module_id: 1, battery_level: 34, module_sensor_id, value, measure_date'}
+// $postdata = '{"module_id": 1, "battery_level": 34, "module_sensor_id": 3, "value": 20, "measure_date": "2020-01-30 10:20:20"}';
 
 if(isset($postdata) && !empty($postdata))
 {    
@@ -32,10 +32,10 @@ if(isset($postdata) && !empty($postdata))
     if(sql_query($con, $sql)) // Store succes
     {
         // Update module last_connection
-        $sql = "UPDATE modules SET last_connection = '$connection_date' battery_level = '$battery_level' WHERE id = '{$module_id}' LIMIT 1";
+        $sql = "UPDATE modules SET last_connection = '$connection_date', battery_level = '$battery_level' WHERE id = '{$module_id}' LIMIT 1";
         
         if (sql_query($con, $sql)) {
-            // echo "Record updated successfully";
+            // echo "Module updated successfully";
         } else {
             echo "Error updating record: " . mysqli_error($con);
         }
@@ -44,7 +44,7 @@ if(isset($postdata) && !empty($postdata))
         $sql = "UPDATE module_sensors SET last_connection = '$connection_date' WHERE id = '{$module_sensor_id}' LIMIT 1";
         
         if (sql_query($con, $sql)) {
-            // echo "Record updated successfully";
+            // echo "Module_sensor updated successfully";
         } else {
             echo "Error updating record: " . mysqli_error($con);
         }

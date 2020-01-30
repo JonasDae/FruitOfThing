@@ -38,7 +38,7 @@
                                     required>
                         </div>
                         <div class="col-lg col-md col-12">
-                            <input name="color" type="text" value=""
+                            <input name="color" type="color" value=""
                                     class="form-control"
                                     required>
                         </div>
@@ -111,14 +111,16 @@
                                     required>
                         </div>
                         <div class="col-lg col-md col-12">
-                            <input name="color" type="text" value="{{ old('color') ?? $sensor->color }}"
-                                    class="form-control"
+                            <input name="color" type="color" value="{{ old('color') ?? $sensor->color }}"
+                                    
                                     required>
                         </div>
                         <div class="col-lg col-md col-12">
-                            <input name="graph_type" type="text" value="{{ old('graph_type') ?? $sensor->graph_type }}"
-                                    class="form-control"
-                                    required>
+                            <label for="graph_type">Diagram type</label>
+                            <select name="graph_type" id="graph_type" class="form-control">
+                                <option value="line">Lijn diagram</option>
+                                <option value="bar">Staaf diagram</option>
+                            </select>
                         </div>
                         <div class="col-lg-1 col-md-1 col text-right">
                             <button type="submit" class="btn btn-success">Update</button>
