@@ -130,12 +130,10 @@ class HomeController extends Controller
         $measurements = Measurement::get()->sortByDesc('measure_date');
         $fruit_types = Fruit_type::get();
 
-
         return view('home', array(
             'notifications' => $notifications,
             'measurements' => $measurements,
             'fruit_types' => $fruit_types,
-//            'chart_data' => $this->chart_build(-1),
         ));
     }
 }
