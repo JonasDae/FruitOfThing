@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Sensor;
+use App\User;
 use Illuminate\Http\Request;
 
 class SensorController extends Controller
@@ -18,8 +19,35 @@ class SensorController extends Controller
         //get sensors
         $sensors = Sensor::get();
 
-        return view('sensor', array(
+        return view('sensors.index', array(
             'sensors' => $sensors,
         ));
+    }
+
+    public function update(Request $request) {
+        $sensor = Sensor::find($request->get('id'));
+
+        $data = $request->validate(array(
+            'name' => array('required', 'string', 'max:255'),
+            'name_alias' => array('required'),
+            'measuring_unit' => array(),
+            'color' => array('required'),
+            'graph_type' => array('required'),
+        ));
+
+        $sensor->name = $data['name'];
+        $sensor->name_alias = $data['name_alias'];
+        $sensor->measuring_unit = $data['measuring_unit'];
+        $sensor->color = $data['color'];
+        $sensor->graph_type = $data['graph_type'];
+        $sensor->timestamps = false;
+        $sensor->save();
+
+        return redirect(route('sensors.index'));
+    }
+
+    public function destroy(Sensor $sensor) {
+        $sensor->delete();
+        return redirect(route('sensors.index'));
     }
 }

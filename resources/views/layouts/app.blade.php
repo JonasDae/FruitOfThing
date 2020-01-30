@@ -45,7 +45,7 @@
                         <a href="{{ route('modules.index') }}" class="nav-link{{ Request::path() == 'modules' ? ' active' : '' }}">{{ __('Modules') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('sensors') }}" class="nav-link{{ Request::path() == 'sensors' ? ' active' : '' }}">{{ __('Sensoren') }}</a>
+                        <a href="{{ route('sensors.index') }}" class="nav-link{{ Request::path() == 'sensors' ? ' active' : '' }}">{{ __('Sensoren') }}</a>
                     </li>
                 @endauth
             </ul>
