@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Field;
 use App\Fruit_type;
-use App\Sensor;
 use Illuminate\Http\Request;
 
 class FieldController extends Controller
