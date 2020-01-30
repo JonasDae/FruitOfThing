@@ -48,7 +48,7 @@
         </div>
 
         <div id="fieldAccordion">
-            @foreach ($fields as $field)
+            @foreach ($fields as $key=>$field)
                 <div class="record">
                     {{--Rows--}}
                     <div class="row py-3 mx-0">
@@ -87,13 +87,13 @@
                                 <input type="hidden" name="id" value="{{ $field->id }}">
                                 <div class="row">
                                     <div class="col-lg-2 col-md-2 col-12">
-                                        <input id="name" name="name" type="text"
+                                        <input id="name{{$key}}" name="name" type="text"
                                                value="{{ old('name') ?? $field->name }}"
                                                class="form-control"
                                                required>
                                     </div>
                                     <div class="col-lg-2 col-md-2 col-12">
-                                        <select name="fruit_type" id="fruit_type" class="form-control">
+                                        <select name="fruit_type" id="fruit_type{{$key}}" class="form-control">
                                             @foreach($fruit_types as $fruit_type)
                                                 <option
                                                     value="{{ $fruit_type->id }}" {{ $field->fruit_type_id == $fruit_type->id ? 'selected' : '' }}>{{ $fruit_type->name }}</option>
@@ -101,13 +101,13 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-5 col-md-4 col-8">
-                                        <input id="adres" name="adres" type="text"
+                                        <input id="adres{{$key}}" name="adres" type="text"
                                                value="{{ old('adres') ?? $field->adres }}"
                                                class="form-control"
                                                required>
                                     </div>
                                     <div class="col-lg-2 col-md-2 col-4 text-right">
-                                        <input id="postcode" name="postcode" type="number"
+                                        <input id="postcode{{$key}}" name="postcode" type="number"
                                                value="{{ old('postcode') ?? $field->postcode }}"
                                                class="form-control"
                                                required>
