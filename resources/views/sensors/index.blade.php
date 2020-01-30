@@ -2,18 +2,60 @@
 
 @section('content')
 <div class="container pt-3">
-    <div class="row mt-3 mx-0 font-weight-bold d-none d-md-flex">
+<div id="sensorNewAccordion">
+<div class="row mt-3 mx-0 font-weight-bold">
         <div class="col">Naam</div>
         <div class="col">Alias</div>
         <div class="col">Eenheid</div>
         <div class="col">Kleur</div>
         <div class="col">Grafiek type</div>
         <div class="col-1 text-right">
-            <a href="javascript:void" data-toggle="collapse" data-target="" aria-expanded="true" aria-controls="">
-                <i class="fas fa-plus text-succes mx-1"></i>
+            <a href="javascript:void" data-toggle="collapse" data-target="#collapseNew" aria-expanded="true" aria-controls="collapseNew">
+                <i class="fas fa-plus-circle text-succes mx-1"></i>
             </a>
         </div>
     </div>
+    <div id="collapseNew" class="collapse" aria-labelledby="headingOne" data-parent="#sensorNewAccordion">
+            <div class="row mx-0 px-3">
+                <form action="{{ route('sensors.store') }}" method="post" class="w-100 mb-3">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="id" value="">
+                    <div class="row">
+                        <div class="col-lg col-md col-12">
+                            <input name="name" type="text" value=""
+                                    class="form-control"
+                                    required>
+                        </div>
+                        <div class="col-lg col-md col-12">
+                            <input name="name_alias" type="text" value=""
+                                    class="form-control"
+                                    required>
+                        </div>
+                        <div class="col-lg col-md col-12">
+                            <input name="measuring_unit" type="text" value=""
+                                    class="form-control"
+                                    required>
+                        </div>
+                        <div class="col-lg col-md col-12">
+                            <input name="color" type="text" value=""
+                                    class="form-control"
+                                    required>
+                        </div>
+                        <div class="col-lg col-md col-12">
+                            <input name="graph_type" type="text" value=""
+                                    class="form-control"
+                                    required>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col text-right">
+                            <button type="submit" class="btn btn-success">Opslaan</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>
+    
     <hr class="mb-0"/>
     <div id="sensorAccordion">
         @foreach ($sensors as $sensor)

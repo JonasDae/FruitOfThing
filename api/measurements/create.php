@@ -3,6 +3,8 @@ require '../connect.php';
 
 $postdata = file_get_contents("php://input");
 
+$postdata = {'module_id: 1, battery_level: 34, module_sensor_id, value, measure_date'}
+
 if(isset($postdata) && !empty($postdata))
 {    
     date_default_timezone_set('Europe/Brussels');
@@ -17,6 +19,7 @@ if(isset($postdata) && !empty($postdata))
     $value = doubleval(mysqli_real_escape_string($con, $request->value)); //double
     $measure_date = DateTime::createFromFormat('Y-m-d H:i:s', mysqli_real_escape_string($con, $request->measure_date))->format('Y-m-d H:i:s');
     // date("Y-m-d H:i:s", strtotime(mysqli_real_escape_string($con, $request->measure_date))); //dateTime   
+
 
     // Store measurement
     $sql = "INSERT INTO measurements (module_id, module_sensor_id, value, measure_date)

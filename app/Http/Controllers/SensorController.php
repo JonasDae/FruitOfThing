@@ -24,6 +24,26 @@ class SensorController extends Controller
         ));
     }
 
+    public function store(Request $request) {
+        $data = $request->validate(array(
+            'name' => array('required', 'string', 'max:255'),
+            'name_alias' => array('required'),
+            'measuring_unit' => array(),
+            'color' => array('required'),
+            'graph_type' => array('required'),
+        ));
+
+        $sensor->name = $data['name'];
+        $sensor->name_alias = $data['name_alias'];
+        $sensor->measuring_unit = $data['measuring_unit'];
+        $sensor->color = $data['color'];
+        $sensor->graph_type = $data['graph_type'];
+        $sensor->timestamps = false;
+        $sensor->create();
+
+        return redirect(route('sensors.index'));
+    }
+
     public function update(Request $request) {
         $sensor = Sensor::find($request->get('id'));
 
