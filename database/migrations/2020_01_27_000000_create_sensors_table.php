@@ -18,6 +18,8 @@ class CreateSensorsTable extends Migration
             $table->string('name');
             $table->string('name_alias')->nullable();
             $table->string('measuring_unit')->nullable();
+            $table->string('color');
+            $table->string('graph_type')->nullable();
         });
     }
 
