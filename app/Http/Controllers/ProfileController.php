@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -31,7 +30,7 @@ class ProfileController extends Controller
         $data = $request->validate(array(
             'name' => array('required', 'string', 'max:255'),
         ));
-        
+
         $user->update($data);
 
         return redirect(route('profile.index'));

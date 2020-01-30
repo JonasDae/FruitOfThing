@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Field;
 use App\Module;
-use App\User;
 use Illuminate\Http\Request;
 
 class ModuleController extends Controller
