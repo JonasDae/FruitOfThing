@@ -7,7 +7,7 @@
         </div>
         <hr class="mb-0">
 
-        <div id="moduleAccordion">
+        <div id="fruitAccordion">
             @foreach ($fruit_types as $fruit_type)
                 <div class="record">
                     {{--Rows--}}
@@ -29,7 +29,7 @@
                     </div>
                     {{--Accordions--}}
                     <div id="collapse{{ $fruit_type->id }}" class="collapse" aria-labelledby="headingOne"
-                         data-parent="#moduleAccordion">
+                         data-parent="#fruitAccordion">
                         <div class="row mx-0 px-3">
                             <form action="{{ route('fruits.update') }}" method="post" class="w-100 mb-3">
                                 @csrf

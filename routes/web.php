@@ -23,6 +23,9 @@ Route::delete('/modules/{module}', 'ModuleController@destroy')->name('modules.de
 
 Route::get('/fields', 'FieldController@index')->name('fields.index');
 Route::get('/fields/create', 'FieldController@create')->name('fields.create');
+Route::post('/fields', 'FieldController@store')->name('fields.store');
+Route::patch('/fields', 'FieldController@update')->name('fields.update');
+Route::delete('/fields/{field}', 'FieldController@destroy')->name('fields.destroy');
 
 Route::get('/fruit_types', 'Fruit_typeController@index')->name('fruits.index');
 Route::get('/fruit_types/create', 'Fruit_typeController@create')->name('fruits.create');

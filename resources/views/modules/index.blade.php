@@ -17,6 +17,7 @@
         <div id="moduleAccordion">
             @foreach ($modules as $module)
                 <div class="record">
+                    {{--Rows--}}
                     <div class="row py-3 mx-0">
                         <div class="col-lg-2 col-md-2 col-12">
                             <span class="font-weight-bolder">{{ $module->name }}</span>
@@ -43,6 +44,7 @@
                         <div class="col-lg-2 col-md-2 col-6">
                             {{ date_create_from_format('Y-m-d H:i:s', $module->last_connection)->format('d/m/Y H:i:s') }}
                         </div>
+                        {{--CRUD--}}
                         <div class="col-lg-1 col-md-1 col-6">
                             <a href="javascript:void" data-toggle="collapse" data-target="#collapse{{ $module->id }}"
                                aria-expanded="true" aria-controls="collapse{{ $module->id }}"><i
@@ -54,6 +56,7 @@
                             </form>
                         </div>
                     </div>
+                    {{--Accordions--}}
                     <div id="collapse{{ $module->id }}" class="collapse" aria-labelledby="headingOne"
                          data-parent="#moduleAccordion">
                         <div class="row mx-0 px-3">

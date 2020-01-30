@@ -46,7 +46,7 @@ class ModuleController extends Controller
 
         $data = $request->validate(array(
             'name' => array('required', 'string', 'max:255'),
-            'field' => array('required'),
+            'field' => array('required', 'exists:fields'),
             'phone_number' => array('required', 'min:10', 'max:11'),
         ));
 
