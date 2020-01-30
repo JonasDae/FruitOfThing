@@ -18,8 +18,6 @@ class Fruit_typeController extends Controller
         //get fruit types
         $fruit_types = Fruit_type::get();
 
-        return view('fruits', array(
-            'fruit_types' => $fruit_types,
-        ));
+        return view('fruits.index', compact('fruit_types'));
     }
 }
