@@ -7,7 +7,6 @@
 //jQuery is default installed in Laravel so no need to require it here
 require('./popper.min');
 require('./bootstrap');
-require('./chart.min');
 require('./all.min'); //Font Awesome
 
 window.Vue = require('vue');

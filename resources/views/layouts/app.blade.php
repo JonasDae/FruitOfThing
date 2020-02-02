@@ -10,7 +10,7 @@
     <title>{{ config('app.name', 'Fruit of Things') }}</title>
 
     <!-- Scripts --> {{--app.js includes jQuery, Popper, Bootstrap and chart.js (check resources > js > app.js)--}}
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 
     <!-- Styles --> {{--app.css includes bootstrap (check resources > css > app.css)--}}
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">

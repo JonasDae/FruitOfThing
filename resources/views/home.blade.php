@@ -15,7 +15,7 @@
                     </div>
                     <div id="kmi-info">
                         <iframe
-                                src="https://www.meteo.be/services/widget/?postcode=3800&nbDay=2&type=4&lang=nl&bgImageId=1&bgColor=567cd2&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
+                            src="https://www.meteo.be/services/widget/?postcode=3800&nbDay=2&type=4&lang=nl&bgImageId=1&bgColor=567cd2&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
                     </div>
                 </div>
                 <div class="content-title text-center">
@@ -43,34 +43,33 @@
 
                 <div class="row">
                     <div class="col-sm-6 col-lg-3 form-group">
-                        <label for="slc_soort">Vruchtsoort</label>
-                        <select id="slc_soort" class="form-control">
+                        <label for="fruit_type">Vruchtsoort</label>
+                        <select id="fruit_type" class="form-control">
                             @foreach($fruit_types as $fruit_type)
                                 <option value="{{ $fruit_type->id }}">{{ $fruit_type->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-sm-6 col-lg-3 form-group">
-                        <label for="slc_weergave">Weergave</label>
-                        <select id="slc_weergave" class="form-control">
-                            <option value="0">uur</option>
-                            <option value="1">dag</option>
-                            <option value="2">week</option>
-                            <option selected value="3">maand</option>
-                            <option value="4">jaar</option>
+                        <label for="display">Weergave</label>
+                        <select id="display" class="form-control">
+                            <option value="H">uur</option>
+                            <option value="d">dag</option>
+                            <option value="W">week</option>
+                            <option selected value="m">maand</option>
+                            <option value="Y">jaar</option>
                         </select>
                     </div>
                     <div class="col-sm-6 col-lg-3 form-group">
-                        <label for="dte_begin">Begindatum</label>
-                        <input type="date" id="dte_begin" placeholder="Selecteer begindatum" class="form-control">
+                        <label for="start_date">Begindatum</label>
+                        <input type="date" id="start_date" placeholder="Selecteer begindatum" value="1970-01-01" class="form-control">
                     </div>
                     <div class="col-sm-6 col-lg-3 form-group">
-                        <label for="dte_end">Einddatum</label>
-                        <input type="date" id="dte_end" placeholder="Selecteer einddatum" class="form-control">
+                        <label for="end_date">Einddatum</label>
+                        <input type="date" id="end_date" placeholder="Selecteer einddatum" value="2025-01-01" class="form-control">
                     </div>
-                    <div class="col-12">
-                        <canvas id="cnv_graph" class="mb-4 mt-4"></canvas>
-                    </div>
+                    <!--Graph-->
+                    <div id="graph" class="col-12"></div>
                 </div>
 
                 <div class="content-title text-center">
@@ -113,59 +112,30 @@
         </div>
     </div>
     <script>
-        console.log($('#dte_begin'))
-
-        var out = {!! json_encode($chart_data ?? "") !!};
-        var cnv_graph = document.getElementById("cnv_graph").getContext("2d");
-        var chart_out = new Chart(cnv_graph, {
-            type: 'bar',
-            data: {
-                labels: [],
-                datasets: [],
-            },
-            options: {
-                title: {
-                    display: false,
-                    text: "Grafiek  titel",
-                    fontSize: 23,
-                },
-                legend: {
-                    display: true,
-                    position: 'bottom',
-                    fullwidth: true,
-                },
-                scales: {
-                    yAxes: [{
-                        id: 'axisleft',
-                        ticks: {
-                            beginAtZero: true
-                        },
-                        type: 'linear',
-                        position: 'left',
-                    },
-                        {
-                            id: 'axisright',
-                            type: 'linear',
-                            position: 'right',
-                        }]
+        function update_graph() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
                 }
-            }
-        });
-        // init graph
-        graph_update();
-
-        function graph_update() {
-            $.get("/FruitOfThing/public/home/chart_build/" + $("#slc_soort").val() + "/" + $("#slc_weergave").val(), function (response) {
-                chart_out.data.labels = response.data.labels;
-                chart_out.data.datasets = response.data.datasets;
-                chart_out.update();
-            })
+            });
+            $.ajax({
+                type: 'get',
+                url: '{{ route('graph.index') }}',
+                data: {fruit_type: $('#fruit_type').val(), display: $('#display').val(), start_date: $('#start_date').val(), end_date: $('#end_date').val()},
+                success: function (response) {
+                    $("#graph").html(response);
+                }
+            });
         }
 
-        // ui interaction
-        // dropdowns
-        $('select').change(function () {
-            graph_update();
+        $(document).ready(function () {
+            //init
+            update_graph();
+
+            //onChange
+            $("select, input[type='date']").change(function () {
+                update_graph();
+            });
         });
     </script>
 @endsection
