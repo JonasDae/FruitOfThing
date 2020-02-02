@@ -15,7 +15,7 @@
         <hr class="mb-0">
 
         <div id="moduleAccordion">
-            @foreach ($modules as $module)
+            @foreach ($modules as $key=>$module)
                 <div class="record">
                     {{--Rows--}}
                     <div class="row py-3 mx-0">
@@ -67,7 +67,7 @@
                                                required>
                                     </div>
                                     <div class="col-lg-2 col-md-2 col-12">
-                                        <select name="field" id="field" class="form-control">
+                                        <select name="field" id="field{{$key}}" class="form-control">
                                             @foreach($fields as $field)
                                                 <option value="{{ $field->id }}">{{ $field->name }}</option>
                                             @endforeach

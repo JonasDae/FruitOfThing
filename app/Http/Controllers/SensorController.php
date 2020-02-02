@@ -26,7 +26,7 @@ class SensorController extends Controller
     public function store(Request $request) {
         $data = $request->validate(array(
             'name' => array('required', 'string', 'max:255'),
-            'name_alias' => array('required'),
+            'name_alias' => array('required', 'string', 'max:255'),
             'measuring_unit' => array(),
             'color' => array('required'),
             'graph_type' => array('required'),
