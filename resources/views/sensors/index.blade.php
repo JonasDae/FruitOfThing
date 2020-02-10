@@ -121,8 +121,8 @@
                         <div class="col-lg col-md col-12">
                             <label for="inputNewDiagram{{$key}}" class="d-block d-md-none mt-2">Diagram type</label>    
                             <select id="inputNewDiagram{{$key}}" name="graph_type" id="graph_type" class="form-control" required>
-                                <option value="line">Lijn diagram</option>
-                                <option value="bar">Staaf diagram</option>
+                                <option {{ ($sensor->graph_type == "line") ? "selected" : "" }} value="line">Lijn diagram</option>
+                                <option {{ ($sensor->graph_type == "bar") ? "selected" : "" }} value="bar">Staaf diagram</option>
                             </select>
                         </div>
                         <div class="col-lg-1 col-md-1 col-12">
