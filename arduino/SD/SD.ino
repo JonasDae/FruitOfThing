@@ -2,34 +2,39 @@
 
 #define SD_CHIPSELECT 4
 
-void setup() {
-  Serial.begin(9600);
-  Serial.println("TEST1");
-  delay(5000);
-  Serial.println("TEST2");
+void sd_init(String filename)
+{
+	
   if(!SD.begin(SD_CHIPSELECT))
-  {
-    while(1) {
       Serial.println("SD ERROR");
-      delay(1000);
-    }
-  }
   else
-    Serial.println("SD GUD");
-  if(!SD.exists("testlog.txt")) {
-    Serial.println("SD MADE");
-    File datafile = SD.open("testlog.txt", FILE_WRITE);
-    if(datafile) {
-      datafile.println("TESTERINOS");
-      datafile.close();
-    }
-    else
-      Serial.println("NO FILE MADE");
+  {
+	  if(!SD.exists(filename)) {
+		File datafile = SD.open(filename, FILE_WRITE);
+		if(datafile) {
+		  datafile.println("STARTDATA");
+		  datafile.close();
+		}
+	  }
   }
-
+}
+void sd_write(String filename, String data)
+{
+  File datafile = SD.open(filename, FILE_WRITE);
+  if(datafile) {
+    datafile.println(data);
+    datafile.close();
+  }
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void setup() {
+	sd_init("testlog.txt");
+}
 
+int i = 0;
+void loop() {
+	String data = "DATA HERE: " + i;
+	sd_write("testlog.txt", data);
+	i++;
+	delay(1000);
 }
