@@ -56,7 +56,7 @@
                             <span class="font-weight-bolder">{{ $field->name }}</span>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
-                            {{ $field->fruit_type->name }}
+                            {{ $field->fruit_type->name ?? '' }}
                         </div>
                         <div class="col-lg-6 col-md-4 col-10 adres">
                             {{ $field->adres }}

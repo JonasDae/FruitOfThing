@@ -23,9 +23,9 @@
                             <span class="font-weight-bolder">{{ $module->name }}</span>
                         </div>
                         <div class="col-lg-2 col-md-2 col-4">
-                            <a href="javascript:void" data-toggle="popover" title="{{ $module->field->name }}" data-html="true" data-trigger="hover" data-content="Type: {{ $module->field->fruit_type->name }}<br>
-                       Adres: {{ $module->field->adres }}<br>
-                       Postcode: {{ $module->field->postcode }}">{{ $module->field->name }}
+                            <a href="javascript:void" data-toggle="popover" title="{{ $module->field->name ?? '' }}" data-html="true" data-trigger="hover" data-content="Type: {{ $module->field->fruit_type->name ?? '' }}<br>
+                       Adres: {{ $module->field->adres ?? '' }}<br>
+                       Postcode: {{ $module->field->postcode ?? '' }}">{{ $module->field->name ?? '' }}
                             </a>
                         </div>
                         <div class="col-lg-2 col-md-2 col">
