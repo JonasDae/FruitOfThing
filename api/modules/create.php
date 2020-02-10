@@ -3,8 +3,8 @@ require '../connect.php';
 
 $postdata = file_get_contents("php://input");
 
-if(isset($postdata) && !empty($postdata)
-{    
+if(isset($postdata) && !empty($postdata))
+{
     date_default_timezone_set('Europe/Brussels');
 
     $request = json_decode($postdata);
