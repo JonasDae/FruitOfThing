@@ -23,9 +23,9 @@
                             <span class="font-weight-bolder">{{ $module->name }}</span>
                         </div>
                         <div class="col-lg-2 col-md-2 col-4">
-                            <a href="javascript:void" data-toggle="popover" title="{{ $module->field->name }}" data-html="true" data-trigger="hover" data-content="Type: {{ $module->field->fruit_type->name }}<br>
-                       Adres: {{ $module->field->adres }}<br>
-                       Postcode: {{ $module->field->postcode }}">{{ $module->field->name }}
+                            <a href="javascript:void" data-toggle="popover" title="{{ $module->field->name ?? '' }}" data-html="true" data-trigger="hover" data-content="Type: {{ $module->field->fruit_type->name ?? '' }}<br>
+                       Adres: {{ $module->field->adres ?? '' }}<br>
+                       Postcode: {{ $module->field->postcode ?? '' }}">{{ $module->field->name ?? '' }}
                             </a>
                         </div>
                         <div class="col-lg-2 col-md-2 col">
@@ -41,7 +41,7 @@
                             {{ date_create_from_format('Y-m-d H:i:s', $module->last_connection)->format('d/m/Y H:i:s') }}
                         </div>
                         {{--CRUD--}}
-                        <div class="col-lg-1 col-md-1 col-12 text-md-center text-right">
+                        <div class="col-lg-1 col-md-1 col-12 text-right">
                             <a href="javascript:void" data-toggle="collapse" data-target="#collapse{{ $module->id }}"
                                aria-expanded="true" aria-controls="collapse{{ $module->id }}"><i
                                     class="fas fa-edit text-warning mx-1"></i></a>

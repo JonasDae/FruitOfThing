@@ -93,14 +93,18 @@
                                     <tr>
                                         <td>{{ $measurement->measure_date }}</td>
                                         <td>{{ $measurement->module_id }}</td>
-                                        <td>{{ $measurement->module_sensor->sensor->name_alias }}</td>
-                                        <td>{{ $measurement->value }} {{$measurement->module_sensor->sensor->measuring_unit }}</td>
-                                        <td>@if ($measurement->module_sensor->sensor->name == "Dendrometer")
-                                                @foreach($sensor_added_values as $sensor_added_value)
-                                                    {{ $sensor_added_value->module_sensor_id == $measurement->module_sensor_id ? $measurement->value + $sensor_added_value->value : "" }}
-                                                @endforeach
-                                                {{ $measurement->module_sensor->sensor->measuring_unit }}
-                                            @endif</td>
+                                        <td>{{ $measurement->module_sensor->sensor->name_alias ?? '' }}</td>
+                                        <td>{{ $measurement->value }} {{$measurement->module_sensor->sensor->measuring_unit ?? '' }}</td>
+                                        <td>
+                                            @if (!empty($measurement->module_sensor->sensor))
+                                                @if ($measurement->module_sensor->sensor->name == "Dendrometer")
+                                                    @foreach($sensor_added_values as $sensor_added_value)
+                                                        {{ $sensor_added_value->module_sensor_id == $measurement->module_sensor_id ? $measurement->value + $sensor_added_value->value : "" }}
+                                                    @endforeach
+                                                    {{ $measurement->module_sensor->sensor->measuring_unit ?? '' }}
+                                                @endif
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>

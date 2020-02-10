@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container pt-3">
+    {{-- List view --}}
+    <div id="list" class="container mt-3">
         <div id="NewAccordion">
             <div class="row mt-3 mx-0 font-weight-bold">
                 <div class="col-lg-2 col-md-2 d-none d-md-block">Naam</div>
-                <div class="col-lg-2 col-md-2 d-none d-md-block">Fruitsoort <a href="{{ route('fruits.index') }}"><i
-                            class="fas fa-external-link-alt"></i></a></div>
+                <div class="col-lg-2 col-md-2 d-none d-md-block">Fruitsoort <a href="{{ route('fruits.index') }}"><i class="fas fa-external-link-alt"></i></a></div>
                 <div class="col-lg-6 col-md-4 d-none d-md-block">Adres</div>
                 <div class="col-lg-1 col-md-2 d-none d-md-block text-right">Postcode</div>
                 <div class="col-lg-1 col-md-2 col text-right">
@@ -56,9 +56,9 @@
                             <span class="font-weight-bolder">{{ $field->name }}</span>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
-                            {{ $field->fruit_type->name }}
+                            {{ $field->fruit_type->name ?? '' }}
                         </div>
-                        <div class="col-lg-6 col-md-4 col-10">
+                        <div class="col-lg-6 col-md-4 col-10 adres">
                             {{ $field->adres }}
                         </div>
                         <div class="col-lg-1 col-md-2 col-2 text-right">
@@ -124,4 +124,16 @@
             @endforeach
         </div>
     </div>
+    {{-- Map --}}
+    <div id="map" class="container my-3">
+        <iframe class="h-100" frameborder="0"></iframe>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.record').click(function () {
+                var q = encodeURIComponent($(this).find('div.adres').text().trim());
+                $('#map iframe').attr('src', 'https://maps.google.com/maps?q=' + q + '&output=embed');
+            });
+        });
+    </script>
 @endsection
