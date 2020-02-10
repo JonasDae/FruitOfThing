@@ -1,15 +1,34 @@
-// watermark initialisation
+#include <ArduinoJson.h>
+#include <MKRGSM.h>
+#include <ArduinoHttpClient.h>
+
+// watermark constants
 #define pinHumGnd 7
 #define pinHumPwr 6
 #define pinHumAnalog A2
 #define pinVinAnalog A3
 
-// dendrometer initialisation
+// dendrometer constants
 #define dendroAnalogIn A1 // input pin for the Thermistor
 
-// thermistor initialisation
+// thermistor constants
 #define thermPower 6 // switching power for thermistor
 #define thermAnalogIn A4 // input pin for the Thermistor
+
+// json constants
+#define MODULE_NAME "logger 123"
+#define JSON_SIZE 200
+
+// gprs constants
+#define GSM_PIN         "6615"
+#define GPRS_APN        "internet.proximus.be"
+#define GPRS_LOGIN      ""
+#define GPRS_PASSWORD   ""
+
+#define GPRS_SERVER     "floriandh.sinners.be"
+#define GPRS_PATH       "/pcfruit/api/measurements/create.php"
+#define GPRS_PORT       443
+
 
 //Watermark variables:
 float resWatermark = 7760.0; //Ohm R;
@@ -34,6 +53,12 @@ float rwm;
 int adcValDendro = 0;  // variable to store the value coming from the sensor
 float distDendro;
 float divider = 100000;
+
+// GPRS variables
+GSM gsm;
+GPRS gprs;
+GSMSSLClient client_gsm;
+HttpClient client_http = HttpClient(client_gsm, GPRS_SERVER, GPRS_PORT);
 
 //read sensor functions
 float readWatermark(){
@@ -96,6 +121,75 @@ float readDendro(){
   return distDendro;
 }
 
+// json functions
+String build_json()
+{
+  String out = "";
+  StaticJsonDocument<JSON_SIZE> doc;
+
+  doc["module_id"] = 1;
+  doc["battery_level"] = 69;
+  doc["module_sensor_id"] = 3;
+  doc["value"] = 66;
+  doc["measure_date"] = "2069-01-30 10:20:20";
+/*
+  JsonArray data_arr = doc.createNestedArray("data");
+  JsonObject sensordata = data_arr.createNestedObject();
+  sensordata["sensor"] = 1;
+  sensordata["data"] = 55;  
+  sensordata = data_arr.createNestedObject();
+  sensordata["sensor"] = 2;
+  sensordata["data"] = 25;
+*/
+  serializeJson(doc, out);
+  return out;
+}
+
+// GPRS functions
+void json_push(String data) {
+  boolean gsm_connected = false;
+  while(!gsm_connected)
+  {
+    if((gsm.begin(GSM_PIN) == GSM_READY))
+    {
+      Serial.println("GSM OK");
+      if(gprs.attachGPRS(GPRS_APN, GPRS_LOGIN, GPRS_PASSWORD) == GPRS_READY)
+      {
+        Serial.println("GPRS OK");
+        gsm_connected = true;
+      }
+      else
+        Serial.println("GPRS not connected, retrying ...");
+    }
+    else
+      Serial.println("GSM not connected, retrying ...");
+  }
+  
+  gsm_connected = false;
+  while(!gsm_connected)
+  {
+    Serial.println(client_gsm.connect(GPRS_SERVER, GPRS_PORT));
+    if(client_gsm.connect(GPRS_SERVER, GPRS_PORT))
+    {
+      Serial.println("HTTPS OK");
+      gsm_connected = true;
+    
+      client_http.beginRequest();
+      client_http.post(GPRS_PATH);
+      client_http.sendHeader("Content-Type", "application/json");
+    
+      client_http.sendHeader("Content-length", data.length());
+      client_http.beginBody();
+      client_http.print(data);
+    
+      client_http.endRequest();
+// FIXME: debug this
+	  client_gsm.stop();
+  }
+  else
+    Serial.println("HTTPS client not connected, retrying ...");
+  }
+}
 // debug print functions
 void printWatermark(){
   Serial.println("\nVin\tVout\tAnalog\tRwm\tcb\t%water\ttemp");
@@ -159,6 +253,8 @@ void loop() {
 
   printAll();
   
+  String json = build_json();
+  json_push(json);
 }
 
 // ============================================================================= //
@@ -225,3 +321,35 @@ void loop() {
   
 }
 */
+
+/*
+void loop() {
+  
+  StaticJsonDocument<JSON_SIZE> doc;
+
+  doc["module_id"] = 1;
+  doc["battery_level"] = 69;
+  doc["module_sensor_id"] = 3;
+  doc["value"] = 99;
+  doc["measure_date"] = "2069-11-22 10:20:20";
+  String data = "";
+  serializeJson(doc, data);
+
+  json_push(data);
+
+
+
+  
+   if(client_gsm.available() )
+   {
+    char c = client_gsm.read();
+    Serial.print(c);
+  }
+  if(!client_gsm.available() && !client_gsm.connected())
+  {
+    client_gsm.stop();
+  }
+  delay(999999999);
+}
+*/
+
