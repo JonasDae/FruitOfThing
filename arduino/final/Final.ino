@@ -1,8 +1,9 @@
-#include "Seeed_SHT35.h"
-#include <float.h>		// for FLT_MAX in sht32
+#include <Seeed_SHT35.h>
 #include <ArduinoJson.h>
 #include <MKRGSM.h>
 #include <ArduinoHttpClient.h>
+
+#include <float.h>    // for FLT_MAX in sht32
 
 // watermark constants
 #define pinHumGnd 7
@@ -65,6 +66,7 @@ float divider = 100000;
 SHT35 shtSensor(SCLPIN);
 float tempSHT;
 float humSHT;
+float wetbulbSHT;
 
 // GPRS variables
 GSM gsm;
@@ -137,9 +139,14 @@ void readSHT()
 {
     if(shtSensor.read_meas_data_single_shot(HIGH_REP_WITH_STRCH,&tempSHT,&humSHT) != NO_ERROR)
     {
-      SERIAL.println("read temp failed!!");
-	  tempSHT = FLT_MAX;
-	  humSHT = FLT_MAX;
+      Serial.println("read temp failed!!");
+	    tempSHT = FLT_MAX;
+	    humSHT = FLT_MAX;
+      wetbulbSHT = FLT_MAX;
+    }
+    else {
+      wetbulbSHT = (tempSHT * atan(0.151977 * sqrt(humSHT + 8.313659))) + atan(tempSHT + humSHT) - atan(humSHT - 1.676331) + (0.00391838 * pow(sqrt(humSHT), 3.0) * atan(0.023101 * humSHT)) - 4.686035;
+
     }
 }
 // json functions
@@ -242,13 +249,17 @@ void printDendro() {
   //Serial.println(" mm");
 }
 void printSHT() {
-      SERIAL.print("temperature = ");
-      SERIAL.print(tempSHT);
-	  SERIAL.println(" ℃ ");
+      Serial.print("temperature = ");
+      Serial.print(tempSHT);
+   Serial.println(" ℃ ");
 
-      SERIAL.print("humidity = ");
-      SERIAL.print(humSHT);
-	  SERIAL.println(" % ");
+      Serial.print("humidity = ");
+      Serial.print(humSHT);
+	  Serial.println(" % ");
+    
+      Serial.print("wetbulb = ");
+      Serial.print(wetbulbSHT);
+    Serial.println(" ℃ ");
 }
 
 void printAll() {
@@ -277,21 +288,24 @@ void setup() {
 
 // sht 32 setup
     if(shtSensor.init())
-      SERIAL.println("sensor init failed!!!");
+      Serial.println("sensor init failed!!!");
 }
 
 // Arduino loop
 void loop() {
-
+/*
   readWatermark();
   distDendro = readDendro();
-  readSHT();
-  printSHT();
-
+  
   printAll();
   
   String json = build_json();
   json_push(json);
+  */
+  readSHT();
+  printSHT();
+  delay(1000);
+
 }
 
 // ============================================================================= //
@@ -325,5 +339,3 @@ void loop() {
   delay(999999999);
 }
 */
-
-
