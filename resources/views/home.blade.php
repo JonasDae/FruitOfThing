@@ -115,6 +115,9 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
     <script>
         function update_graph() {
             $.ajaxSetup({

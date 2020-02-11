@@ -128,6 +128,9 @@
     <div id="map" class="container my-3">
         <iframe class="h-100" frameborder="0"></iframe>
     </div>
+@endsection
+
+@section('script')
     <script>
         $(document).ready(function () {
             $('.record').click(function () {
