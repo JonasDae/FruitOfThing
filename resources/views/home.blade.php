@@ -115,6 +115,9 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
     <script>
         function update_graph() {
             $.ajaxSetup({
@@ -128,6 +131,9 @@
                 data: {fruit_type: $('#fruit_type').val(), display: $('#display').val(), start_date: $('#start_date').val(), end_date: $('#end_date').val()},
                 success: function (response) {
                     $("#graph").html(response);
+                },
+                error: function (request, status, error) {
+                    $("#graph").html('<p>De grafiek kon niet worden weergegeven... Probeer het later opnieuw</p>');
                 }
             });
         }

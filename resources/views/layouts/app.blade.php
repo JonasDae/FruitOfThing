@@ -100,5 +100,7 @@
 
 <script src="{{ asset('js/index.js') }}" defer></script>
 
+@yield('script')
+
 </body>
 </html>
