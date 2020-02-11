@@ -48,6 +48,9 @@
                         <li class="nav-item">
                             <a href="{{ route('sensors.index') }}" class="nav-link{{ Request::path() == 'sensors' ? ' active' : '' }}">{{ __('Sensoren') }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('sensor_types.index') }}" class="nav-link{{ Request::path() == 'sensor_types' ? ' active' : '' }}">{{ __('Sensortypen') }}</a>
+                        </li>
                     @endauth
                 </ul>
 
