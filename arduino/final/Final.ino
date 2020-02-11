@@ -11,20 +11,20 @@
 #define SENSOR_HUMIDITY_SOIL 	3
 #define SENSOR_HUMIDITY_AIR		4
 
-// watermark constants
-#define pinHumGnd 7
-#define pinHumPwr 6
-#define pinHumAnalog A2
-#define pinVinAnalog A3
+// watermark pins
+#define PIN_WM_GND 7
+#define PIN_WM_PWR 6
+#define PIN_WM_HUM A2
+#define PIN_WM_VIN A3
 
-// dendrometer constants
-#define dendroAnalogIn A1 // input pin for the Thermistor
+// dendrometer pins
+#define PIN_DENDRO_IN A1 // input pin for the Thermistor
 
-// thermistor constants
-#define thermPower 6 // switching power for thermistor
-#define thermAnalogIn A4 // input pin for the Thermistor
+// thermistor pins
+#define PIN_THERM_PWR 6 // switching power for thermistor
+#define PIN_THERM_IN A4 // input pin for the Thermistor
 
-// sht 35 constants
+// sht 35 pins
 #define SDAPIN  11		// serial data
 #define SCLPIN  12		// serial clock
 #define RSTPIN  13		// serial reset
@@ -83,25 +83,25 @@ HttpClient client_http = HttpClient(client_gsm, GPRS_SERVER, GPRS_PORT);
 //read sensor functions
 float readWatermark(){
 
-  digitalWrite(pinHumPwr, HIGH);
-  digitalWrite(pinHumGnd, LOW);
+  digitalWrite(PIN_WM_PWR, HIGH);
+  digitalWrite(PIN_WM_GND, LOW);
   delay(1000);
-  digitalWrite(pinHumPwr, LOW);
-  digitalWrite(pinHumGnd, LOW);
+  digitalWrite(PIN_WM_PWR, LOW);
+  digitalWrite(PIN_WM_GND, LOW);
 
   average_v_in = 0;
   average_v_out = 0;
 
   for (int i = 0; i < total_iterations; i++)
   {
-    digitalWrite(pinHumPwr, HIGH);
-    digitalWrite(pinHumGnd, LOW);
+    digitalWrite(PIN_WM_PWR, HIGH);
+    digitalWrite(PIN_WM_GND, LOW);
     delayMicroseconds(49);
     //delay(0.09);
-    val = analogRead(pinHumAnalog); //Read Sensor Pin A2
-    val_vin = analogRead(pinVinAnalog); //Read Sensor Pin A3
-    digitalWrite(pinHumPwr, LOW);
-    digitalWrite(pinHumGnd, LOW);
+    val = analogRead(PIN_WM_HUM); //Read Sensor Pin A2
+    val_vin = analogRead(PIN_WM_VIN); //Read Sensor Pin A3
+    digitalWrite(PIN_WM_PWR, LOW);
+    digitalWrite(PIN_WM_GND, LOW);
 
     v_in =  val_vin * (3.3 / arduino_resolution);
     v_out = val * (v_in / arduino_resolution);
@@ -113,7 +113,6 @@ float readWatermark(){
   average_v_in = average_v_in / total_iterations;
 
   rwm = ((average_v_in * resWatermark)/average_v_out)-resWatermark;
-  //float rwm = (average_v_out * resWatermark) / (average_v_in - average_v_out);
 
   if (rwm <= 500) {
     watermark_1_cb_instant = 0;
@@ -129,13 +128,13 @@ float readWatermark(){
   watermark_1_per_instant = map(watermark_1_cb_instant, -200, 0, 100, 0);  //Convert to Percentage
   //http://www.omafra.gov.on.ca/english/engineer/facts/11-037f4.gif
 
-  digitalWrite(pinHumPwr, LOW);
-  digitalWrite(pinHumGnd, LOW);
+  digitalWrite(PIN_WM_PWR, LOW);
+  digitalWrite(PIN_WM_GND, LOW);
   
 }
 
 float readDendro(){
-  adcValDendro = analogRead(dendroAnalogIn); // read dendrometer input
+  adcValDendro = analogRead(PIN_DENDRO_IN); // read dendrometer input
   delay(500);
   distDendro = (adcValDendro * 366 /divider); // calculate dendrometer distance in mm
   return distDendro;
@@ -283,12 +282,12 @@ void setup() {
   Serial.begin(9600);
 
 // watermark setup
-  pinMode(pinHumPwr, OUTPUT);
-  pinMode(pinHumGnd, OUTPUT);
-  pinMode(pinHumAnalog, INPUT);
-  pinMode(pinVinAnalog, INPUT);
-  digitalWrite(pinHumPwr, LOW);
-  digitalWrite(pinHumGnd, LOW);
+  pinMode(PIN_WM_PWR, OUTPUT);
+  pinMode(PIN_WM_GND, OUTPUT);
+  pinMode(PIN_WM_HUM, INPUT);
+  pinMode(PIN_WM_VIN, INPUT);
+  digitalWrite(PIN_WM_PWR, LOW);
+  digitalWrite(PIN_WM_GND, LOW);
 
 // dendrometer setup
    // Setting analog read resolution to 12 bit 
