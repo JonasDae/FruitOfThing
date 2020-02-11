@@ -163,6 +163,7 @@ String build_json()
 
   doc["module_id"] = 1;
   doc["battery_level"] = 69;
+  doc["measure_date"] = "2020-01-30 10:20:20";
   /*
   doc["value"] = 66;
   doc["measure_date"] = "2069-01-30 10:20:20";
