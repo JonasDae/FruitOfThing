@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Field;
 use App\Module;
+use App\Notifications\Arduino;
 use Illuminate\Http\Request;
 
 class ModuleController extends Controller
@@ -36,6 +37,8 @@ class ModuleController extends Controller
 
             $module->uptime = $uptime;
         }
+
+        auth()->user()->notify(new Arduino());
 
         return view('modules.index', compact('modules', 'fields'));
     }

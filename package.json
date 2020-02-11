@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.12.0",
-        "font-awesome": "^4.7.0"
+        "font-awesome": "^4.7.0",
+        "toastr": "^2.1.4"
     }
 }
