@@ -6,8 +6,7 @@
             <div class="row mt-3 mx-0 font-weight-bolder">
                 <div class="col">Naam</div>
                 <div class="col-auto">
-                    <a href="javascript:void" data-toggle="collapse" data-target="#collapseNew" aria-expanded="true"
-                       aria-controls="collapseNew"><i class="fas fa-plus-circle text-success mx-1"></i></a>
+                    <a href="javascript:void" data-toggle="collapse" data-target="#collapseNew" aria-expanded="true" aria-controls="collapseNew"><i class="fas fa-plus-circle text-success mx-1"></i></a>
                 </div>
             </div>
             {{--New fruit type Accordion--}}
@@ -36,17 +35,12 @@
                         {{--Rows--}}
                         <div class="row py-3 mx-0">
                             <div class="col">
-                                <span class="font-weight-bolder">{{ $fruit_type->name }}</span>
+                                {{ $fruit_type->name }}
                             </div>
                             <div class="col-auto">
-                                <a href="javascript:void" data-toggle="collapse"
-                                   data-target="#collapse{{ $fruit_type->id }}"
-                                   aria-expanded="true" aria-controls="collapse{{ $fruit_type->id }}"><i
-                                        class="fas fa-edit text-warning mx-1"></i></a>
+                                <a href="javascript:void" data-toggle="collapse" data-target="#collapse{{ $fruit_type->id }}" aria-expanded="true" aria-controls="collapse{{ $fruit_type->id }}"><i class="fas fa-edit text-warning mx-1"></i></a>
                                 {{--CRUD--}}
-                                <form id="form{{ $fruit_type->id }}"
-                                      action="{{ route('fruits.destroy', $fruit_type->id) }}" method="post"
-                                      class="d-inline">
+                                <form id="form{{ $fruit_type->id }}" action="{{ route('fruits.destroy', $fruit_type->id) }}" method="post" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <a href="javascript:void"
