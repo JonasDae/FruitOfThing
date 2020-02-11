@@ -45,7 +45,7 @@
                             <form id="form{{ $module->id }}" action="{{ route('modules.destroy', $module->id) }}" method="post" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <a href="javascript:void" onclick="document.getElementById('form{{ $module->id }}').submit();"><i class='far fa-trash-alt text-danger mx-1'></i></a>
+                                <a href="javascript:void" onclick="confirm('\'{{ $module->name }}\' verwijderen?') ? document.getElementById('form{{ $module->id }}').submit() : ''"><i class='far fa-trash-alt text-danger mx-1'></i></a>
                             </form>
                         </div>
                     </div>
