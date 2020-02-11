@@ -9,9 +9,6 @@
 
     <title>{{ config('app.name', 'Fruit of Things') }}</title>
 
-    <!-- Scripts --> {{--app.js includes jQuery, Popper, Bootstrap and chart.js (check resources > js > app.js)--}}
-    <script src="{{ asset('js/app.js') }}"></script>
-
     <!-- Styles --> {{--app.css includes bootstrap (check resources > css > app.css)--}}
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/index.css') }}" rel="stylesheet">
@@ -101,6 +98,8 @@
     </footer>
 </div>{{--VUE error fix--}}
 
+<!-- Scripts --> {{--app.js includes jQuery, Popper, Bootstrap and chart.js (check resources > js > app.js)--}}
+<script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/index.js') }}" defer></script>
 
 @yield('script')
