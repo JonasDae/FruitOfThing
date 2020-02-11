@@ -18,22 +18,6 @@
                             src="https://www.meteo.be/services/widget/?postcode=3800&nbDay=2&type=4&lang=nl&bgImageId=1&bgColor=567cd2&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
                     </div>
                 </div>
-                <div class="content-title text-center">
-                    <h5>Meldingen</h5>
-                </div>
-                <div class="card p-0">
-                    <ul class="list-group list-group-flush">
-                        @foreach($notifications as $notification)
-                            <li class="notification-item list-group-item severity-{{$notification->severity}}">
-                                <div class="card-body p-0">
-                                    <h5 class="card-title">{{$notification->title}}</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">{{$notification->send_date}}</h6>
-                                    <p class="card-text">{{$notification->description}}</p>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
             </div>
 
             <div id="div_main" class="col-md-8 col-sm-12">

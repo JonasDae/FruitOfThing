@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Sensor;
 use Illuminate\Http\Request;
 
@@ -42,7 +41,7 @@ class Sensor_typeController extends Controller
         $sensor->timestamps = false;
         $sensor->save();
 
-        return redirect(route('sensors.index'));
+        return redirect(route('sensor_types.index'));
     }
 
     public function update(Request $request) {
@@ -64,11 +63,11 @@ class Sensor_typeController extends Controller
         $sensor->timestamps = false;
         $sensor->update();
 
-        return redirect(route('sensors.index'));
+        return redirect(route('sensor_types.index'));
     }
 
     public function destroy(Sensor $sensor) {
         $sensor->delete();
-        return redirect(route('sensors.index'));
+        return redirect(route('sensor_types.index'));
     }
 }

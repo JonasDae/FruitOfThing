@@ -9,9 +9,6 @@
 
     <title>{{ config('app.name', 'Fruit of Things') }}</title>
 
-    <!-- Scripts --> {{--app.js includes jQuery, Popper, Bootstrap and chart.js (check resources > js > app.js)--}}
-    <script src="{{ asset('js/app.js') }}"></script>
-
     <!-- Styles --> {{--app.css includes bootstrap (check resources > css > app.css)--}}
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/index.css') }}" rel="stylesheet">
@@ -68,6 +65,20 @@
                         @endif
                     @else
                         <li class="nav-item dropdown">
+                            <button role="button" type="button" class="nav-link btn dropdown" data-toggle="dropdown">
+                                Meldingen <span class="badge badge-danger">{{ count(auth()->user()->unreadNotifications) }}</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+                                @foreach(auth()->user()->unreadNotifications as $notification)
+                                    <a class="dropdown-item text-danger" href="#">
+                                        {{ $notification->data['text'] }}
+                                    </a>
+                                @endforeach
+
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }} <span class="caret"></span>
@@ -101,6 +112,8 @@
     </footer>
 </div>{{--VUE error fix--}}
 
+<!-- Scripts --> {{--app.js includes jQuery, Popper, Bootstrap and chart.js (check resources > js > app.js)--}}
+<script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/index.js') }}" defer></script>
 
 @yield('script')

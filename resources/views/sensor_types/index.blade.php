@@ -59,7 +59,7 @@
         <div class="sensor">
             <div class="row py-3 mx-0">
                 <div class="col-lg col-md col">
-                    <span class="font-weight-bolder">{{ $sensor->name }}</span>
+                    <a href="javascript:void" data-toggle="popover" title="{{ $sensor->name }}" data-html="true" data-trigger="hover" data-content="Id: {{ $sensor->id }}"><span class="font-weight-bolder">{{ $sensor->name }}</span></a>
                     <span class="d-block d-sm-none">{{ $sensor->name_alias }} ({{ $sensor->measuring_unit }})</span>
                 </div>
                 <div class="col-lg col-md col d-none d-sm-block" >
@@ -76,18 +76,11 @@
                     <div style="background-color: {{$sensor->color}}; width: 100%; height: 20px"></div>
                 </div>
                 <div class="col-1 text-right">
-                    <a href="javascript:void" data-toggle="collapse" data-target="#collapse{{ $sensor->id }}"
-                        aria-expanded="true" aria-controls="collapse{{ $sensor->id }}">
-                        <i class="fas fa-edit text-warning mx-1"></i>
-                    </a>
-                    <form id="form{{ $sensor->id }}" action="{{ route('sensor_types.destroy', $sensor->id) }}"
-                            method="post" class="d-inline">
+                    <a href="javascript:void" data-toggle="collapse" data-target="#collapse{{ $sensor->id }}" aria-expanded="true" aria-controls="collapse{{ $sensor->id }}"><i class="fas fa-edit text-warning mx-1"></i></a>
+                    <form id="form{{ $sensor->id }}" action="{{ route('sensor_types.destroy', $sensor->id) }}" method="post" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <a href="javascript:void"
-                            onclick="document.getElementById('form{{ $sensor->id }}').submit();">
-                            <i class='far fa-trash-alt text-danger mx-1'></i>
-                        </a>
+                        <a href="javascript:void" onclick="document.getElementById('form{{ $sensor->id }}').submit();"><i class='far fa-trash-alt text-danger mx-1'></i></a>
                     </form>
                 </div>
             </div>
