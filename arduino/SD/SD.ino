@@ -10,12 +10,17 @@ void sd_init(String filename)
   else
   {
 	  if(!SD.exists(filename)) {
-		File datafile = SD.open(filename, FILE_WRITE);
-		if(datafile) {
-		  datafile.println("STARTDATA");
-		  datafile.close();
-		}
+		  File datafile = SD.open(filename, FILE_WRITE);
+		  if(datafile) {
+		    datafile.println("STARTDATA");
+		    datafile.close();
+        Serial.println("FILE MADE");
+		  }
+     else
+        Serial.println("CANNOT MAKE FILE");
 	  }
+    else
+      Serial.println("FILE EXISTS");
   }
 }
 void sd_write(String filename, String data)
@@ -24,15 +29,21 @@ void sd_write(String filename, String data)
   if(datafile) {
     datafile.println(data);
     datafile.close();
+    Serial.println("WRITE OK");
   }
+  else
+    Serial.println("CANNOT WRITE");
 }
 
 void setup() {
+  delay(5000);
 	sd_init("testlog.txt");
 }
 
 int i = 0;
 void loop() {
+  Serial.print("DONE ");
+  Serial.println(i);
 	String data = "DATA HERE: " + i;
 	sd_write("testlog.txt", data);
 	i++;
