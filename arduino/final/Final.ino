@@ -11,6 +11,16 @@
 #define SENSOR_HUMIDITY_SOIL 	3
 #define SENSOR_HUMIDITY_AIR		4
 
+// LED defines
+#define PIN_LED 		200		// FIXME
+#define LED_MASK_SIZE 	8-1
+
+#define LED_MASK_GSM		0x15		// 1 0 1 0 1
+#define LED_MASK_GPRS		0x1b		// 1 1 0 1 1
+#define LED_MASK_HTTP		0x17		// 1 0 1 1 1
+#define LED_MASK_SHT_INIT	0x1d		// 1 1 1 0 1
+#define LED_MASK_SHT_READ	0x1a		// 1 1 0 1 0
+
 // watermark pins
 #define PIN_WM_GND 7
 #define PIN_WM_PWR 6
@@ -144,10 +154,11 @@ void readSHT()
 {
     if(shtSensor.read_meas_data_single_shot(HIGH_REP_WITH_STRCH,&tempSHT,&humSHT) != NO_ERROR)
     {
-      Serial.println("read temp failed!!");
-	    tempSHT = FLT_MAX;
-	    humSHT = FLT_MAX;
+	  tempSHT = FLT_MAX;
+	  humSHT = FLT_MAX;
       wetbulbSHT = FLT_MAX;
+      Serial.println("read temp failed!!");
+	  led_blink(LED_MASK_SHT_READ);
     }
     else {
       wetbulbSHT = (tempSHT * atan(0.151977 * sqrt(humSHT + 8.313659))) + atan(tempSHT + humSHT) - atan(humSHT - 1.676331) + (0.00391838 * pow(sqrt(humSHT), 3.0) * atan(0.023101 * humSHT)) - 4.686035;
@@ -202,36 +213,46 @@ void json_push(String data) {
         gsm_connected = true;
       }
       else
+	  {
         Serial.println("GPRS not connected, retrying ...");
+		led_blink(LED_MASK_GPRS);
+	  }
     }
     else
+	{
       Serial.println("GSM not connected, retrying ...");
+	  led_blink(LED_MASK_GSM);
+	}
   }
   
   gsm_connected = false;
   while(!gsm_connected)
   {
-    Serial.println(client_gsm.connect(GPRS_SERVER, GPRS_PORT));
-    if(client_gsm.connect(GPRS_SERVER, GPRS_PORT))
-    {
-      Serial.println("HTTPS OK");
-      gsm_connected = true;
-    
-      client_http.beginRequest();
-      client_http.post(GPRS_PATH);
-      client_http.sendHeader("Content-Type", "application/json");
-    
-      client_http.sendHeader("Content-length", data.length());
-      client_http.beginBody();
-      client_http.print(data);
-    
-      client_http.endRequest();
-// FIXME: debug this
-	  client_gsm.stop();
+		Serial.println(client_gsm.connect(GPRS_SERVER, GPRS_PORT));
+		if(client_gsm.connect(GPRS_SERVER, GPRS_PORT))
+		{
+		  Serial.println("HTTPS OK");
+		  gsm_connected = true;
+		
+		  client_http.beginRequest();
+		  client_http.post(GPRS_PATH);
+		  client_http.sendHeader("Content-Type", "application/json");
+		
+		  client_http.sendHeader("Content-length", data.length());
+		  client_http.beginBody();
+		  client_http.print(data);
+		
+		  client_http.endRequest();
+	// FIXME: debug this
+		  client_gsm.stop();
+	  }
+	  else
+	  {
+		Serial.println("HTTPS client not connected, retrying ...");
+		led_blink(LED_MASK_HTTP);
+	  }
   }
-  else
-    Serial.println("HTTPS client not connected, retrying ...");
-  }
+  gsm.shutdown();
 }
 // debug print functions
 void printWatermark(){
@@ -277,9 +298,30 @@ void printAll() {
 	printSHT();
 }
 
+// led blink
+void led_blink(char mask)
+{
+	for(int i=LED_MASK_SIZE;i>=0;i--)
+	{
+		if(mask & (1<<i))
+		{
+			digitalWrite(PIN_LED, HIGH);
+			delay(300);
+			digitalWrite(PIN_LED, LOW);
+			delay(200);
+		}
+		else
+			delay(500);
+	}
+}
+
 void setup() {
 
   Serial.begin(9600);
+
+// LED setup
+  pinMode(PIN_LED, OUTPUT);
+  digitalWrite(PIN_LED, LOW);
 
 // watermark setup
   pinMode(PIN_WM_PWR, OUTPUT);
@@ -295,7 +337,10 @@ void setup() {
 
 // sht 35 setup
     if(shtSensor.init())
+	{
       Serial.println("sensor init failed!!!");
+	  led_blink(LED_MASK_SHT_INIT);
+	}
 }
 
 // Arduino loop
