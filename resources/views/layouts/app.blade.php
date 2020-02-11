@@ -65,6 +65,20 @@
                         @endif
                     @else
                         <li class="nav-item dropdown">
+                            <button role="button" type="button" class="nav-link btn dropdown" data-toggle="dropdown">
+                                Meldingen <span class="badge badge-danger">{{ count(auth()->user()->unreadNotifications) }}</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+                                @foreach(auth()->user()->unreadNotifications as $notification)
+                                    <a class="dropdown-item text-danger" href="#">
+                                        {{ $notification->data['text'] }}
+                                    </a>
+                                @endforeach
+
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }} <span class="caret"></span>
