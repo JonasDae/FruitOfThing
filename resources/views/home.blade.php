@@ -55,47 +55,19 @@
                     <!--Graph-->
                     <div id="graph" class="col-12"></div>
                 </div>
-
+            </div>
+        </div>
+        <div class="row">
+            <div class="container-fluid">
                 <div class="content-title text-center">
                     <h5>Overzicht metingen</h5>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="table-responsive">
-                            <table class="table" id="data_table">
-                                <thead>
-                                <tr>
-                                    <th scope="col" width=auto> Datum</th>
-                                    <th scope="col"> Module</th>
-                                    <th scope="col"> Type</th>
-                                    <th scope="col"> Waarde</th>
-                                    <th scope="col"> Huidige vruchtgrootte</th>
-                                </tr>
-                                </thead>
-                                <tbody id="data_table_body">
-                                @foreach($measurements as $measurement)
-                                    <tr>
-                                        <td>{{ $measurement->measure_date }}</td>
-                                        <td>{{ $measurement->module_id }}</td>
-                                        <td>{{ $measurement->module_sensor->sensor->name_alias ?? '' }}</td>
-                                        <td>{{ $measurement->value }} {{$measurement->module_sensor->sensor->measuring_unit ?? '' }}</td>
-                                        <td>
-                                            @if (!empty($measurement->module_sensor->sensor))
-                                                @if ($measurement->module_sensor->sensor->name == "Dendrometer")
-                                                    @foreach($sensor_added_values as $sensor_added_value)
-                                                        {{ $sensor_added_value->module_sensor_id == $measurement->module_sensor_id ? $measurement->value + $sensor_added_value->value : "" }}
-                                                    @endforeach
-                                                    {{ $measurement->module_sensor->sensor->measuring_unit ?? '' }}
-                                                @endif
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <!--Table-->
+                <div id="table" class="table-responsive"></div>
             </div>
         </div>
     </div>
@@ -122,13 +94,34 @@
             });
         }
 
+        function update_table() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: 'get',
+                url: '{{ route('table.index') }}',
+                data: {fruit_type: $('#fruit_type').val(), start_date: $('#start_date').val(), end_date: $('#end_date').val()},
+                success: function (response) {
+                    $("#table").html(response);
+                },
+                error: function (request, status, error) {
+                    $("#table").html('<p>De tabel kon niet worden weergegeven... Probeer het later opnieuw</p>');
+                }
+            });
+        }
+
         $(document).ready(function () {
             //init
             update_graph();
+            update_table();
 
             //onChange
             $("select, input[type='date']").change(function () {
                 update_graph();
+                update_table();
             });
         });
     </script>
