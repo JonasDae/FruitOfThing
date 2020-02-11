@@ -3,7 +3,13 @@
 #include <MKRGSM.h>
 #include <ArduinoHttpClient.h>
 
-#include <float.h>    // for FLT_MAX in sht32
+#include <float.h>    // for FLT_MAX in sht35
+
+// database constants
+#define SENSOR_DENDROMETER 		1
+#define SENSOR_TEMPERATURE 		2
+#define SENSOR_HUMIDITY_SOIL 	3
+#define SENSOR_HUMIDITY_AIR		4
 
 // watermark constants
 #define pinHumGnd 7
@@ -18,7 +24,7 @@
 #define thermPower 6 // switching power for thermistor
 #define thermAnalogIn A4 // input pin for the Thermistor
 
-// sht 32 constants
+// sht 35 constants
 #define SDAPIN  11		// serial data
 #define SCLPIN  12		// serial clock
 #define RSTPIN  13		// serial reset
@@ -62,7 +68,7 @@ int adcValDendro = 0;  // variable to store the value coming from the sensor
 float distDendro;
 float divider = 100000;
 
-// sht 32 variables
+// sht 35 variables
 SHT35 shtSensor(SCLPIN);
 float tempSHT;
 float humSHT;
@@ -157,18 +163,27 @@ String build_json()
 
   doc["module_id"] = 1;
   doc["battery_level"] = 69;
-  doc["module_sensor_id"] = 3;
+  /*
   doc["value"] = 66;
   doc["measure_date"] = "2069-01-30 10:20:20";
-/*
+  */
   JsonArray data_arr = doc.createNestedArray("data");
   JsonObject sensordata = data_arr.createNestedObject();
-  sensordata["sensor"] = 1;
-  sensordata["data"] = 55;  
+  sensordata["sensor"] = SENSOR_DENDROMETER;
+  sensordata["data"] = distdendro;  
+
   sensordata = data_arr.createNestedObject();
-  sensordata["sensor"] = 2;
-  sensordata["data"] = 25;
-*/
+  sensordata["sensor"] = SENSOR_TEMPERATURE;
+  sensordata["data"] = tempSHT;
+
+  sensordata = data_arr.createNestedObject();
+  sensordata["sensor"] = SENSOR_HUMIDITY_AIR;
+  sensordata["data"] = humSHT;
+
+  sensordata = data_arr.createNestedObject();
+  sensordata["sensor"] = SENSOR_HUMIDITY_SOIL;
+  sensordata["data"] = watermark_1_per_instant;
+
   serializeJson(doc, out);
   return out;
 }
@@ -223,13 +238,13 @@ void printWatermark(){
   Serial.println("\nVin\tVout\tAnalog\tRwm\tcb\t%water\ttemp");
   Serial.println("-------------------------------------------------------------");
   Serial.print(average_v_in);
-  Serial.print("\t");
+  Serial.print("V\t");
   Serial.print(average_v_out);
-  Serial.print("\t");
+  Serial.print("V\t");
   Serial.print(val);
   Serial.print("\t");
   Serial.print((int)rwm);
-  Serial.print("\t");
+  Serial.print("OHM\t");
   Serial.print(watermark_1_cb_instant);
   Serial.print("\t");
   Serial.print(watermark_1_per_instant);
@@ -238,28 +253,22 @@ void printWatermark(){
   Serial.println("C");
 }
 void printDendro() {
-  Serial.print ("Distance: "); 
+  Serial.println("\ndistance");
+  Serial.println("-------------------------------------------------------------");
   Serial.print (distDendro,2); 
-  Serial.println(" mm");
-  //Serial.println ();
-  //Serial.print ("ADC: ");
-  //Serial.println (adcValDendro);
-  //Serial.print ("Distance: "); 
-  //Serial.print (distDendro,2); 
-  //Serial.println(" mm");
+  Serial.println("mm\t");
 }
 void printSHT() {
-      Serial.print("temperature = ");
-      Serial.print(tempSHT);
-   Serial.println(" ℃ ");
+  Serial.println("\ntemp\thumid\twetbulb");
+  Serial.println("-------------------------------------------------------------");
+  Serial.print(tempSHT);
+  Serial.println("C\t");
 
-      Serial.print("humidity = ");
-      Serial.print(humSHT);
-	  Serial.println(" % ");
-    
-      Serial.print("wetbulb = ");
-      Serial.print(wetbulbSHT);
-    Serial.println(" ℃ ");
+  Serial.print(humSHT);
+  Serial.println("%\t");
+
+  Serial.print(wetbulbSHT);
+  Serial.println("C\t");
 }
 
 void printAll() {
@@ -267,8 +276,6 @@ void printAll() {
 	printDendro();
 	printSHT();
 }
-
-
 
 void setup() {
 
@@ -286,7 +293,7 @@ void setup() {
    // Setting analog read resolution to 12 bit 
    analogReadResolution(12);
 
-// sht 32 setup
+// sht 35 setup
     if(shtSensor.init())
       Serial.println("sensor init failed!!!");
 }
