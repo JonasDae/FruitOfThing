@@ -41,3 +41,11 @@ Route::delete('/sensor_types/{sensor_type}', 'Sensor_typeController@destroy')->n
 
 Route::get('/profile', 'ProfileController@index')->name('profile.index');
 Route::patch('/profile', 'ProfileController@update')->name('profile.update');
+
+Route::get('/notification/markasread', function () {
+    auth()->user()->unreadNotifications->markAsRead();
+})->name('notification.markasread');
+Route::get('/notification/delete/{id}', function ($id) {
+    auth()->user()->notifications()->where('id', $id)->get()->first()->delete();
+    return back();
+})->name('notification.destroy');

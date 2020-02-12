@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Field;
 use App\Module;
 use App\Notifications\Arduino;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class ModuleController extends Controller
 {
@@ -38,7 +40,9 @@ class ModuleController extends Controller
             $module->uptime = $uptime;
         }
 
-        auth()->user()->notify(new Arduino());
+        $users = User::get();
+        $message = auth()->user()->name . ' just visited the Module page';
+        Notification::send($users, new Arduino($message));
 
         return view('modules.index', compact('modules', 'fields'));
     }
