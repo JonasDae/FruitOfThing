@@ -14,6 +14,7 @@ return [
     */
 
     'failed' => 'These credentials do not match our records.',
+    'access' => 'Dit account heeft geen toegang tot het dashboard.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
 ];
