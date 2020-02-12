@@ -35,7 +35,7 @@ void send_ntp_packet(IPAddress &adr)
 	ntp_packet_buffer[2] = 6;			// polling interval
 	ntp_packet_buffer[3] = 0xEC;		// peer clock precision
 										// 8 bytes zeroed
-	ntp_packet_buffer[12] = 49;			// no idea what the rest does
+	ntp_packet_buffer[12] = 49;			// reference ID (4 bytes)
 	ntp_packet_buffer[13] = 0x4E;
 	ntp_packet_buffer[14] = 49;
 	ntp_packet_buffer[15] = 52;

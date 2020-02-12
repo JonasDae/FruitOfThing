@@ -6,7 +6,7 @@ $postdata = file_get_contents("php://input");
 // OLD
 // $postdata = '{"module_id": 1, "battery_level": 34, "module_sensor_id": 3, "value": 20, "measure_date": "2020-01-30 10:20:20"}';
 // NEW
-//$postdata = '{"module_id": 1, "battery_level": 34, "measure_date": "2020-01-30 10:20:20", data: [{sensor: 1, data: 20.3},{sensor: 2, data: 30.5},{sensor: 3, data: 40.6},{sensor: 4, data: 50.1}]}';
+//$postdata = '{"module_id": 1, "battery_level": 34, "measure_date": "2020-01-30 10:20:20", "data": [{"sensor": 1, "data": 20.3},{sensor: 2, data: 30.5},{sensor: 3, data: 40.6},{sensor: 4, data: 50.1}]}';
 
 if(isset($postdata) && !empty($postdata))
 {    
