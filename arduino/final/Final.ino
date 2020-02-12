@@ -7,6 +7,8 @@
 
 #include <float.h>    // for FLT_MAX in sht35
 
+#define ANALOG_RESOLUTION 1023.0
+
 // database constants
 #define SENSOR_DENDROMETER 		1
 #define SENSOR_TEMPERATURE 		2
@@ -57,7 +59,6 @@
 
 //Watermark variables:
 float resWatermark = 7760.0; //Ohm R;
-float arduino_resolution = 1023.0;
 int total_iterations = 10;
 float watermark_1_cb = 0.0;
 float watermark_1_cb_med = 0.0;
@@ -119,8 +120,8 @@ float readWatermark(){
     digitalWrite(PIN_WM_PWR, LOW);
     digitalWrite(PIN_WM_GND, LOW);
 
-    v_in =  val_vin * (3.3 / arduino_resolution);
-    v_out = val * (v_in / arduino_resolution);
+    v_in =  val_vin * (3.3 / ANALOG_RESOLUTION);
+    v_out = val * (v_in / ANALOG_RESOLUTION);
     average_v_in += v_in;
     average_v_out += v_out;
   }
