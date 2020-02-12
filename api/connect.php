@@ -1,11 +1,24 @@
 <?php
 // CORS fix: FIXME remove
 header("Access-Control-Allow-Origin: *");
-// db credentials
-define('DB_HOST', 'db.sinners.be');
-define('DB_USER', 'floriandh');
-define('DB_PASS', 'yu0p7fOrDc3g');
-define('DB_NAME', 'floriandh_pcfruit');
+
+// db credentials LOCAL
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'pcfruit');
+
+// db credentials SINNERS
+// define('DB_HOST', 'localhost');
+// define('DB_USER', 'root');
+// define('DB_PASS', '');
+// define('DB_NAME', 'pcfruit');
+
+// db credentials INFINITY
+// define('DB_HOST', 'sql107.epizy.com');
+// define('DB_USER', 'epiz_25192099');
+// define('DB_PASS', '9uWkPRY99pWL1');
+// define('DB_NAME', 'epiz_25192099_pcfruit_dashboard');
 
 // connect with the database
 function sql_connect() {

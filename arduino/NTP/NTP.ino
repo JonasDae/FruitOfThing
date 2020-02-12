@@ -17,7 +17,7 @@
 #define UTC_OFFSET			(3600UL*2UL)   // UTC +2? voor belgie
 
 GSMUDP Udp;
-IPAddress ntp_server(192, 13, 23, 5);
+IPAddress ntp_server(195, 13, 23, 5);
 byte ntp_packet_buffer[NTP_PACKET_SIZE];
 
 
@@ -27,7 +27,7 @@ GSMSSLClient client_gsm;
 HttpClient client_http = HttpClient(client_gsm, GPRS_SERVER, GPRS_PORT);
 void setup(){}
 
-void send_ntp_packet(IPAddress &adr)
+void send_ntp_packet(IPAddress& adr)
 {
 	memset(ntp_packet_buffer, 0, NTP_PACKET_SIZE);
 
@@ -41,28 +41,41 @@ void send_ntp_packet(IPAddress &adr)
 	ntp_packet_buffer[14] = 49;
 	ntp_packet_buffer[15] = 52;
 
+  Serial.println("WRITE");
 	Udp.beginPacket(adr, UDP_PORT_REMOTE);
 	Udp.write(ntp_packet_buffer, NTP_PACKET_SIZE);
 	Udp.endPacket();
+  Serial.println("WRITE DONE");
 }
 int parse_ntp_packet() {
+  bool read_ok = false;
+  while(!read_ok) {
+    delay(1000);
+  Serial.println("READ INIT");
   if(Udp.parsePacket()) {
-	Udp.read(ntp_packet_buffer, NTP_PACKET_SIZE);
-	unsigned long word_high = word(ntp_packet_buffer[40], ntp_packet_buffer[41]);
-	unsigned long word_low = word(ntp_packet_buffer[42], ntp_packet_buffer[43]);
+    
+    Serial.println("PARSE OK");
+	  Udp.read(ntp_packet_buffer, NTP_PACKET_SIZE);
+	  unsigned long word_high = word(ntp_packet_buffer[40], ntp_packet_buffer[41]);
+	  unsigned long word_low = word(ntp_packet_buffer[42], ntp_packet_buffer[43]);
 
-	unsigned long time_NTP = word_high << 16 | word_low;
+	  unsigned long time_NTP = word_high << 16 | word_low;
 
-	unsigned long time_unix = time_NTP - UNIX_TIME_OFFSET
-	time_unix = time_unit + UTC_OFFSET;
-	rtc.setEpoch(time_unix);
+	  unsigned long time_unix = time_NTP - UNIX_TIME_OFFSET;
+	  time_unix += UTC_OFFSET;
+//	  rtc.setEpoch(time_unix);
+    read_ok = true;
+    Serial.println(time_unix);
   }
   else
-  	return -1;
+    Serial.println("PARSE NOK");
+  }
 }
 
 String get_ntp_time() {
+  Serial.println("NTP START");
   boolean gsm_connected = false;
+  Serial.println(gsm_connected);
   while(!gsm_connected)
   {
     if((gsm.begin(GSM_PIN) == GSM_READY))
@@ -79,9 +92,9 @@ String get_ntp_time() {
     else
       Serial.println("GSM not connected, retrying ...");
   }
-
+  Serial.println("UDP_BEGIN");
   Udp.begin(UDP_PORT_LOCAL);
-  send_ntp_packet(&ntp_server);
+  send_ntp_packet(ntp_server);
   delay(3000);
   parse_ntp_packet();
 
@@ -89,5 +102,6 @@ String get_ntp_time() {
 }
 
 void loop() {
-	client_gsm.stop();
+  
+ get_ntp_time();
 }
