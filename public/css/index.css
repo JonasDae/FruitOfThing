@@ -163,10 +163,7 @@ table, td {
 
 #content #map {
     flex: 1;
-}
-
-#map {
-    min-height: 500px;
+    min-height: 300px;
 }
 
 /* FOOTER */
