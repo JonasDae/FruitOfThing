@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container pt-3">
+<div class="container-fluid">
     <div id="sensorNewAccordion">
         <div class="row mt-3 mx-0 font-weight-bold">
             <div class="col">Naam</div>

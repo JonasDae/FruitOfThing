@@ -67,7 +67,7 @@
         <div class="row">
             <div class="col">
                 <!--Table-->
-                <div id="table" class="table-responsive"></div>
+                <div id="table"></div>
             </div>
         </div>
     </div>

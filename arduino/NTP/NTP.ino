@@ -10,13 +10,16 @@
 #define GPRS_PATH       "/pcfruit/api/measurements/create.php"
 #define GPRS_PORT       443
 
-#define UDP_PORT_LOCAL	2390
-#define UDP_PORT_REMOTE	123
-#define NTP_PACKET_SIZE	48
-#define UTC_OFFSET		3600UL   // UTC +1 voor belgie
+#define UDP_PORT_LOCAL		2390
+#define UDP_PORT_REMOTE		123
+#define NTP_PACKET_SIZE		48
+#define UNIX_TIME_OFFSET 	2208988800UL
+#define UTC_OFFSET			(3600UL*2UL)   // UTC +2? voor belgie
 
 GSMUDP Udp;
 IPAddress ntp_server(192, 13, 23, 5);
+byte ntp_packet_buffer[NTP_PACKET_SIZE];
+
 
 GSM gsm;
 GPRS gprs;
@@ -26,8 +29,6 @@ void setup(){}
 
 void send_ntp_packet(IPAddress &adr)
 {
-	byte ntp_packet_buffer[NTP_PACKET_SIZE];
-
 	memset(ntp_packet_buffer, 0, NTP_PACKET_SIZE);
 
 	ntp_packet_buffer[0] = 0b11100011;	// LI, version, mode
@@ -45,7 +46,19 @@ void send_ntp_packet(IPAddress &adr)
 	Udp.endPacket();
 }
 int parse_ntp_packet() {
+  if(Udp.parsePacket()) {
 	Udp.read(ntp_packet_buffer, NTP_PACKET_SIZE);
+	unsigned long word_high = word(ntp_packet_buffer[40], ntp_packet_buffer[41]);
+	unsigned long word_low = word(ntp_packet_buffer[42], ntp_packet_buffer[43]);
+
+	unsigned long time_NTP = word_high << 16 | word_low;
+
+	unsigned long time_unix = time_NTP - UNIX_TIME_OFFSET
+	time_unix = time_unit + UTC_OFFSET;
+	rtc.setEpoch(time_unix);
+  }
+  else
+  	return -1;
 }
 
 String get_ntp_time() {
@@ -66,12 +79,13 @@ String get_ntp_time() {
     else
       Serial.println("GSM not connected, retrying ...");
   }
+
   Udp.begin(UDP_PORT_LOCAL);
   send_ntp_packet(&ntp_server);
-
   delay(3000);
-  if(Udp.parsePacket()) {
-  }
+  parse_ntp_packet();
+
+  gsm.shutdown();
 }
 
 void loop() {
