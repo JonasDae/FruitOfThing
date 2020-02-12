@@ -2,15 +2,15 @@
 #include <ArduinoHttpClient.h>
 #include <ArduinoJson.h>
 
-#define JSON_SIZE 200
+#define JSON_SIZE 300
 
 #define GSM_PIN         "6615"
 #define GPRS_APN        "internet.proximus.be"
 #define GPRS_LOGIN      ""
 #define GPRS_PASSWORD   ""
 
-#define GPRS_SERVER     "floriandh.sinners.be"
-#define GPRS_PATH       "/pcfruit/api/measurements/create.php"
+#define GPRS_SERVER     "pcfruit-dashboard.epizy.com"
+#define GPRS_PATH       "/api/measurements/create.php"
 #define GPRS_PORT       443
 
 GSM gsm;
@@ -41,7 +41,6 @@ void json_push(String data) {
   gsm_connected = false;
   while(!gsm_connected)
   {
-    Serial.println(client_gsm.connect(GPRS_SERVER, GPRS_PORT));
     if(client_gsm.connect(GPRS_SERVER, GPRS_PORT))
     {
       Serial.println("HTTPS OK");
@@ -64,15 +63,7 @@ void json_push(String data) {
 
 void loop() {
   
-  StaticJsonDocument<JSON_SIZE> doc;
-
-  doc["module_id"] = 1;
-  doc["battery_level"] = 69;
-  doc["module_sensor_id"] = 3;
-  doc["value"] = 99;
-  doc["measure_date"] = "2069-11-22 10:20:20";
-  String data = "";
-  serializeJson(doc, data);
+  String data = "{\"module_id\":1,\"battery_level\":69,\"measure_date\":\"2020-01-30 10:20:20\",\"data\":[{\"sensor\":1,\"data\":0.00366},{\"sensor\":2,\"data\":22.12139},{\"sensor\":3,\"data\":34},{\"sensor\":4,\"data\":38.32303}]}";
 
   json_push(data);
 
@@ -88,5 +79,5 @@ void loop() {
   {
     client_gsm.stop();
   }
-  delay(999999999);
+  delay(10000);
 }
