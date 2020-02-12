@@ -136,6 +136,7 @@
             $('.record').click(function () {
                 var q = encodeURIComponent($(this).find('div.adres').text().trim());
                 $('#map iframe').attr('src', 'https://maps.google.com/maps?q=' + q + '&output=embed');
+                document.getElementById('map').scrollIntoView(true);
             });
         });
     </script>

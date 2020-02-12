@@ -1,5 +1,5 @@
 // dendrometer initialisation
-#define dendroAnalogIn A1 // input pin for the Thermistor
+#define dendroAnalogIn A1 // input pin for the dendrometer
 int adcValDendro = 0;  // variable to store the value coming from the sensor
 float distDendro;
 float divider = 100000;
@@ -41,4 +41,3 @@ void loop() {
   printAll();
 
 }
-

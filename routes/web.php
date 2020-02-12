@@ -16,6 +16,7 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home'); //give route a name so it can be addressed from a view
 Route::get('/home', 'HomeController@index');
 Route::get('/graph', 'GraphController@index')->name('graph.index');
+Route::get('/table', 'TableController@index')->name('table.index');
 
 Route::get('/modules', 'ModuleController@index')->name('modules.index');
 Route::patch('/modules', 'ModuleController@update')->name('modules.update');
@@ -39,4 +40,12 @@ Route::post('/sensor_types', 'Sensor_typeController@store')->name('sensor_types.
 Route::delete('/sensor_types/{sensor_type}', 'Sensor_typeController@destroy')->name('sensor_types.destroy');
 
 Route::get('/profile', 'ProfileController@index')->name('profile.index');
-Route::patch('/profile', 'ProfileController@update')->name('profile.update');
+Route::patch('/profile/{user}', 'ProfileController@update')->name('profile.update');
+
+Route::get('/notification/markasread', function () {
+    auth()->user()->unreadNotifications->markAsRead();
+})->name('notification.markasread');
+Route::get('/notification/delete/{id}', function ($id) {
+    auth()->user()->notifications()->where('id', $id)->get()->first()->delete();
+    return back();
+})->name('notification.destroy');

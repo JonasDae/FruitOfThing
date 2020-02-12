@@ -16,7 +16,7 @@
 <body>
 <div id="app" class="d-flex">
     <header>
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
             <a class="navbar-brand" href="https://www.pcfruit.be/nl">
                 <img src="{{ asset('img/logo.png') }}" height="50" alt="logo">
             </a>
@@ -64,35 +64,55 @@
                             </li>
                         @endif
                     @else
-                        <li class="nav-item dropdown">
-                            <button role="button" type="button" class="nav-link btn dropdown" data-toggle="dropdown">
+                    <!--Notifications-->
+                        <li id="notifications" class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 Meldingen <span class="badge badge-danger">{{ count(auth()->user()->unreadNotifications) }}</span>
-                            </button>
+                            </a>
 
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
-                                @foreach(auth()->user()->unreadNotifications as $notification)
-                                    <a class="dropdown-item text-danger" href="#">
-                                        {{ $notification->data['text'] }}
-                                    </a>
-                                @endforeach
-
+                            <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="notificationDropdown">
+                                @if (auth()->user()->notifications()->count() !== 0)
+                                    @if (count(auth()->user()->unreadNotifications) !== 0)
+                                        <div class="dropdown-item bg-dark text-white">
+                                            Ongelezen
+                                        </div>
+                                        @foreach(auth()->user()->unreadNotifications as $notification)
+                                            <hr class="my-0">
+                                            <a class="dropdown-item py-3 text-{{ $notification->data['severity'] }}" href="{{ route('notification.destroy', array('id' => $notification->id)) }}">
+                                                {{ $notification->data['text'] }}
+                                            </a>
+                                        @endforeach
+                                    @endif
+                                    <div class="dropdown-item bg-dark text-white">
+                                        Gelezen
+                                    </div>
+                                    @foreach(auth()->user()->notifications()->whereNotNull('read_at')->get() as $notification)
+                                        <hr class="my-0">
+                                        <a class="dropdown-item py-3 text-{{ $notification->data['severity'] }}" href="{{ route('notification.destroy', array('id' => $notification->id)) }}">
+                                            {{ $notification->data['text'] }}
+                                        </a>
+                                    @endforeach
+                                @else
+                                    <div class="dropdown-item py-3">
+                                        Geen meldingen
+                                    </div>
+                                @endif
                             </div>
                         </li>
+                        <!--Profile-->
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
 
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('profile.index') }}">{{ __('Profiel') }}</a>
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                            <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item py-3" href="{{ route('profile.index') }}">{{ __('Profiel') }}</a>
+                                <hr class="my-0">
+                                <a class="dropdown-item py-3" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
                                 </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                      style="display: none;">
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
                             </div>
@@ -115,6 +135,13 @@
 <!-- Scripts --> {{--app.js includes jQuery, Popper, Bootstrap and chart.js (check resources > js > app.js)--}}
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/index.js') }}" defer></script>
+<script>
+    $(function () {
+        $('#notifications').click(function () {
+            $.get("{{ route('notification.markasread') }}");
+        });
+    });
+</script>
 
 @yield('script')
 
