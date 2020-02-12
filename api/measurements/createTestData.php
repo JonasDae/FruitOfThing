@@ -54,7 +54,7 @@ if(isset($module_id) && !empty($module_id))
 
             //Meting opslaan
             $value = rand(0,25);
-            $measure_date = $connectiondate;
+            $measure_date = $connection_date;
             for ($i = 1; $i <= 25; $i++) {
                 $value+= rand(0,10);
                 $sql = "INSERT INTO measurements (module_id, module_sensor_id, value, measure_date)
@@ -63,24 +63,11 @@ if(isset($module_id) && !empty($module_id))
 		 		    '{$moduleSensor["id"]}',
 		 		    '{$value}',
                      '{$measure_date}')";
-                $measure_date->add(new DateInterval('P15M'));
+                // $measure_date;
             }
 
         }
     }
-
-
-
-    
-
-	/*
-    $module_sensor_id = intval(mysqli_real_escape_string($con, $request->module_sensor_id)); //int
-    $value = doubleval(mysqli_real_escape_string($con, $request->value)); //double
-	*/
-		// echo "data element: " . $moduleSensor->sensor_id;
-		// 
-	// }
-
 
     mysqli_close($con);
     return;
