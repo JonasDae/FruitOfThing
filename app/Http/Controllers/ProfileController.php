@@ -23,15 +23,20 @@ class ProfileController extends Controller
         return view('profiles.index', compact('profile', 'users'));
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $user = Auth::user();
+        $user = User::find($id);
 
-        $data = $request->validate(array(
-            'name' => array('required', 'string', 'max:255'),
-        ));
-
-        $user->update($data);
+        //Update user depending on what parameters are given
+        if ($request->get('name')) { //Update current logged on user
+            $data = $request->validate(array(
+                'name' => array('required', 'string', 'max:255'),
+            ));
+            $user->update($data);
+        } else { //Update other user access to the website
+            $user->access = $request->get('access') == 'on' ? 1 : 0;
+            $user->save();
+        }
 
         return redirect(route('profile.index'));
     }

@@ -8,9 +8,9 @@
                 <i class="fas fa-user-circle h-75 w-75"></i>
             </div>
             <div class="col-lg-8 col-md-6 col-12">
-                <form action="{{ route('profile.update') }}" method="post" class="p-3">
-                    @csrf
+                <form action="{{ route('profile.update', $profile->id) }}" method="post" class="p-3">
                     @method('PATCH') {{--PATCH to update an existing source (method="patch" won't work so we do it this way)--}}
+                    @csrf
                     <div class="form-group row">
                         <label for="name" class="col-md-4 col-form-label">Naam</label>
                         <div class="col-md-6">
@@ -50,26 +50,19 @@
                         {{ $user->email }}
                     </div>
                     <div class="col-lg-1 col-md-2 col-auto text-md-center text-right">
-                        @if (empty($user->email_verified_at))
-                            <a class="m-0 p-0 no-gutters" href="javascript:void" data-toggle="popover" data-html="true" data-trigger="hover" data-content="Kan gebruiker geen toegang geven aan het dashboard omdat de gebruiker nog niet geferifieerd is">
+                        <form id="access{{ $key }}" action="{{ route('profile.update', $user->id) }}" method="post">
+                            @method('PATCH')
+                            @csrf
+                            <div class="m-0 p-0 no-gutters" data-toggle="popover" data-html="true" data-trigger="hover" data-content="Toegang geven is vergrendeld wanneer deze gebruiker niet geverifieerd is.">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" disabled class="custom-control-input" id="customSwitchDis{{ $key }}">
+                                    <input type="checkbox" name="access" class="custom-control-input" id="customSwitchDis{{ $key }}"{{ $user->access ? ' checked' : '' }} {{ empty($user->email_verified_at) ? 'disabled' : 'onchange=this.form.submit()' }}>
                                     <label class="custom-control-label" for="customSwitchDis{{ $key }}"></label>
                                 </div>
-                            </a>                                   
-                        @else
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="accessSwitch{{ $key }}" {{ $user->access == true ? 'checked' : '' }}>
-                                <label class="custom-control-label" for="accessSwitch{{ $key }}"></label>
                             </div>
-                        @endif
+                        </form>
                     </div>
                     <div class="col-lg-1 col-md-2 col-auto text-md-center text-right">
-                        @if (empty($user->email_verified_at))
-                            <i class="fas fa-times text-danger"></i>
-                        @else
-                            <i class="fas fa-check text-success"></i>
-                        @endif
+                        <i class="fas {{ empty($user->email_verified_at) ? 'fa-times text-danger' : 'fa-check text-success' }}"></i>
                     </div>
                 </div>
                 <hr>

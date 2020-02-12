@@ -109,13 +109,10 @@
                             <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item py-3" href="{{ route('profile.index') }}">{{ __('Profiel') }}</a>
                                 <hr class="my-0">
-                                <a class="dropdown-item py-3" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                <a class="dropdown-item py-3" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
                                 </a>
-                                <form id="logout-form py-3" action="{{ route('logout') }}" method="POST"
-                                      style="display: none;">
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
                             </div>

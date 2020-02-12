@@ -40,7 +40,7 @@ Route::post('/sensor_types', 'Sensor_typeController@store')->name('sensor_types.
 Route::delete('/sensor_types/{sensor_type}', 'Sensor_typeController@destroy')->name('sensor_types.destroy');
 
 Route::get('/profile', 'ProfileController@index')->name('profile.index');
-Route::patch('/profile', 'ProfileController@update')->name('profile.update');
+Route::patch('/profile/{user}', 'ProfileController@update')->name('profile.update');
 
 Route::get('/notification/markasread', function () {
     auth()->user()->unreadNotifications->markAsRead();
