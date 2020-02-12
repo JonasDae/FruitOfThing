@@ -2,6 +2,8 @@
 #include <ArduinoJson.h>
 #include <MKRGSM.h>
 #include <ArduinoHttpClient.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
 #include <float.h>    // for FLT_MAX in sht35
 
@@ -12,14 +14,14 @@
 #define SENSOR_HUMIDITY_AIR		4
 
 // LED defines
-#define PIN_LED 		200		// FIXME
-#define LED_MASK_SIZE 	8-1
+#define PIN_LED 		    200		// FIXME
+#define LED_MASK_SIZE 	8-1   // 1 byte 0->7
 
 #define LED_MASK_GSM		0x15		// 1 0 1 0 1
 #define LED_MASK_GPRS		0x1b		// 1 1 0 1 1
 #define LED_MASK_HTTP		0x17		// 1 0 1 1 1
-#define LED_MASK_SHT_INIT	0x1d		// 1 1 1 0 1
-#define LED_MASK_SHT_READ	0x1a		// 1 1 0 1 0
+#define LED_MASK_SHT_INIT	0x1d	// 1 1 1 0 1
+#define LED_MASK_SHT_READ	0x1a	// 1 1 0 1 0
 
 // watermark pins
 #define PIN_WM_GND 7
@@ -28,11 +30,10 @@
 #define PIN_WM_VIN A3
 
 // dendrometer pins
-#define PIN_DENDRO_IN A1 // input pin for the Thermistor
+#define PIN_DENDRO_IN A1 // input pin for the dendrometer
 
-// thermistor pins
-#define PIN_THERM_PWR 6 // switching power for thermistor
-#define PIN_THERM_IN A4 // input pin for the Thermistor
+// OneWire temperature sensor constants
+#define ONE_WIRE_BUS 2
 
 // sht 35 pins
 #define SDAPIN  11		// serial data
@@ -77,6 +78,11 @@ float rwm;
 int adcValDendro = 0;  // variable to store the value coming from the sensor
 float distDendro;
 float divider = 100000;
+
+// OneWire temperature sensor variables
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature tempSensor(&oneWire);
+float tempGnd = 0.f;
 
 // sht 35 variables
 SHT35 shtSensor(SCLPIN);
@@ -150,6 +156,13 @@ float readDendro(){
   return distDendro;
 }
 
+float readTemp()
+{
+  tempSensor.requestTemperatures();
+  tempGnd = tempSensor.getTempCByIndex(0);
+  return tempGnd;
+}
+
 void readSHT()
 {
     if(shtSensor.read_meas_data_single_shot(HIGH_REP_WITH_STRCH,&tempSHT,&humSHT) != NO_ERROR)
@@ -181,7 +194,7 @@ String build_json()
   JsonArray data_arr = doc.createNestedArray("data");
   JsonObject sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_DENDROMETER;
-  sensordata["data"] = distdendro;  
+  sensordata["data"] = distDendro;  
 
   sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_TEMPERATURE;
@@ -279,6 +292,12 @@ void printDendro() {
   Serial.print (distDendro,2); 
   Serial.println("mm\t");
 }
+void printTemp() {
+  Serial.println("\ntemp");
+  Serial.println("-------------------------------------------------------------");
+  Serial.print(tempGnd);
+  Serial.println("C\t");
+}
 void printSHT() {
   Serial.println("\ntemp\thumid\twetbulb");
   Serial.println("-------------------------------------------------------------");
@@ -296,6 +315,7 @@ void printAll() {
 	printWatermark();
 	printDendro();
 	printSHT();
+	printTemp();
 }
 
 // led blink
@@ -334,7 +354,8 @@ void setup() {
 // dendrometer setup
    // Setting analog read resolution to 12 bit 
    analogReadResolution(12);
-
+// onewire temperature sensor setup
+   tempSensor.begin();
 // sht 35 setup
     if(shtSensor.init())
 	{
@@ -353,9 +374,11 @@ void loop() {
   
   String json = build_json();
   json_push(json);
-  */
   readSHT();
   printSHT();
+  */
+  readTemp();
+  printTemp();
   delay(1000);
 
 }
