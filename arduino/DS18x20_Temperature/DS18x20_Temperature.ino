@@ -31,5 +31,6 @@ void setup()
 void loop()
 { 
     tempGnd = readTemp();
+    delay(1000);
     printAll();
 }
