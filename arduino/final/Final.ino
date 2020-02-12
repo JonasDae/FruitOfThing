@@ -7,7 +7,7 @@
 
 #include <float.h>    // for FLT_MAX in sht35
 
-#define ANALOG_RESOLUTION 1023.0
+#define ANALOG_RESOLUTION   4096.0
 
 // database constants
 #define SENSOR_DENDROMETER 		1
@@ -30,6 +30,7 @@
 #define PIN_WM_PWR 6
 #define PIN_WM_HUM A2
 #define PIN_WM_VIN A3
+#define WM_NUM_ITERATION 10
 
 // dendrometer pins
 #define PIN_DENDRO_IN A1 // input pin for the dendrometer
@@ -44,7 +45,7 @@
 
 // json constants
 #define MODULE_NAME "logger 123"
-#define JSON_SIZE 200
+#define JSON_SIZE 300
 
 // gprs constants
 #define GSM_PIN         "6615"
@@ -56,10 +57,16 @@
 #define GPRS_PATH       "/pcfruit/api/measurements/create.php"
 #define GPRS_PORT       443
 
+// NTP constants
+#define UDP_PORT_LOCAL    2390
+#define UDP_PORT_REMOTE   123
+#define NTP_PACKET_SIZE   48
+#define UNIX_TIME_OFFSET  2208988800UL
+#define UTC_OFFSET      (3600UL*2UL)   // UTC +2? voor belgie
 
 //Watermark variables:
 float resWatermark = 7760.0; //Ohm R;
-int total_iterations = 10;
+
 float watermark_1_cb = 0.0;
 float watermark_1_cb_med = 0.0;
 float watermark_1_cb_instant = 0.0;
@@ -97,6 +104,11 @@ GPRS gprs;
 GSMSSLClient client_gsm;
 HttpClient client_http = HttpClient(client_gsm, GPRS_SERVER, GPRS_PORT);
 
+// NTP variables
+GSMUDP Udp;
+IPAddress ntp_server(195, 13, 23, 5);
+byte ntp_packet_buffer[NTP_PACKET_SIZE];
+
 //read sensor functions
 float readWatermark(){
 
@@ -109,7 +121,7 @@ float readWatermark(){
   average_v_in = 0;
   average_v_out = 0;
 
-  for (int i = 0; i < total_iterations; i++)
+  for (int i = 0; i < WM_NUM_ITERATION; i++)
   {
     digitalWrite(PIN_WM_PWR, HIGH);
     digitalWrite(PIN_WM_GND, LOW);
@@ -126,8 +138,8 @@ float readWatermark(){
     average_v_out += v_out;
   }
 
-  average_v_out = average_v_out / total_iterations;
-  average_v_in = average_v_in / total_iterations;
+  average_v_out = average_v_out / WM_NUM_ITERATION;
+  average_v_in = average_v_in / WM_NUM_ITERATION;
 
   rwm = ((average_v_in * resWatermark)/average_v_out)-resWatermark;
 
@@ -202,12 +214,12 @@ String build_json()
   sensordata["data"] = tempSHT;
 
   sensordata = data_arr.createNestedObject();
-  sensordata["sensor"] = SENSOR_HUMIDITY_AIR;
-  sensordata["data"] = humSHT;
-
-  sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_HUMIDITY_SOIL;
   sensordata["data"] = watermark_1_per_instant;
+
+  sensordata = data_arr.createNestedObject();
+  sensordata["sensor"] = SENSOR_HUMIDITY_AIR;
+  sensordata["data"] = humSHT;
 
   serializeJson(doc, out);
   return out;
@@ -227,16 +239,16 @@ void json_push(String data) {
         gsm_connected = true;
       }
       else
-	  {
+	    {
         Serial.println("GPRS not connected, retrying ...");
-		led_blink(LED_MASK_GPRS);
-	  }
+		    led_blink(LED_MASK_GPRS);
+	    }
     }
     else
-	{
+	  {
       Serial.println("GSM not connected, retrying ...");
-	  led_blink(LED_MASK_GSM);
-	}
+	    led_blink(LED_MASK_GSM);
+	  }
   }
   
   gsm_connected = false;
@@ -262,15 +274,89 @@ void json_push(String data) {
 	  }
 	  else
 	  {
-		Serial.println("HTTPS client not connected, retrying ...");
-		led_blink(LED_MASK_HTTP);
+		  Serial.println("HTTPS client not connected, retrying ...");
+		  led_blink(LED_MASK_HTTP);
 	  }
   }
   gsm.shutdown();
 }
+// NTP functions
+void send_ntp_packet(IPAddress& adr)
+{
+  memset(ntp_packet_buffer, 0, NTP_PACKET_SIZE);
+
+  ntp_packet_buffer[0] = 0b11100011;  // LI, version, mode
+  ntp_packet_buffer[1] = 0;     // clocktype
+  ntp_packet_buffer[2] = 6;     // polling interval
+  ntp_packet_buffer[3] = 0xEC;    // peer clock precision
+                    // 8 bytes zeroed
+  ntp_packet_buffer[12] = 49;     // reference ID (4 bytes)
+  ntp_packet_buffer[13] = 0x4E;
+  ntp_packet_buffer[14] = 49;
+  ntp_packet_buffer[15] = 52;
+
+  Serial.println("WRITE");
+  Udp.beginPacket(adr, UDP_PORT_REMOTE);
+  Udp.write(ntp_packet_buffer, NTP_PACKET_SIZE);
+  Udp.endPacket();
+  Serial.println("WRITE DONE");
+}
+int parse_ntp_packet() {
+  bool read_ok = false;
+  while(!read_ok) {
+    delay(1000);
+  Serial.println("READ INIT");
+  if(Udp.parsePacket()) {
+    
+    Serial.println("PARSE OK");
+    Udp.read(ntp_packet_buffer, NTP_PACKET_SIZE);
+    unsigned long word_high = word(ntp_packet_buffer[40], ntp_packet_buffer[41]);
+    unsigned long word_low = word(ntp_packet_buffer[42], ntp_packet_buffer[43]);
+
+    unsigned long time_NTP = word_high << 16 | word_low;
+
+    unsigned long time_unix = time_NTP - UNIX_TIME_OFFSET;
+    time_unix += UTC_OFFSET;
+//    rtc.setEpoch(time_unix);
+    read_ok = true;
+    Serial.println(time_unix);
+  }
+  else
+    Serial.println("PARSE NOK");
+  }
+}
+String get_ntp_time() {
+  Serial.println("NTP START");
+  boolean gsm_connected = false;
+  Serial.println(gsm_connected);
+  while(!gsm_connected)
+  {
+    if((gsm.begin(GSM_PIN) == GSM_READY))
+    {
+      Serial.println("GSM OK");
+      if(gprs.attachGPRS(GPRS_APN, GPRS_LOGIN, GPRS_PASSWORD) == GPRS_READY)
+      {
+        Serial.println("GPRS OK");
+        gsm_connected = true;
+      }
+      else
+        Serial.println("GPRS not connected, retrying ...");
+    }
+    else
+      Serial.println("GSM not connected, retrying ...");
+  }
+  Serial.println("UDP_BEGIN");
+  Udp.begin(UDP_PORT_LOCAL);
+  send_ntp_packet(ntp_server);
+  delay(3000);
+  parse_ntp_packet();
+
+  gsm.shutdown();
+}
+
 // debug print functions
 void printWatermark(){
-  Serial.println("\nVin\tVout\tAnalog\tRwm\tcb\t%water\ttemp");
+  Serial.println("\nVin\tVout\tAnalog\tRwm\t\tcb\t%water\ttemp");
   Serial.println("-------------------------------------------------------------");
   Serial.print(average_v_in);
   Serial.print("V\t");
@@ -279,7 +365,7 @@ void printWatermark(){
   Serial.print(val);
   Serial.print("\t");
   Serial.print((int)rwm);
-  Serial.print("OHM\t");
+  Serial.print(" OHM\t");
   Serial.print(watermark_1_cb_instant);
   Serial.print("\t");
   Serial.print(watermark_1_per_instant);
@@ -303,10 +389,10 @@ void printSHT() {
   Serial.println("\ntemp\thumid\twetbulb");
   Serial.println("-------------------------------------------------------------");
   Serial.print(tempSHT);
-  Serial.println("C\t");
+  Serial.print("C\t");
 
   Serial.print(humSHT);
-  Serial.println("%\t");
+  Serial.print("%\t");
 
   Serial.print(wetbulbSHT);
   Serial.println("C\t");
@@ -363,23 +449,24 @@ void setup() {
       Serial.println("sensor init failed!!!");
 	  led_blink(LED_MASK_SHT_INIT);
 	}
+
+ // ntp setup
+ get_ntp_time();
 }
 
 // Arduino loop
 void loop() {
 /*
-  readWatermark();
-  distDendro = readDendro();
-  
-  printAll();
-  
   String json = build_json();
   json_push(json);
-  readSHT();
-  printSHT();
-  */
+*/
+  readWatermark();
+  readDendro();
   readTemp();
-  printTemp();
+  readSHT();
+  printAll();
+  String json = build_json();
+  Serial.println(json);
   delay(1000);
 
 }
