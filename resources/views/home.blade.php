@@ -46,11 +46,11 @@
                     </div>
                     <div class="col-sm-6 col-lg-3 form-group">
                         <label for="start_date">Begindatum</label>
-                        <input type="date" id="start_date" placeholder="Selecteer begindatum" value="1970-01-01" class="form-control">
+                        <input type="date" id="start_date" placeholder="Selecteer begindatum" value="{{ date('Y-m-d', strtotime(date('Y-m-d') . ' -1 year')) }}" class="form-control">
                     </div>
                     <div class="col-sm-6 col-lg-3 form-group">
                         <label for="end_date">Einddatum</label>
-                        <input type="date" id="end_date" placeholder="Selecteer einddatum" value="2025-01-01" class="form-control">
+                        <input type="date" id="end_date" placeholder="Selecteer einddatum" value="{{ date('Y-m-d') }}" class="form-control">
                     </div>
                     <!--Graph-->
                     <div id="graph" class="col-12"></div>
