@@ -5,6 +5,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <RTCZero.h>
+#include <SD.h>
 
 #include <float.h>    // for FLT_MAX in sht35
 
@@ -57,6 +58,10 @@
 #define GPRS_SERVER     "floriandh.sinners.be"
 #define GPRS_PATH       "/pcfruit/api/measurements/create.php"
 #define GPRS_PORT       443
+
+// SD constants
+#define SD_CHIPSELECT 4
+#define SD_FILE_NAME "DATALOG.TXT"
 
 //Watermark variables:
 float resWatermark = 7760.0; //Ohm R;
@@ -298,6 +303,41 @@ int ntp_get_time()
   return out;
 }
 
+// SD functions
+void sd_init(String filename)
+{
+  
+  if(!SD.begin(SD_CHIPSELECT))
+      Serial.println("SD ERROR");
+  else
+  {
+    if(!SD.exists(filename)) {
+      File datafile = SD.open(filename, FILE_WRITE);
+      if(datafile) {
+        datafile.print("Data log: ");
+        datafile.println(MODULE_NAME);
+        datafile.close();
+        Serial.println("FILE MADE");
+      }
+     else
+        Serial.println("CANNOT MAKE FILE");
+    }
+    else
+      Serial.println("FILE EXISTS");
+  }
+}
+void sd_write(String filename, String data)
+{
+  File datafile = SD.open(filename, FILE_WRITE);
+  if(datafile) {
+    datafile.println(data);
+    datafile.close();
+    Serial.println("WRITE OK");
+  }
+  else
+    Serial.println("CANNOT WRITE");
+}
+
 // debug print functions
 void printWatermark(){
   Serial.println("\nVin\tVout\tAnalog\tRwm\t\tcb\t%water\ttemp");
@@ -398,6 +438,8 @@ void setup() {
  rtc.begin();
  // set rtc from ntp
  rtc.setEpoch(ntp_get_time());
+ // SD setup
+ sd_init(SD_FILE_NAME);
 }
 // Arduino loop
 void loop() {
@@ -411,6 +453,7 @@ void loop() {
   readSHT();
   printAll();
   String json = build_json();
+  sd_write(SD_FILE_NAME, json);
   Serial.println(json);
   delay(1000);
 
