@@ -2,12 +2,13 @@
 require '../connect.php';
 
 $module_id = intval($_GET['module_id']);
-$battery_level = rand(1,100);
+$battery_level = mt_rand(1,100);
 
 if(isset($module_id) && !empty($module_id))
 {    
     date_default_timezone_set('Europe/Brussels');
 
+    // $connection_date = date("Y-m-d H:i:s", strtotime("2019-12-24 09:00:00"));
     $connection_date = date("Y-m-d H:i:s");
 
     $moduleSensors = [];
@@ -53,17 +54,25 @@ if(isset($module_id) && !empty($module_id))
             }
 
             //Meting opslaan
-            $value = rand(0,25);
+            $value = mt_rand(0.00,10.99);
             $measure_date = $connection_date;
             for ($i = 1; $i <= 25; $i++) {
-                $value+= rand(0,10);
+                
                 $sql = "INSERT INTO measurements (module_id, module_sensor_id, value, measure_date)
 		 		    VALUES (
 		 		    '{$module_id}',
 		 		    '{$moduleSensor["id"]}',
 		 		    '{$value}',
                      '{$measure_date}')";
-                // $measure_date;
+
+                $measure_date = date('Y-m-d H:i:s',strtotime('+15 minutes',strtotime($measure_date)));
+                $value+= mt_rand(0.00,10.99);
+
+                if (sql_query($con, $sql)) {
+                    echo "New record created successfully. ";
+                } else {
+                    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+                }
             }
 
         }

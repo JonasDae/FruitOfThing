@@ -65,6 +65,6 @@ if(isset($postdata) && !empty($postdata))
     }
 
     mysqli_close($con);
-    return;
+    return 'Gereturned BITCH';
 }
 ?>

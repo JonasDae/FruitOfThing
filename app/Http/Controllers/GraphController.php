@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Measurement;
 use App\Sensor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GraphController extends Controller
 {
@@ -20,8 +21,17 @@ class GraphController extends Controller
 
     public function graph($fruit_type, $display = 'm', $start_date = '', $end_date = '')
     {
-        //Get measurements and filter by date
-        $measurements = Measurement::whereDate('measure_date', '>=', $start_date)->where('measure_date', '<=', $end_date)->get()->sortBy('measure_date')->values(); //->values() resets the key values after sort
+        //Get measurements and filter by date and fruit_type
+        $measurements = DB::table('measurements')
+            ->join('modules', 'measurements.module_id', '=', 'modules.id')
+            ->join('fields', 'modules.field_id', '=', 'fields.id')
+            ->join('module_sensors', 'measurements.module_sensor_id', '=', 'module_sensors.id')
+            ->join('sensors', 'module_sensors.sensor_id', '=', 'sensors.id')
+            ->select('measurements.id', 'measurements.module_id', 'measurements.module_sensor_id', 'measurements.value', 'measurements.measure_date', 'fields.fruit_type_id', 'sensors.name_alias')
+            ->whereDate('measurements.measure_date', '>=', $start_date)
+            ->whereDate('measurements.measure_date', '<=', $end_date)
+            ->where('fields.fruit_type_id', '=', $fruit_type)
+            ->get();
         $sensors = Sensor::get();
 
         $data = array( //embed key's in single quotes in order to be able to replace them into the javascript code at graph.blade.php
@@ -41,16 +51,14 @@ class GraphController extends Controller
 
         //Fill data
         foreach ($measurements as $measurement) {
-            if ($measurement->module->field->fruit_type_id == $fruit_type) { //Check for fruit_type
-                if (empty($sensorValues[$measurement->module_sensor->sensor->name_alias]['\'data\''])) {
-                    $sensorValues[$measurement->module_sensor->sensor->name_alias]['\'data\''] = array();
-                }
-                array_push($sensorValues[$measurement->module_sensor->sensor->name_alias]['\'data\''], array('window' => $this->get_display_window($measurement, $display), 'value' => $measurement->value));
-
-                //Update labels
-                if (!in_array(date($display, strtotime($measurement->measure_date)), $data['\'labels\'']))
-                    array_push($data['\'labels\''], date($display, strtotime($measurement->measure_date)));
+            if (empty($sensorValues[$measurement->name_alias]['\'data\''])) {
+                $sensorValues[$measurement->name_alias]['\'data\''] = array();
             }
+            array_push($sensorValues[$measurement->name_alias]['\'data\''], array('window' => $this->get_display_window($measurement, $display), 'value' => $measurement->value));
+
+            //Update labels
+            if (!in_array(date($display, strtotime($measurement->measure_date)), $data['\'labels\'']))
+                array_push($data['\'labels\''], date($display, strtotime($measurement->measure_date)));
         }
 
         //Build the dataset

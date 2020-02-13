@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Measurement;
 use App\Sensor;
 use App\Sensor_added_value;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TableController extends Controller
 {
@@ -22,18 +22,23 @@ class TableController extends Controller
 
     public function table($fruit_type, $start_date = '', $end_date = '')
     {
-        //get measurements filtered by date
-        $measurements = Measurement::whereDate('measure_date', '>=', $start_date)->where('measure_date', '<=', $end_date)->get()->sortByDesc('measure_date')->values(); //->values() resets the key values after sort
+        //get measurements filtered by date and fruit_type
+        $measurements = DB::table('measurements')
+            ->join('modules', 'measurements.module_id', '=', 'modules.id')
+            ->join('fields', 'modules.field_id', '=', 'fields.id')
+            ->join('module_sensors', 'measurements.module_sensor_id', '=', 'module_sensors.id')
+            ->join('sensors', 'module_sensors.sensor_id', '=', 'sensors.id')
+            ->select('measurements.id', 'measurements.module_id', 'measurements.module_sensor_id', 'measurements.value', 'measurements.measure_date', 'fields.fruit_type_id', 'sensors.name', 'sensors.measuring_unit')
+            ->whereDate('measurements.measure_date', '>=', $start_date)
+            ->whereDate('measurements.measure_date', '<=', $end_date)
+            ->where('fields.fruit_type_id', '=', $fruit_type)
+            ->get();
 
-        foreach ($measurements as $key => $measurement) {
-            if ($measurement->module->field->fruit_type_id != $fruit_type) { //Remove unwanted fruit_types
-                unset($measurements[$key]);
-            }
-        }
 
+        //dd($measurements[0]->id);
         $values = array();
         foreach ($measurements as $key => $item) {
-            $values[$item['measure_date']][$item->module_id][] = $item;
+            $values[$item->measure_date][$item->module_id][] = $item;
         }
 
         return $values;
