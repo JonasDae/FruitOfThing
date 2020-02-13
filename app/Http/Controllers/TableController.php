@@ -28,17 +28,15 @@ class TableController extends Controller
             ->join('fields', 'modules.field_id', '=', 'fields.id')
             ->join('module_sensors', 'measurements.module_sensor_id', '=', 'module_sensors.id')
             ->join('sensors', 'module_sensors.sensor_id', '=', 'sensors.id')
-            ->select('measurements.id', 'measurements.module_id', 'measurements.module_sensor_id', 'measurements.value', 'measurements.measure_date', 'fields.fruit_type_id', 'sensors.name', 'sensors.measuring_unit')
+            ->select('measurements.module_id', 'measurements.module_sensor_id', 'measurements.value', 'measurements.measure_date', 'sensors.name', 'sensors.measuring_unit', 'sensors.id')
             ->whereDate('measurements.measure_date', '>=', $start_date)
             ->whereDate('measurements.measure_date', '<=', $end_date)
             ->where('fields.fruit_type_id', '=', $fruit_type)
             ->get();
 
-
-        //dd($measurements[0]->id);
         $values = array();
-        foreach ($measurements as $key => $item) {
-            $values[$item->measure_date][$item->module_id][] = $item;
+        foreach ($measurements as $key => $measurement) {
+            $values[$measurement->measure_date][$measurement->module_id][] = $measurement;
         }
 
         return $values;

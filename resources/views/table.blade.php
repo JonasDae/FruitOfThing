@@ -1,37 +1,47 @@
 <div class="container-fluid-lg pt-3">
     <div class="row mt-3 mx-0 font-weight-bold d-none d-md-flex">
-        <div class="col-lg-auto col-2 mr-lg-5">Datum</div>
-        <div class="col-lg-auto col-1 ml-lg-5">Module</div>
+        <div class="col">Datum</div>
+        <div class="col">Module</div>
         @foreach($sensors as $sensor)
-            <div class="col-lg-2 col-md-2">{{ $sensor->name_alias }}</div>
+            <div class="col text-break text-center">{{ $sensor->name_alias }}</div>
         @endforeach
     </div>
     <div>
         @foreach($table_data as $date => $record)
             @foreach($record as $module_id => $values)
-                <div class="row py-3 mx-0">
-                    <div class="col-auto">
-                        {{ $date}}
+                <hr class="my-0">
+                <div class="row py-3 mx-0 record">
+                    <div class="col-md col-6">
+                        {{ date('d M y H:i', strtotime($date)) }}
                     </div>
-                    <div class="col-auto">
+                    <div class="col-md col-6">
                         {{ $module_id }}
                     </div>
-                    @php
+                @php
+                    //Sort on sensor_id (id = id from sensors table)
                         usort($values, function($a, $b) {
-                            return $a->module_sensor_id - $b->module_sensor_id;
+                          return $a->module_sensor_id - $b->module_sensor_id;
                         });
-                    @endphp
-                    @foreach($values as $measurement)
-                        <div class="col-lg-2 col-md-2 col-2">
-                            @if ($measurement->name == "Dendrometer")
+                @endphp
+
+                <!--Place every measurement in the right column according to its sensor type-->
+                    @php $notInTableCount = 0 //counter to get the number of sensors that don't have a value in order to get the right key in the values array @endphp
+                    @for($i=0; $i<count($sensors); $i++)
+                        <div class="col text-md-center">
+                            @if (array_key_exists($i-$notInTableCount, $values) && $values[$i-$notInTableCount]->name == $sensors[$i]->name)
+                                @if (false) {{--$measurement->name == "Dendrometer"--}}
                                 @foreach($sensor_added_values as $sensor_added_value)
-                                    {{ $sensor_added_value->module_sensor_id == $measurement->module_sensor_id ? $measurement->value + $sensor_added_value->value . ' ' . $measurement->measuring_unit . ' (' . $measurement->value . ' ' . $measurement->measuring_unit . ' groei)' : '' }}
+                                    {{ $sensor_added_value->module_sensor_id == $values[$i-$notInTableCount]->module_sensor_id ? $values[$i-$notInTableCount]->value + $sensor_added_value->value . ' ' . $values[$i-$notInTableCount]->measuring_unit . ' (' . $values[$i-$notInTableCount]->value . ' ' . $values[$i-$notInTableCount]->measuring_unit . ' groei)' : '' }}
                                 @endforeach
+                                @else
+                                    {{ $values[$i-$notInTableCount]->value ?? '' }} {{ $values[$i-$notInTableCount]->measuring_unit ?? '' }}
+                                @endif
+                                @php $notInTableCount = 0 @endphp
                             @else
-                                {{ $measurement->value ?? '' }} {{ $measurement->measuring_unit ?? '' }}
+                                @php $notInTableCount += 1; @endphp
                             @endif
                         </div>
-                    @endforeach
+                    @endfor
                 </div>
             @endforeach
         @endforeach
