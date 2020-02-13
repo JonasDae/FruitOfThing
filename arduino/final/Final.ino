@@ -45,7 +45,7 @@
 
 // json constants
 #define MODULE_NAME "logger 123"
-#define JSON_SIZE 300
+#define JSON_SIZE 512
 
 // gprs constants
 #define GSM_PIN         "6615"
@@ -56,13 +56,6 @@
 #define GPRS_SERVER     "floriandh.sinners.be"
 #define GPRS_PATH       "/pcfruit/api/measurements/create.php"
 #define GPRS_PORT       443
-
-// NTP constants
-#define UDP_PORT_LOCAL    2390
-#define UDP_PORT_REMOTE   123
-#define NTP_PACKET_SIZE   48
-#define UNIX_TIME_OFFSET  2208988800UL
-#define UTC_OFFSET      (3600UL*2UL)   // UTC +2? voor belgie
 
 //Watermark variables:
 float resWatermark = 7760.0; //Ohm R;
@@ -103,11 +96,6 @@ GSM gsm;
 GPRS gprs;
 GSMSSLClient client_gsm;
 HttpClient client_http = HttpClient(client_gsm, GPRS_SERVER, GPRS_PORT);
-
-// NTP variables
-GSMUDP Udp;
-IPAddress ntp_server(195, 13, 23, 5);
-byte ntp_packet_buffer[NTP_PACKET_SIZE];
 
 //read sensor functions
 float readWatermark(){
@@ -200,10 +188,7 @@ String build_json()
   doc["module_id"] = 1;
   doc["battery_level"] = 69;
   doc["measure_date"] = "2020-01-30 10:20:20";
-  /*
-  doc["value"] = 66;
-  doc["measure_date"] = "2069-01-30 10:20:20";
-  */
+  
   JsonArray data_arr = doc.createNestedArray("data");
   JsonObject sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_DENDROMETER;
@@ -221,6 +206,7 @@ String build_json()
   sensordata["sensor"] = SENSOR_HUMIDITY_AIR;
   sensordata["data"] = humSHT;
 
+  
   serializeJson(doc, out);
   return out;
 }
@@ -280,55 +266,13 @@ void json_push(String data) {
   }
   gsm.shutdown();
 }
-// NTP functions
-void send_ntp_packet(IPAddress& adr)
+
+// NTP function
+void ntp_get_time()
 {
-  memset(ntp_packet_buffer, 0, NTP_PACKET_SIZE);
+    Serial.println("NTP START");
 
-  ntp_packet_buffer[0] = 0b11100011;  // LI, version, mode
-  ntp_packet_buffer[1] = 0;     // clocktype
-  ntp_packet_buffer[2] = 6;     // polling interval
-  ntp_packet_buffer[3] = 0xEC;    // peer clock precision
-                    // 8 bytes zeroed
-  ntp_packet_buffer[12] = 49;     // reference ID (4 bytes)
-  ntp_packet_buffer[13] = 0x4E;
-  ntp_packet_buffer[14] = 49;
-  ntp_packet_buffer[15] = 52;
-
-  Serial.println("WRITE");
-  Udp.beginPacket(adr, UDP_PORT_REMOTE);
-  Udp.write(ntp_packet_buffer, NTP_PACKET_SIZE);
-  Udp.endPacket();
-  Serial.println("WRITE DONE");
-}
-int parse_ntp_packet() {
-  bool read_ok = false;
-  while(!read_ok) {
-    delay(1000);
-  Serial.println("READ INIT");
-  if(Udp.parsePacket()) {
-    
-    Serial.println("PARSE OK");
-    Udp.read(ntp_packet_buffer, NTP_PACKET_SIZE);
-    unsigned long word_high = word(ntp_packet_buffer[40], ntp_packet_buffer[41]);
-    unsigned long word_low = word(ntp_packet_buffer[42], ntp_packet_buffer[43]);
-
-    unsigned long time_NTP = word_high << 16 | word_low;
-
-    unsigned long time_unix = time_NTP - UNIX_TIME_OFFSET;
-    time_unix += UTC_OFFSET;
-//    rtc.setEpoch(time_unix);
-    read_ok = true;
-    Serial.println(time_unix);
-  }
-  else
-    Serial.println("PARSE NOK");
-  }
-}
-String get_ntp_time() {
-  Serial.println("NTP START");
-  boolean gsm_connected = false;
-  Serial.println(gsm_connected);
+ boolean gsm_connected = false;
   while(!gsm_connected)
   {
     if((gsm.begin(GSM_PIN) == GSM_READY))
@@ -345,12 +289,7 @@ String get_ntp_time() {
     else
       Serial.println("GSM not connected, retrying ...");
   }
-  Serial.println("UDP_BEGIN");
-  Udp.begin(UDP_PORT_LOCAL);
-  send_ntp_packet(ntp_server);
-  delay(3000);
-  parse_ntp_packet();
-
+  Serial.println(gsm.getTime());
   gsm.shutdown();
 }
 
@@ -451,9 +390,8 @@ void setup() {
 	}
 
  // ntp setup
- get_ntp_time();
+ //get_ntp_time();
 }
-
 // Arduino loop
 void loop() {
 /*
@@ -465,40 +403,9 @@ void loop() {
   readTemp();
   readSHT();
   printAll();
+  ntp_get_time();
   String json = build_json();
   Serial.println(json);
   delay(1000);
 
 }
-
-// ============================================================================= //
-/*
-void loop() {
-  
-  StaticJsonDocument<JSON_SIZE> doc;
-
-  doc["module_id"] = 1;
-  doc["battery_level"] = 69;
-  doc["module_sensor_id"] = 3;
-  doc["value"] = 99;
-  doc["measure_date"] = "2069-11-22 10:20:20";
-  String data = "";
-  serializeJson(doc, data);
-
-  json_push(data);
-
-
-
-  
-   if(client_gsm.available() )
-   {
-    char c = client_gsm.read();
-    Serial.print(c);
-  }
-  if(!client_gsm.available() && !client_gsm.connected())
-  {
-    client_gsm.stop();
-  }
-  delay(999999999);
-}
-*/
