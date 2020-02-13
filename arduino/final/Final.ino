@@ -4,6 +4,7 @@
 #include <ArduinoHttpClient.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <RTCZero.h>
 
 #include <float.h>    // for FLT_MAX in sht35
 
@@ -97,6 +98,9 @@ GPRS gprs;
 GSMSSLClient client_gsm;
 HttpClient client_http = HttpClient(client_gsm, GPRS_SERVER, GPRS_PORT);
 
+// RTC variables
+RTCZero rtc;
+
 //read sensor functions
 float readWatermark(){
 
@@ -182,12 +186,12 @@ void readSHT()
 // json functions
 String build_json()
 {
-  String out = "";
+  String out = ""; 
   StaticJsonDocument<JSON_SIZE> doc;
 
   doc["module_id"] = 1;
   doc["battery_level"] = 69;
-  doc["measure_date"] = "2020-01-30 10:20:20";
+  doc["measure_date"] = rtc.getEpoch();  // UNIX timestamp
   
   JsonArray data_arr = doc.createNestedArray("data");
   JsonObject sensordata = data_arr.createNestedObject();
@@ -268,9 +272,9 @@ void json_push(String data) {
 }
 
 // NTP function
-void ntp_get_time()
+int ntp_get_time()
 {
-    Serial.println("NTP START");
+  unsigned long out = 0;
 
  boolean gsm_connected = false;
   while(!gsm_connected)
@@ -289,8 +293,9 @@ void ntp_get_time()
     else
       Serial.println("GSM not connected, retrying ...");
   }
-  Serial.println(gsm.getTime());
+  out = gsm.getTime();
   gsm.shutdown();
+  return out;
 }
 
 // debug print functions
@@ -389,8 +394,10 @@ void setup() {
 	  led_blink(LED_MASK_SHT_INIT);
 	}
 
- // ntp setup
- //get_ntp_time();
+ // rtc setup
+ rtc.begin();
+ // set rtc from ntp
+ rtc.setEpoch(ntp_get_time());
 }
 // Arduino loop
 void loop() {
@@ -403,7 +410,6 @@ void loop() {
   readTemp();
   readSHT();
   printAll();
-  ntp_get_time();
   String json = build_json();
   Serial.println(json);
   delay(1000);
