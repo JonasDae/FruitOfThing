@@ -106,6 +106,56 @@ HttpClient client_http = HttpClient(client_gsm, GPRS_SERVER, GPRS_PORT);
 // RTC variables
 RTCZero rtc;
 
+// Notification variables
+String severities[] = {"success", "warning", "danger", "info"};
+#define NOTIF_COUNT 4
+String notifSeverity[NOTIF_COUNT];
+String notifText[NOTIF_COUNT];
+#define CHECK_SUCCESS 0
+#define CHECK_WARNING 1
+#define CHECK_DANGER 2
+#define CHECK_INFO 3
+
+
+//check sensors
+int checkWatermark(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+int checkDendro(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+int checkTemp(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+int checkSHT(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+
+void printNotif(){
+  
+   for(int i = 0; i < NOTIF_COUNT; i++)
+  {
+    Serial.println(notifSeverity[i]);
+  }
+
+}
+
+
+
+
+
 //read sensor functions
 float readWatermark(){
 
@@ -156,6 +206,9 @@ float readWatermark(){
 
   digitalWrite(PIN_WM_PWR, LOW);
   digitalWrite(PIN_WM_GND, LOW);
+
+  //notification
+  notifSeverity[0] = severities[checkWatermark()]; 
   
 }
 
@@ -163,6 +216,12 @@ float readDendro(){
   adcValDendro = analogRead(PIN_DENDRO_IN); // read dendrometer input
   delay(500);
   distDendro = (adcValDendro * 366 /divider); // calculate dendrometer distance in mm
+
+
+  //notification
+  notifSeverity[1] = severities[checkDendro()]; 
+
+  
   return distDendro;
 }
 
@@ -170,6 +229,12 @@ float readTemp()
 {
   tempSensor.requestTemperatures();
   tempGnd = tempSensor.getTempCByIndex(0);
+
+
+  //notification
+  notifSeverity[2] = severities[checkTemp()]; 
+
+  
   return tempGnd;
 }
 
@@ -187,7 +252,15 @@ void readSHT()
       wetbulbSHT = (tempSHT * atan(0.151977 * sqrt(humSHT + 8.313659))) + atan(tempSHT + humSHT) - atan(humSHT - 1.676331) + (0.00391838 * pow(sqrt(humSHT), 3.0) * atan(0.023101 * humSHT)) - 4.686035;
 
     }
+
+  //notification
+  notifSeverity[3] = severities[checkSHT()]; 
+
+    
 }
+
+
+
 // json functions
 String build_json()
 {
@@ -387,6 +460,7 @@ void printAll() {
 	printDendro();
 	printSHT();
 	printTemp();
+  printNotif(); 
 }
 
 // led blink
