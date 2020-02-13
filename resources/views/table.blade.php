@@ -27,9 +27,9 @@
                 <!--Place every measurement in the right column according to its sensor type-->
                     @php $notInTableCount = 0 //counter to get the number of sensors that don't have a value in order to get the right key in the values array @endphp
                     @for($i=0; $i<count($sensors); $i++)
-                        <div class="col text-md-center">
+                        <div class="col-md col-auto text-md-center">
                             @if (array_key_exists($i-$notInTableCount, $values) && $values[$i-$notInTableCount]->name == $sensors[$i]->name)
-                                @if (false) {{--$measurement->name == "Dendrometer"--}}
+                                @if ($values[$i-$notInTableCount]->name == "Dendrometer")
                                 @foreach($sensor_added_values as $sensor_added_value)
                                     {{ $sensor_added_value->module_sensor_id == $values[$i-$notInTableCount]->module_sensor_id ? $values[$i-$notInTableCount]->value + $sensor_added_value->value . ' ' . $values[$i-$notInTableCount]->measuring_unit . ' (' . $values[$i-$notInTableCount]->value . ' ' . $values[$i-$notInTableCount]->measuring_unit . ' groei)' : '' }}
                                 @endforeach
