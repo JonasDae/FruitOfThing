@@ -23,8 +23,6 @@ byte ntp_packet_buffer[NTP_PACKET_SIZE];
 
 GSM gsm;
 GPRS gprs;
-GSMSSLClient client_gsm;
-HttpClient client_http = HttpClient(client_gsm, GPRS_SERVER, GPRS_PORT);
 void setup(){}
 
 void send_ntp_packet(IPAddress& adr)
@@ -97,11 +95,28 @@ String get_ntp_time() {
   send_ntp_packet(ntp_server);
   delay(3000);
   parse_ntp_packet();
-
-  gsm.shutdown();
 }
 
 void loop() {
   
- get_ntp_time();
+ boolean gsm_connected = false;
+  Serial.println(gsm_connected);
+  while(!gsm_connected)
+  {
+    if((gsm.begin(GSM_PIN) == GSM_READY))
+    {
+      Serial.println("GSM OK");
+      if(gprs.attachGPRS(GPRS_APN, GPRS_LOGIN, GPRS_PASSWORD) == GPRS_READY)
+      {
+        Serial.println("GPRS OK");
+        gsm_connected = true;
+      }
+      else
+        Serial.println("GPRS not connected, retrying ...");
+    }
+    else
+      Serial.println("GSM not connected, retrying ...");
+  }
+  Serial.println(gsm.getTime());
+  gsm.shutdown();
 }

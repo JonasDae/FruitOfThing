@@ -27,6 +27,7 @@ void sd_write(String filename, String data)
 {
   File datafile = SD.open(filename, FILE_WRITE);
   if(datafile) {
+    Serial.println(data);
     datafile.println(data);
     datafile.close();
     Serial.println("WRITE OK");
@@ -36,15 +37,15 @@ void sd_write(String filename, String data)
 }
 
 void setup() {
+    Serial.begin(9600);
+
   delay(5000);
 	sd_init("testlog.txt");
 }
 
 int i = 0;
 void loop() {
-  Serial.print("DONE ");
-  Serial.println(i);
-	String data = "DATA HERE: " + i;
+	String data = String("DATA HERE: ") + String(i);
 	sd_write("testlog.txt", data);
 	i++;
 	delay(1000);
