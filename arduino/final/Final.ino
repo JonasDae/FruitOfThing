@@ -108,6 +108,7 @@ RTCZero rtc;
 
 // Notification variables
 String severities[] = {"success", "warning", "danger", "info"};
+String checks[] = {"Watermark: ", "Dendro: ", "Temp: ", "SHT: ", "GSM: ", "GPRS: ", "HTTPS: "};
 #define NOTIF_COUNT 4
 String notifSeverity[NOTIF_COUNT];
 String notifText[NOTIF_COUNT];
@@ -117,7 +118,25 @@ String notifText[NOTIF_COUNT];
 #define CHECK_INFO 3
 
 
-//check sensors
+//check system/sensors
+int checkGSM(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+int checkGPRS(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+int checkHTTPS(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
 int checkWatermark(){
   
   return CHECK_SUCCESS;
@@ -144,11 +163,17 @@ int checkSHT(){
 
 
 void printNotif(){
+
+  Serial.println();
+  Serial.println("Notifications: ");
   
    for(int i = 0; i < NOTIF_COUNT; i++)
   {
+    Serial.print(checks[i]);
     Serial.println(notifSeverity[i]);
   }
+
+  Serial.println();
 
 }
 
@@ -305,6 +330,7 @@ void json_push(String data) {
       {
         Serial.println("GPRS OK");
         gsm_connected = true;
+
       }
       else
 	    {
