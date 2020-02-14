@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Field;
 use App\Module;
-use App\Notifications\Arduino;
-use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
 
 class ModuleController extends Controller
 {

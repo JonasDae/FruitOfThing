@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Measurement;
 use App\Sensor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
