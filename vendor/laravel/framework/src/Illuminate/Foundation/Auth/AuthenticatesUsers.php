@@ -78,17 +78,17 @@ trait AuthenticatesUsers
      */
     protected function attemptLogin(Request $request)
     {
-        //Check if user has access to the website
-        if (User::select('access')->where('email', $request->get('email'))->first()->access === 0) {
+        //Check if email exists and if user has access to the website
+        $user = User::select('access')->where('email', $request->get('email'))->first();
+        if (!empty($user) && $user->access === 0) {
             throw ValidationException::withMessages([
                 $this->username() => [trans('auth.access')],
             ]);//Throw no access exception (/resources/lang/en/auth.php)
         }
 
-        //Proceed with Laravel login attempt
+        //Proceed with Laravel authentication
         return $this->guard()->attempt(
-            $this->credentials($request), $request->filled('remember')
-        );
+            $this->credentials($request), $request->filled('remember'));
     }
 
     /**
