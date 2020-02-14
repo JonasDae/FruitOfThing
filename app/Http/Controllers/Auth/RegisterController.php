@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
+use App\Notifications\Login;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -29,7 +30,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/login';
 
     /**
      * Create a new controller instance.
@@ -64,6 +65,10 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $users = User::get();
+        $message = $data['name'] . ' heeft zich geregistreerd en wacht op toestemming om in te loggen.';
+        Notification::send($users, new Login('info', $message));
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],

@@ -79,7 +79,7 @@
                                         @foreach(auth()->user()->unreadNotifications as $notification)
                                             <hr class="my-0">
                                             <a class="dropdown-item py-3 text-{{ $notification->data['severity'] }}" href="{{ route('notification.destroy', array('id' => $notification->id)) }}">
-                                                {{ $notification->data['text'] }}
+                                                {{ $notification->data['message'] }}
                                             </a>
                                         @endforeach
                                     @endif
@@ -89,7 +89,7 @@
                                     @foreach(auth()->user()->notifications()->whereNotNull('read_at')->get() as $notification)
                                         <hr class="my-0">
                                         <a class="dropdown-item py-3 text-{{ $notification->data['severity'] }}" href="{{ route('notification.destroy', array('id' => $notification->id)) }}">
-                                            {{ $notification->data['text'] }}
+                                            {{ $notification->data['message'] }}
                                         </a>
                                     @endforeach
                                 @else
