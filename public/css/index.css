@@ -9,16 +9,20 @@ body {
     height: 100%;
     margin: 0;
 }
+
 #app {
     flex-flow: column;
     height: 100%;
 }
+
 #app header {
     flex: 0 1 auto; /* shorthand for: flex-grow: 0, flex-shrink: 1, flex-basis: auto */
 }
+
 #app #content {
     flex: 1 1 auto;
 }
+
 #app footer {
     flex: 0 1 auto;
 }
@@ -31,7 +35,7 @@ body {
     margin-top: 12px;
 }
 
-.content-title h5{
+.content-title h5 {
     margin: 0px;
     padding: 0px;
 }
@@ -53,8 +57,8 @@ a, a:hover, a:focus {
 }
 
 /* HEADER */
-.navbar{
-	background-color: white;
+.navbar {
+    background-color: white;
 }
 
 /* Weer API */
@@ -62,6 +66,7 @@ a, a:hover, a:focus {
     margin-left: -0.5em;
     margin-right: -0.5em;
 }
+
 iframe {
     display: block;
     border: none;
@@ -69,22 +74,9 @@ iframe {
     width: 100%;
 }
 
-/* SENSOREN */
-.headerButtons{
-    z-index: 2;
-    position: absolute;
-    right: 0px;
-    bottom: 10px;
-}
-.headerButtons button{
-    background-color: transparent;
-    border: 0px;
-    color: tomato;
-    margin: 4px;
-}
-.headerButtons button:hover{
-    background-color: lightslategray;
-    color: white;
+/* Notifications */
+.notification {
+    min-width: 20vw !important;
 }
 
 /* PROFILE */
@@ -123,7 +115,6 @@ iframe {
 }
 
 /* FOOTER */
-/* footer fixed to bottom */
 footer {
     height: 75px;
     padding: 25px;
