@@ -106,6 +106,81 @@ HttpClient client_http = HttpClient(client_gsm, GPRS_SERVER, GPRS_PORT);
 // RTC variables
 RTCZero rtc;
 
+// Notification variables
+String severities[] = {"success", "warning", "danger", "info"};
+String checks[] = {"Watermark: ", "Dendro: ", "Temp: ", "SHT: ", "GSM: ", "GPRS: ", "HTTPS: "};
+#define NOTIF_COUNT 4
+String notifSeverity[NOTIF_COUNT];
+String notifText[NOTIF_COUNT];
+#define CHECK_SUCCESS 0
+#define CHECK_WARNING 1
+#define CHECK_DANGER 2
+#define CHECK_INFO 3
+
+
+//check system/sensors
+int checkGSM(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+int checkGPRS(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+int checkHTTPS(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+int checkWatermark(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+int checkDendro(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+int checkTemp(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+int checkSHT(){
+  
+  return CHECK_SUCCESS;
+  
+}
+
+
+void printNotif(){
+
+  Serial.println();
+  Serial.println("Notifications: ");
+  
+   for(int i = 0; i < NOTIF_COUNT; i++)
+  {
+    Serial.print(checks[i]);
+    Serial.println(notifSeverity[i]);
+  }
+
+  Serial.println();
+
+}
+
+
+
+
+
 //read sensor functions
 float readWatermark(){
 
@@ -156,6 +231,9 @@ float readWatermark(){
 
   digitalWrite(PIN_WM_PWR, LOW);
   digitalWrite(PIN_WM_GND, LOW);
+
+  //notification
+  notifSeverity[0] = severities[checkWatermark()]; 
   
 }
 
@@ -163,6 +241,12 @@ float readDendro(){
   adcValDendro = analogRead(PIN_DENDRO_IN); // read dendrometer input
   delay(500);
   distDendro = (adcValDendro * 366 /divider); // calculate dendrometer distance in mm
+
+
+  //notification
+  notifSeverity[1] = severities[checkDendro()]; 
+
+  
   return distDendro;
 }
 
@@ -170,6 +254,12 @@ float readTemp()
 {
   tempSensor.requestTemperatures();
   tempGnd = tempSensor.getTempCByIndex(0);
+
+
+  //notification
+  notifSeverity[2] = severities[checkTemp()]; 
+
+  
   return tempGnd;
 }
 
@@ -187,7 +277,15 @@ void readSHT()
       wetbulbSHT = (tempSHT * atan(0.151977 * sqrt(humSHT + 8.313659))) + atan(tempSHT + humSHT) - atan(humSHT - 1.676331) + (0.00391838 * pow(sqrt(humSHT), 3.0) * atan(0.023101 * humSHT)) - 4.686035;
 
     }
+
+  //notification
+  notifSeverity[3] = severities[checkSHT()]; 
+
+    
 }
+
+
+
 // json functions
 String build_json()
 {
@@ -221,7 +319,7 @@ String build_json()
 }
 
 // GPRS functions
-void json_push(String data) {
+void gsm_enable() {
   boolean gsm_connected = false;
   while(!gsm_connected)
   {
@@ -232,21 +330,26 @@ void json_push(String data) {
       {
         Serial.println("GPRS OK");
         gsm_connected = true;
+
       }
       else
-	    {
+      {
         Serial.println("GPRS not connected, retrying ...");
-		    led_blink(LED_MASK_GPRS);
-	    }
+        led_blink(LED_MASK_GPRS);
+      }
     }
     else
-	  {
+    {
       Serial.println("GSM not connected, retrying ...");
-	    led_blink(LED_MASK_GSM);
-	  }
-  }
-  
-  gsm_connected = false;
+      led_blink(LED_MASK_GSM);
+    }
+  }  
+}
+void gsm_disable() {
+  gsm.shutdown();
+}
+void json_push(String data) {
+  boolean gsm_connected = false;
   while(!gsm_connected)
   {
 		Serial.println(client_gsm.connect(GPRS_SERVER, GPRS_PORT));
@@ -264,7 +367,7 @@ void json_push(String data) {
 		  client_http.print(data);
 		
 		  client_http.endRequest();
-	// FIXME: debug this
+
 		  client_gsm.stop();
 	  }
 	  else
@@ -273,33 +376,12 @@ void json_push(String data) {
 		  led_blink(LED_MASK_HTTP);
 	  }
   }
-  gsm.shutdown();
 }
 
 // NTP function
 int ntp_get_time()
 {
-  unsigned long out = 0;
-
- boolean gsm_connected = false;
-  while(!gsm_connected)
-  {
-    if((gsm.begin(GSM_PIN) == GSM_READY))
-    {
-      Serial.println("GSM OK");
-      if(gprs.attachGPRS(GPRS_APN, GPRS_LOGIN, GPRS_PASSWORD) == GPRS_READY)
-      {
-        Serial.println("GPRS OK");
-        gsm_connected = true;
-      }
-      else
-        Serial.println("GPRS not connected, retrying ...");
-    }
-    else
-      Serial.println("GSM not connected, retrying ...");
-  }
-  out = gsm.getTime();
-  gsm.shutdown();
+  unsigned long out = gsm.getTime();
   return out;
 }
 
@@ -387,6 +469,7 @@ void printAll() {
 	printDendro();
 	printSHT();
 	printTemp();
+  printNotif(); 
 }
 
 // led blink
@@ -437,7 +520,9 @@ void setup() {
  // rtc setup
  rtc.begin();
  // set rtc from ntp
+ gsm_enable();
  rtc.setEpoch(ntp_get_time());
+ gsm_disable();
  // SD setup
  sd_init(SD_FILE_NAME);
 }
@@ -445,7 +530,9 @@ void setup() {
 void loop() {
 /*
   String json = build_json();
+  gsm_enable();
   json_push(json);
+  gsm_disable();
 */
   readWatermark();
   readDendro();
@@ -456,5 +543,4 @@ void loop() {
   sd_write(SD_FILE_NAME, json);
   Serial.println(json);
   delay(1000);
-
 }
