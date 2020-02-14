@@ -40,10 +40,6 @@ class ModuleController extends Controller
             $module->uptime = $uptime;
         }
 
-        $users = User::get();
-        $message = auth()->user()->name . ' just visited the Module page';
-        Notification::send($users, new Arduino($message));
-
         return view('modules.index', compact('modules', 'fields'));
     }
 
