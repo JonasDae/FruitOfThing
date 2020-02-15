@@ -8,7 +8,6 @@
 require('./popper.min');
 require('./bootstrap');
 require('./all.min'); //Font Awesome
-require('./notify.min'); //Bootstrap notifications
 
 window.Vue = require('vue');
 
