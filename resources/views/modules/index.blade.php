@@ -20,7 +20,7 @@
                     {{--Rows--}}
                     <div class="row py-3 mx-0">
                         <div class="col-lg-2 col-md-2 col-12">
-                            <span class="font-weight-bolder">{{ $module->name }}</span>
+                            <a href="{{ route('sensors.index') }}?module_id={{ $module->id }}" class="font-weight-bolder">{{ $module->name }}</a>
                         </div>
                         <div class="col-lg-2 col-md-2 col-4">
                             <a href="javascript:void" data-toggle="popover" title="{{ $module->field->name ?? '' }}" data-html="true" data-trigger="hover" data-content="Type: {{ $module->field->fruit_type->name ?? '' }}<br>Adres: {{ $module->field->adres ?? '' }}<br>Postcode: {{ $module->field->postcode ?? '' }}">{{ $module->field->name ?? '' }}</a>
