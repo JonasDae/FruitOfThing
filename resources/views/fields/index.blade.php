@@ -53,7 +53,7 @@
                     {{--Rows--}}
                     <div class="row py-3 mx-0">
                         <div class="col-lg-2 col-md-2 col-12">
-                            <span class="font-weight-bolder">{{ $field->name }}</span>
+                            <a href="{{ route('modules.index') }}?field_id={{ $field->id }}" class="font-weight-bolder">{{ $field->name }}</a>
                         </div>
                         <div class="col-lg-2 col-md-2 col-12">
                             {{ $field->fruit_type->name ?? '' }}

@@ -14,9 +14,12 @@ class ModuleController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() {
-        //get modules & fields
-        $modules = Module::get();
+    public function index(Request $request) {
+        //get sensors & modules (filter on field_id if field_id is given, else get all modules)
+        $field_id = $request->get('field_id');
+        $modules = Module::get()->when($field_id, function ($query, $field_id) {
+            return $query->where('field_id', $field_id);
+        })->sortBy('name');
         $fields = Field::get();
 
         /* change uptime value */
