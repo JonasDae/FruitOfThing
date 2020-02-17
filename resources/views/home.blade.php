@@ -94,16 +94,11 @@
             });
         }
 
-        function update_table() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
+        function update_table(page = 1) {
             $.ajax({
                 type: 'get',
-                url: '{{ route('table.index') }}',
-                data: {fruit_type: $('#fruit_type').val(), start_date: $('#start_date').val(), end_date: $('#end_date').val()},
+                url: '{{ route('table.index') }}?page=' + page,
+                data: {_token: $('meta[name="csrf-token"]').attr('content'), fruit_type: $('#fruit_type').val(), start_date: $('#start_date').val(), end_date: $('#end_date').val()},
                 success: function (response) {
                     $("#table").html(response);
                 },
@@ -122,6 +117,19 @@
             $("select, input[type='date']").change(function () {
                 update_graph();
                 update_table();
+            });
+
+            //enable ajax loading on pagination click
+            $(document).on('click', '.pagination a', function (e) {
+                e.preventDefault();
+
+                $('li').removeClass('active');
+                $(this).parent('li').addClass('active');
+
+                var myurl = $(this).attr('href');
+                var page = $(this).attr('href').split('page=')[1];
+
+                update_table(page);
             });
         });
     </script>

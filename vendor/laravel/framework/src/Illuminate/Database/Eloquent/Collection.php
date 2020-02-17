@@ -9,9 +9,35 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Str;
 use LogicException;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class Collection extends BaseCollection implements QueueableCollection
 {
+    /**
+     * Add Pagination function to a collection
+     *
+     * @param $perPage
+     * @param null $total
+     * @param null $page
+     * @param string $pageName
+     * @return LengthAwarePaginator
+     */
+    public function paginate($perPage, $total = null, $page = null, $pageName = 'page')
+    {
+        $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
+
+        return new LengthAwarePaginator(
+            $this->forPage($page, $perPage),
+            $total ?: $this->count(),
+            $perPage,
+            $page,
+            [
+                'path' => LengthAwarePaginator::resolveCurrentPath(),
+                'pageName' => $pageName,
+            ]
+        );
+    }
+
     /**
      * Find a model in the collection by key.
      *
