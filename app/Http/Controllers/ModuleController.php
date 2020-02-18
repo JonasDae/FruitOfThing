@@ -58,11 +58,11 @@ class ModuleController extends Controller
         $module->timestamps = false; //don't update the updated_at column on save()
         $module->save();
 
-        return redirect(route('modules.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Module bijgewerkt!'));
     }
 
     public function destroy(Module $module) {
         $module->delete();
-        return redirect(route('modules.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Module verwijderd!'));
     }
 }

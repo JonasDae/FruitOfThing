@@ -59,9 +59,7 @@
                                 <input type="hidden" name="id" value="{{ $module->id }}">
                                 <div class="row">
                                     <div class="col-lg-2 col-md-2 col-12">
-                                        <input name="name" type="text" value="{{ old('name') ?? $module->name }}"
-                                               class="form-control"
-                                               required>
+                                        <input name="name" type="text" value="{{ old('name') ?? $module->name }}" class="form-control @error('name') is-invalid @enderror" required>
                                     </div>
                                     <div class="col-lg-2 col-md-2 col-12">
                                         <select name="field" id="field{{$key}}" class="form-control">
@@ -71,10 +69,7 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-2 col-md-2 col-12">
-                                        <input name="phone_number" type="number"
-                                               value="{{ old('phone_number') ?? $module->phone_number }}"
-                                               class="form-control"
-                                               required>
+                                        <input name="phone_number" type="number" value="{{ old('phone_number') ?? $module->phone_number }}" class="form-control @error('name') is-invalid @enderror">
                                     </div>
                                     <div class="col-lg-6 col-md-6 col text-right">
                                         <button type="submit" class="btn btn-success">Update</button>

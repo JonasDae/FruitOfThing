@@ -41,7 +41,7 @@ class Sensor_typeController extends Controller
         $sensor->timestamps = false;
         $sensor->save();
 
-        return redirect(route('sensor_types.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Sensor type aangemaakt!'));
     }
 
     public function update(Request $request) {
@@ -63,11 +63,11 @@ class Sensor_typeController extends Controller
         $sensor->timestamps = false;
         $sensor->update();
 
-        return redirect(route('sensor_types.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Sensor type bijgewerkt!'));
     }
 
     public function destroy(Sensor $sensor) {
         $sensor->delete();
-        return redirect(route('sensor_types.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Sensor type verwijderd!'));
     }
 }

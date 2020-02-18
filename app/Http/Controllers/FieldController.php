@@ -39,7 +39,7 @@ class FieldController extends Controller
         $field->timestamps = false; //don't update the updated_at column on save()
         $field->save();
 
-        return redirect(route('fields.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Veld aangemaakt!'));
     }
 
     public function update(Request $request) {
@@ -59,11 +59,11 @@ class FieldController extends Controller
         $field->timestamps = false; //don't update the updated_at column on save()
         $field->update();
 
-        return redirect(route('fields.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Veld bijgewerkt!'));
     }
 
     public function destroy(Field $field) {
         $field->delete();
-        return redirect(route('fields.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Veld verwijderd!'));
     }
 }

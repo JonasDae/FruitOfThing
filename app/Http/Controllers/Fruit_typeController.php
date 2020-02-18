@@ -31,7 +31,7 @@ class Fruit_typeController extends Controller
         $fruit_type->timestamps = false; //don't update the updated_at column on save()
         $fruit_type->save();
 
-        return redirect(route('fruits.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Fruittype aangemaakt!'));
     }
 
     public function update(Request $request) {
@@ -45,11 +45,11 @@ class Fruit_typeController extends Controller
         $fruit_type->timestamps = false; //don't update the updated_at column on save()
         $fruit_type->save();
 
-        return redirect(route('fruits.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Fruittype bijgewerkt!'));
     }
 
     public function destroy(Fruit_type $fruit_type) {
         $fruit_type->delete();
-        return redirect(route('fruits.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Fruittype verwijderd!'));
     }
 }

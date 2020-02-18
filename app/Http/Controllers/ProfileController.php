@@ -38,6 +38,6 @@ class ProfileController extends Controller
             $user->save();
         }
 
-        return redirect(route('profile.index'));
+        return back()->with('message', array('status' => 'success', 'content' => 'Profiel bijgewerkt!'));
     }
 }

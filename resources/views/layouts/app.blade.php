@@ -124,6 +124,13 @@
     </header>
 
     <div id="content">
+        @if ($message = session()->get('message'))
+            <div class="container">
+                <div class="alert alert-{{ $message['status'] }} mt-3">
+                    {{ $message['content'] }}
+                </div>
+            </div>
+        @endif
         @yield('content')
     </div>
 
