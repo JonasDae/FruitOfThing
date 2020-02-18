@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Fruit_type;
-use App\Measurement;
-use App\Sensor_added_value;
-
 
 class HomeController extends Controller
 {
