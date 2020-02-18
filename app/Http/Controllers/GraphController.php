@@ -30,6 +30,7 @@ class GraphController extends Controller
             ->whereDate('measurements.measure_date', '>=', $start_date)
             ->whereDate('measurements.measure_date', '<=', $end_date)
             ->where('fields.fruit_type_id', '=', $fruit_type)
+            ->orderBy('measurements.measure_date')
             ->get();
         $sensors = Sensor::get();
 
@@ -56,8 +57,8 @@ class GraphController extends Controller
             array_push($sensorValues[$measurement->name_alias]['\'data\''], array('window' => $this->get_display_window($measurement, $display), 'value' => $measurement->value));
 
             //Update labels
-            if (!in_array(date($display, strtotime($measurement->measure_date)), $data['\'labels\'']))
-                array_push($data['\'labels\''], date($display, strtotime($measurement->measure_date)));
+            if (!in_array($this->get_display_window($measurement, $display), $data['\'labels\'']))
+                array_push($data['\'labels\''], $this->get_display_window($measurement, $display));
         }
 
         //Build the dataset
@@ -99,13 +100,18 @@ class GraphController extends Controller
 
     public function get_display_window($measurement, $display)
     {
-        $displays = array('Y', 'm', 'd', 'W', 'H'); //different views
+        $displays = array('Y', 'm', 'W', 'd', 'H'); //different views
         $view = '';
         $i = 0;
         while (($displays[$i - 1] ?? '') !== $display) {
-            $view .= date($displays[$i], strtotime($measurement->measure_date));
+            if (($displays[$i] ?? '') == 'H')
+                $view .= ' ' . date(str_replace('m', 'M', $displays[$i]), strtotime($measurement->measure_date)) . 'u'; //Label add hour
+            else if (($displays[$i] ?? '') == 'W' && $display == 'W')
+                $view .= '(week ' . date(str_replace('m', 'M', $displays[$i]), strtotime($measurement->measure_date)) . ')'; //Label add week
+            else if (($displays[$i] ?? '') != 'W')
+                $view = date(str_replace('m', 'M', $displays[$i]), strtotime($measurement->measure_date)) . " $view"; //Label add other displays
             $i++;
         }
-        return $view;
+        return trim($view);
     }
 }
