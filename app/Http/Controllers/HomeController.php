@@ -11,15 +11,9 @@ class HomeController extends Controller
 {
     public function index()
     {
-        //get measurements & fruit_types
-        $measurements = Measurement::get()->sortByDesc('measure_date');
+        //get fruit_types
         $fruit_types = Fruit_type::get();
-        $sensor_added_values = Sensor_added_value::get();
 
-        return view('home', array(
-            'measurements' => $measurements,
-            'fruit_types' => $fruit_types,
-            'sensor_added_values' => $sensor_added_values,
-        ));
+        return view('home', compact('fruit_types'));
     }
 }

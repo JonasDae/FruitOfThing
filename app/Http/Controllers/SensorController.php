@@ -20,8 +20,6 @@ class SensorController extends Controller
             return $query->where('module_id', $module_id);
         })->sortBy('module_id');
 
-        return view('sensors.index', array(
-            'sensors' => $sensors,
-        ));
+        return view('sensors.index', compact('sensors'));
     }
 }

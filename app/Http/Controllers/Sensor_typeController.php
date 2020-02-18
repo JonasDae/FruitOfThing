@@ -18,9 +18,7 @@ class Sensor_typeController extends Controller
         //get sensor types
         $sensors = Sensor::get();
 
-        return view('sensor_types.index', array(
-            'sensors' => $sensors,
-        ));
+        return view('sensor_types.index', compact('sensors'));
     }
 
     public function store(Request $request) {
