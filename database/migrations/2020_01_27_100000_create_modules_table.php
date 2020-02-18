@@ -15,7 +15,7 @@ class CreateModulesTable extends Migration
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->unsignedBigInteger('field_id')->unsigned()->nullable();
             $table->unsignedBigInteger('battery_level')->nullable();
             $table->string('phone_number')->nullable();

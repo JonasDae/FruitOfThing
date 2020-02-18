@@ -8,14 +8,14 @@
     </div>
     <div>
         @foreach($table_data as $date => $record)
-            @foreach($record as $module_id => $values)
+            @foreach($record as $module_name => $values)
                 <hr class="my-0">
                 <div class="row py-3 mx-0 record">
                     <div class="col-md col-6">
                         {{ date('d M y H:i', strtotime($date)) }}
                     </div>
                     <div class="col-md col-6">
-                        {{ $module_id }}
+                        {{ $module_name }}
                     </div>
                 @php
                     //Sort on sensor_id (id = id from sensors table)

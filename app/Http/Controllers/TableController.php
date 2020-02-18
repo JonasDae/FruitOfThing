@@ -29,7 +29,7 @@ class TableController extends Controller
             ->join('fields', 'modules.field_id', '=', 'fields.id')
             ->join('module_sensors', 'measurements.module_sensor_id', '=', 'module_sensors.id')
             ->join('sensors', 'module_sensors.sensor_id', '=', 'sensors.id')
-            ->select('measurements.module_id', 'measurements.module_sensor_id', 'measurements.value', 'measurements.measure_date', 'sensors.name', 'sensors.measuring_unit', 'sensors.id')
+            ->select('measurements.module_id', 'measurements.module_sensor_id', 'measurements.value', 'measurements.measure_date', 'sensors.name', 'sensors.measuring_unit', 'sensors.id', 'modules.name as module_name')
             ->whereDate('measurements.measure_date', '>=', $start_date)
             ->whereDate('measurements.measure_date', '<=', $end_date)
             ->where('fields.fruit_type_id', '=', $fruit_type)
@@ -38,7 +38,7 @@ class TableController extends Controller
 
         $values = array();
         foreach ($measurements as $measurement) {
-            $values[$measurement->measure_date][$measurement->module_id][] = $measurement;
+            $values[$measurement->measure_date][$measurement->module_name][] = $measurement;
         }
 
         return $values;
