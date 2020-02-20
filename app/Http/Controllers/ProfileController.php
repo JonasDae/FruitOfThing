@@ -18,7 +18,7 @@ class ProfileController extends Controller
     {
         //get profile
         $profile = Auth::user();
-        $users = User::get();
+        $users = User::orderBy('name','ASC')->get();
 
         return view('profiles.index', compact('profile', 'users'));
     }

@@ -17,7 +17,7 @@ class FieldController extends Controller
     public function index()
     {
         //get fields & fruit_types
-        $fields = Field::get();
+        $fields = Field::orderBy('name', 'ASC')->get();
         $fruit_types = Fruit_type::get();
 
         return view('fields.index', compact('fields', 'fruit_types'));
