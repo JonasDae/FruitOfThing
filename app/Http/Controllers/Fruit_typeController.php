@@ -16,7 +16,7 @@ class Fruit_typeController extends Controller
     public function index()
     {
         //get fruit types
-        $fruit_types = Fruit_type::get();
+        $fruit_types = Fruit_type::orderBy('name')->get();
 
         return view('fruits.index', compact('fruit_types'));
     }
