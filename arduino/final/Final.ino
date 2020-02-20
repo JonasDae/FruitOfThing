@@ -12,10 +12,10 @@
 #define ANALOG_RESOLUTION   4096.0
 
 // database constants
-#define SENSOR_DENDROMETER 		1
-#define SENSOR_TEMPERATURE 		2
-#define SENSOR_HUMIDITY_SOIL 	3
-#define SENSOR_HUMIDITY_AIR		4
+#define SENSOR_DENDROMETER 		13
+#define SENSOR_TEMPERATURE 		14
+#define SENSOR_HUMIDITY_SOIL 	16
+#define SENSOR_HUMIDITY_AIR		15
 
 // LED defines
 #define PIN_LED 		    200		// FIXME
@@ -47,6 +47,7 @@
 
 // json constants
 #define MODULE_NAME "logger 123"
+#define MODULE_ID 1
 #define JSON_SIZE 512
 
 // gprs constants
@@ -292,26 +293,26 @@ String build_json()
   String out = ""; 
   StaticJsonDocument<JSON_SIZE> doc;
 
-  doc["module_id"] = 1;
+  doc["module_id"] = MODULE_ID;
   doc["battery_level"] = 69;
   doc["measure_date"] = rtc.getEpoch();  // UNIX timestamp
   
   JsonArray data_arr = doc.createNestedArray("data");
   JsonObject sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_DENDROMETER;
-  sensordata["data"] = distDendro;  
+  sensordata["value"] = distDendro;  
 
   sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_TEMPERATURE;
-  sensordata["data"] = tempSHT;
+  sensordata["value"] = tempSHT;
 
   sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_HUMIDITY_SOIL;
-  sensordata["data"] = watermark_1_per_instant;
+  sensordata["value"] = 37.37; //watermark_1_per_instant;
 
   sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_HUMIDITY_AIR;
-  sensordata["data"] = humSHT;
+  sensordata["value"] = humSHT;
 
   
   serializeJson(doc, out);
@@ -542,5 +543,10 @@ void loop() {
   String json = build_json();
   sd_write(SD_FILE_NAME, json);
   Serial.println(json);
+
+  gsm_enable();
+  json_push(json);
+  gsm_disable();
+  
   delay(1000);
 }
