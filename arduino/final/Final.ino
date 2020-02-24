@@ -73,7 +73,6 @@ float watermark_1_cb_instant = 0.0;
 float watermark_1_per = 0;
 float watermark_1_per_med = 0.0;
 float watermark_1_per_instant = 0.0;
-float soil_temperature = 6.0;
 float average_v_in = 0.0;
 float average_v_out = 0.0;
 float val = 0.0;
@@ -219,11 +218,11 @@ float readWatermark(){
   if (rwm <= 500) {
     watermark_1_cb_instant = 0;
   } else if (rwm > 500 && rwm <= 1000) {
-    watermark_1_cb_instant = -20 * ((rwm / 1000.0) * (1.00 + 0.018 * (soil_temperature - 24)) - 0.55);
+    watermark_1_cb_instant = -20 * ((rwm / 1000.0) * (1.00 + 0.018 * (tempGnd- 24)) - 0.55);
   } else if (rwm > 1000 && rwm <= 8000) {
-    watermark_1_cb_instant = (-3.213 * (rwm / 1000.0) - 4.093) / (1.0 - 0.009733 * (rwm / 1000.0) - 0.01205 * soil_temperature);
+    watermark_1_cb_instant = (-3.213 * (rwm / 1000.0) - 4.093) / (1.0 - 0.009733 * (rwm / 1000.0) - 0.01205 * tempGnd);
   } else if (rwm > 8000) {
-    watermark_1_cb_instant = -2.246 - 5.239 * (rwm / 1000.00) * (1.0 + 0.018 * (soil_temperature - 24.00)) - 0.06756 * (rwm / 1000.00) * (rwm / 1000.00) * ((1.00 + 0.018 * (soil_temperature - 24.00)) * (1.00 + 0.018 * (soil_temperature - 24.00)));
+    watermark_1_cb_instant = -2.246 - 5.239 * (rwm / 1000.00) * (1.0 + 0.018 * (tempGnd - 24.00)) - 0.06756 * (rwm / 1000.00) * (rwm / 1000.00) * ((1.00 + 0.018 * (tempGnd - 24.00)) * (1.00 + 0.018 * (tempGnd - 24.00)));
   }
 
   //map(value, fromLow, fromHigh, toLow, toHigh)
@@ -437,7 +436,7 @@ void printWatermark(){
   Serial.print("\t");
   Serial.print(watermark_1_per_instant);
   Serial.print("%\t");
-  Serial.print(soil_temperature);
+  Serial.print(tempGnd);
   Serial.println("C");
 }
 void printDendro() {
@@ -535,9 +534,10 @@ void loop() {
   json_push(json);
   gsm_disable();
 */
+  readTemp();
+// WM after temperature
   readWatermark();
   readDendro();
-  readTemp();
   readSHT();
   printAll();
   String json = build_json();
