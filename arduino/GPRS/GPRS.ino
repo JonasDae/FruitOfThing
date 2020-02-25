@@ -2,15 +2,15 @@
 #include <ArduinoHttpClient.h>
 #include <ArduinoJson.h>
 
-#define JSON_SIZE 300
+#define JSON_SIZE 512
 
 #define GSM_PIN         "6615"
 #define GPRS_APN        "internet.proximus.be"
 #define GPRS_LOGIN      ""
 #define GPRS_PASSWORD   ""
 
-#define GPRS_SERVER     "pcfruit-dashboard.epizy.com"
-#define GPRS_PATH       "/api/measurements/create.php"
+#define GPRS_SERVER     "floriandh.sinners.be"
+#define GPRS_PATH       "/pcfruit/api/measurements/create.php"
 #define GPRS_PORT       443
 
 GSM gsm;
@@ -62,15 +62,15 @@ void json_push(String data) {
 }
 
 void loop() {
-  
-  String data = "{\"module_id\":1,\"battery_level\":69,\"measure_date\":\"2020-01-30 10:20:20\",\"data\":[{\"sensor\":1,\"data\":0.00366},{\"sensor\":2,\"data\":22.12139},{\"sensor\":3,\"data\":34},{\"sensor\":4,\"data\":38.32303}]}";
+
+  String data = "{\"module_id\":1,\"battery_level\":69,\"measure_date\":1582197975,\"value\":[{\"sensor\":1,\"value\":0.01464},{\"sensor\":2,\"value\":20.63401},{\"sensor\":3,\"value\":3244299},{\"sensor\":4,\"value\":53.39285}]}";
 
   json_push(data);
 
 
 
   
-   if(client_gsm.available() )
+   while (client_gsm.available() )
    {
     char c = client_gsm.read();
     Serial.print(c);

@@ -16,7 +16,7 @@ class Sensor_typeController extends Controller
     public function index()
     {
         //get sensor types
-        $sensors = Sensor::get();
+        $sensors = Sensor::orderBy('name', 'ASC')->get();
 
         return view('sensor_types.index', compact('sensors'));
     }

@@ -12,10 +12,10 @@
 #define ANALOG_RESOLUTION   4096.0
 
 // database constants
-#define SENSOR_DENDROMETER 		1
-#define SENSOR_TEMPERATURE 		2
-#define SENSOR_HUMIDITY_SOIL 	3
-#define SENSOR_HUMIDITY_AIR		4
+#define SENSOR_DENDROMETER 		13
+#define SENSOR_TEMPERATURE 		14
+#define SENSOR_HUMIDITY_SOIL 	16
+#define SENSOR_HUMIDITY_AIR		15
 
 // LED defines
 #define PIN_LED 		    200		// FIXME
@@ -47,6 +47,7 @@
 
 // json constants
 #define MODULE_NAME "logger 123"
+#define MODULE_ID 1
 #define JSON_SIZE 512
 
 // gprs constants
@@ -67,12 +68,9 @@
 float resWatermark = 7760.0; //Ohm R;
 
 float watermark_1_cb = 0.0;
-float watermark_1_cb_med = 0.0;
-float watermark_1_cb_instant = 0.0;
+float watermark_1_kp_instant = 0.0;
 float watermark_1_per = 0;
-float watermark_1_per_med = 0.0;
 float watermark_1_per_instant = 0.0;
-float soil_temperature = 6.0;
 float average_v_in = 0.0;
 float average_v_out = 0.0;
 float val = 0.0;
@@ -216,17 +214,17 @@ float readWatermark(){
   rwm = ((average_v_in * resWatermark)/average_v_out)-resWatermark;
 
   if (rwm <= 500) {
-    watermark_1_cb_instant = 0;
+    watermark_1_kp_instant = 0;
   } else if (rwm > 500 && rwm <= 1000) {
-    watermark_1_cb_instant = -20 * ((rwm / 1000.0) * (1.00 + 0.018 * (soil_temperature - 24)) - 0.55);
+    watermark_1_kp_instant = -20 * ((rwm / 1000.0) * (1.00 + 0.018 * (tempGnd- 24)) - 0.55);
   } else if (rwm > 1000 && rwm <= 8000) {
-    watermark_1_cb_instant = (-3.213 * (rwm / 1000.0) - 4.093) / (1.0 - 0.009733 * (rwm / 1000.0) - 0.01205 * soil_temperature);
+    watermark_1_kp_instant = (-3.213 * (rwm / 1000.0) - 4.093) / (1.0 - 0.009733 * (rwm / 1000.0) - 0.01205 * tempGnd);
   } else if (rwm > 8000) {
-    watermark_1_cb_instant = -2.246 - 5.239 * (rwm / 1000.00) * (1.0 + 0.018 * (soil_temperature - 24.00)) - 0.06756 * (rwm / 1000.00) * (rwm / 1000.00) * ((1.00 + 0.018 * (soil_temperature - 24.00)) * (1.00 + 0.018 * (soil_temperature - 24.00)));
+    watermark_1_kp_instant = -2.246 - 5.239 * (rwm / 1000.00) * (1.0 + 0.018 * (tempGnd - 24.00)) - 0.06756 * (rwm / 1000.00) * (rwm / 1000.00) * ((1.00 + 0.018 * (tempGnd - 24.00)) * (1.00 + 0.018 * (tempGnd - 24.00)));
   }
 
   //map(value, fromLow, fromHigh, toLow, toHigh)
-  watermark_1_per_instant = map(watermark_1_cb_instant, -200, 0, 100, 0);  //Convert to Percentage
+  watermark_1_per_instant = map(watermark_1_kp_instant, -200, 0, 100, 0);  //Convert to Percentage
   //http://www.omafra.gov.on.ca/english/engineer/facts/11-037f4.gif
 
   digitalWrite(PIN_WM_PWR, LOW);
@@ -292,26 +290,26 @@ String build_json()
   String out = ""; 
   StaticJsonDocument<JSON_SIZE> doc;
 
-  doc["module_id"] = 1;
+  doc["module_id"] = MODULE_ID;
   doc["battery_level"] = 69;
   doc["measure_date"] = rtc.getEpoch();  // UNIX timestamp
   
   JsonArray data_arr = doc.createNestedArray("data");
   JsonObject sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_DENDROMETER;
-  sensordata["data"] = distDendro;  
+  sensordata["value"] = distDendro;  
 
   sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_TEMPERATURE;
-  sensordata["data"] = tempSHT;
+  sensordata["value"] = tempSHT;
 
   sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_HUMIDITY_SOIL;
-  sensordata["data"] = watermark_1_per_instant;
+  sensordata["value"] = 37.37; //watermark_1_per_instant;
 
   sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_HUMIDITY_AIR;
-  sensordata["data"] = humSHT;
+  sensordata["value"] = humSHT;
 
   
   serializeJson(doc, out);
@@ -422,7 +420,7 @@ void sd_write(String filename, String data)
 
 // debug print functions
 void printWatermark(){
-  Serial.println("\nVin\tVout\tAnalog\tRwm\t\tcb\t%water\ttemp");
+  Serial.println("\nVin\tVout\tAnalog\tRwm\t\tkp\t%water\ttemp");
   Serial.println("-------------------------------------------------------------");
   Serial.print(average_v_in);
   Serial.print("V\t");
@@ -432,11 +430,11 @@ void printWatermark(){
   Serial.print("\t");
   Serial.print((int)rwm);
   Serial.print(" OHM\t");
-  Serial.print(watermark_1_cb_instant);
+  Serial.print(watermark_1_kp_instant);
   Serial.print("\t");
   Serial.print(watermark_1_per_instant);
   Serial.print("%\t");
-  Serial.print(soil_temperature);
+  Serial.print(tempGnd);
   Serial.println("C");
 }
 void printDendro() {
@@ -534,13 +532,19 @@ void loop() {
   json_push(json);
   gsm_disable();
 */
+  readTemp();
+// WM after temperature
   readWatermark();
   readDendro();
-  readTemp();
   readSHT();
   printAll();
   String json = build_json();
   sd_write(SD_FILE_NAME, json);
   Serial.println(json);
+
+  gsm_enable();
+  json_push(json);
+  gsm_disable();
+  
   delay(1000);
 }

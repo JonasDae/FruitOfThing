@@ -29,7 +29,7 @@
                     @for($i=0; $i<count($sensors); $i++)
                         <div class="col-md col-auto text-md-center">
                             @if (array_key_exists($i-$notInTableCount, $values) && $values[$i-$notInTableCount]->name == $sensors[$i]->name)
-                                @if ($values[$i-$notInTableCount]->name == "Dendrometer")
+                                @if ($values[$i-$notInTableCount]->name == "TODO")
                                 @foreach($sensor_added_values as $sensor_added_value)
                                     {{ $sensor_added_value->module_sensor_id == $values[$i-$notInTableCount]->module_sensor_id ? $values[$i-$notInTableCount]->value + $sensor_added_value->value . ' ' . $values[$i-$notInTableCount]->measuring_unit . ' (' . $values[$i-$notInTableCount]->value . ' ' . $values[$i-$notInTableCount]->measuring_unit . ' groei)' : '' }}
                                 @endforeach
