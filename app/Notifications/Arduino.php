@@ -9,8 +9,9 @@ class Arduino extends Notification
 {
     use Queueable;
 
-    public function __construct($message)
+    public function __construct($severity, $message)
     {
+        $this->severity = $severity;
         $this->message = $message;
     }
 
@@ -21,6 +22,6 @@ class Arduino extends Notification
 
     public function toDatabase($notifiable)
     {
-        return array('severity' => 'info', 'message' => $this->message);
+        return array('severity' => $this->severity, 'message' => $this->message);
     }
 }
