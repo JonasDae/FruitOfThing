@@ -25,7 +25,7 @@ function sql_connect() {
     }
 
     mysqli_set_charset($conn, "utf8");
-    return $conn;    
+    return $conn;
 }
 function sql_query($connection, $query) {
 	return mysqli_query($connection, $query);
