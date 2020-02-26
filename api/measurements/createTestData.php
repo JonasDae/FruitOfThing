@@ -4,9 +4,9 @@ require '../connect.php';
 $module_id = intval($_GET['module_id']);
 $battery_level = mt_rand(1,100);
 // Start date
-$date = '2019-09-01 00:00:00';
+$date = '2020-01-01 00:00:00';
 // End date
-$end_date = '2020-02-25 00:00:00';
+$end_date = '2020-02-26 00:00:00';
 
 if(isset($module_id) && !empty($module_id))
 {    
