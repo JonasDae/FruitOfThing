@@ -60,6 +60,8 @@
 #define GPRS_PATH       "/pcfruit/api/measurements/create.php"
 #define GPRS_PORT       443
 
+#define GSM_TRIES       10
+
 // SD constants
 #define SD_CHIPSELECT 4
 #define SD_FILE_NAME "DATALOG.TXT"
@@ -269,7 +271,6 @@ void readSHT()
 	  humSHT = FLT_MAX;
       wetbulbSHT = FLT_MAX;
       Serial.println("read temp failed!!");
-	  led_blink(LED_MASK_SHT_READ);
     }
     else {
       wetbulbSHT = (tempSHT * atan(0.151977 * sqrt(humSHT + 8.313659))) + atan(tempSHT + humSHT) - atan(humSHT - 1.676331) + (0.00391838 * pow(sqrt(humSHT), 3.0) * atan(0.023101 * humSHT)) - 4.686035;
@@ -319,8 +320,10 @@ String build_json()
 // GPRS functions
 void gsm_enable() {
   boolean gsm_connected = false;
-  while(!gsm_connected)
+  int tries = 0;
+  while(!gsm_connected || tries < GSM_TRIES)
   {
+    tries++;
     if((gsm.begin(GSM_PIN) == GSM_READY))
     {
       Serial.println("GSM OK");
@@ -328,18 +331,15 @@ void gsm_enable() {
       {
         Serial.println("GPRS OK");
         gsm_connected = true;
-
       }
       else
       {
         Serial.println("GPRS not connected, retrying ...");
-        led_blink(LED_MASK_GPRS);
       }
     }
     else
     {
       Serial.println("GSM not connected, retrying ...");
-      led_blink(LED_MASK_GSM);
     }
   }  
 }
@@ -347,9 +347,11 @@ void gsm_disable() {
   gsm.shutdown();
 }
 void json_push(String data) {
-  boolean gsm_connected = false;
-  while(!gsm_connected)
+  boolean gsm_connected = false;  
+  int tries = 0;
+  while(!gsm_connected || tries < GSM_TRIES)
   {
+    tries++;
 		Serial.println(client_gsm.connect(GPRS_SERVER, GPRS_PORT));
 		if(client_gsm.connect(GPRS_SERVER, GPRS_PORT))
 		{
@@ -371,7 +373,6 @@ void json_push(String data) {
 	  else
 	  {
 		  Serial.println("HTTPS client not connected, retrying ...");
-		  led_blink(LED_MASK_HTTP);
 	  }
   }
 }
@@ -512,7 +513,6 @@ void setup() {
     if(shtSensor.init())
 	{
       Serial.println("sensor init failed!!!");
-	  led_blink(LED_MASK_SHT_INIT);
 	}
 
  // rtc setup
