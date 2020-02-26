@@ -37,11 +37,11 @@
                     <div class="col-sm-6 col-lg-3 form-group">
                         <label for="display">Weergave</label>
                         <select id="display" class="form-control">
-                            <option value="H">uur</option>
-                            <option value="d">dag</option>
-                            <option value="W">week</option>
-                            <option selected value="m">maand</option>
-                            <option value="Y">jaar</option>
+                            <option value="H">Uur</option>
+                            <option value="d">Dag</option>
+                            <option value="W">Week</option>
+                            <option selected value="m">Maand</option>
+                            <option value="Y">Jaar</option>
                         </select>
                     </div>
                     <div class="col-sm-6 col-lg-3 form-group">
