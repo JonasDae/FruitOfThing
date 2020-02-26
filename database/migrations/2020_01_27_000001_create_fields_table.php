@@ -19,7 +19,6 @@ class CreateFieldsTable extends Migration
             $table->unsignedBigInteger('fruit_type_id')->unsigned()->nullable();
             $table->string('adres')->nullable();
             $table->unsignedBigInteger('postcode')->nullable();
-
             $table->index('fruit_type_id');
             $table->foreign('fruit_type_id')->references('id')->on('fruit_types')->onDelete('set null')->onUpdate('cascade');
         });

@@ -1,5 +1,8 @@
 <?php
-// CORS fix: FIXME remove
+//This file will setup a connection with the database
+//Api's will use it for doing sql querries
+
+// CORS fix
 header("Access-Control-Allow-Origin: *");
 
 // db credentials LOCAL
@@ -27,6 +30,7 @@ function sql_connect() {
     mysqli_set_charset($conn, "utf8");
     return $conn;
 }
+// this function will execute sql commands
 function sql_query($connection, $query) {
 	return mysqli_query($connection, $query);
 }

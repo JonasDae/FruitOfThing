@@ -16,12 +16,12 @@ class CreateModulesTable extends Migration
         Schema::create('modules', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->unique();
+            $table->string('identifier')->unique();
             $table->unsignedBigInteger('field_id')->unsigned()->nullable();
             $table->unsignedBigInteger('battery_level')->nullable();
             $table->string('phone_number')->nullable();
             $table->dateTime('uptime');
             $table->dateTime('last_connection');
-
             $table->index('field_id');
             $table->foreign('field_id')->references('id')->on('fields')->onDelete('set null')->onUpdate('cascade');
         });
