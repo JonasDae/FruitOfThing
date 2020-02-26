@@ -37,11 +37,11 @@
                     <div class="col-sm-6 col-lg-3 form-group">
                         <label for="display">Weergave</label>
                         <select id="display" class="form-control">
-                            <option value="H">uur</option>
-                            <option value="d">dag</option>
-                            <option value="W">week</option>
-                            <option selected value="m">maand</option>
-                            <option value="Y">jaar</option>
+                            <option value="H">Uur</option>
+                            <option value="d">Dag</option>
+                            <option value="W">Week</option>
+                            <option selected value="m">Maand</option>
+                            <option value="Y">Jaar</option>
                         </select>
                     </div>
                     <div class="col-sm-6 col-lg-3 form-group">
@@ -53,6 +53,11 @@
                         <input type="date" id="end_date" placeholder="Selecteer einddatum" value="{{ date('Y-m-d') }}" class="form-control">
                     </div>
                     <!--Graph-->
+                    <div class="position-absolute overlay">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="spinner d-flex m-auto position-absolute"></div>
+                        </div>
+                    </div>
                     <div id="graph" class="col-12"></div>
                 </div>
             </div>
@@ -67,6 +72,11 @@
         <div class="row">
             <div class="col">
                 <!--Table-->
+                <div class="position-absolute overlay">
+                    <div class="w-100 d-flex justify-content-center align-items-center">
+                        <div class="spinner d-flex m-auto position-absolute"></div>
+                    </div>
+                </div>
                 <div id="table"></div>
             </div>
         </div>
@@ -130,6 +140,15 @@
                 var page = $(this).attr('href').split('page=')[1];
 
                 update_table(page);
+            });
+
+            //Ajax loading
+            $(document).ajaxStart(function () {
+                $('.overlay').show();
+            });
+
+            $(document).ajaxComplete(function () {
+                $('.overlay').hide();
             });
         });
     </script>
