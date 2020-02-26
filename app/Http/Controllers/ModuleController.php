@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Field;
 use App\Module;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ModuleController extends Controller
 {
@@ -47,7 +48,7 @@ class ModuleController extends Controller
         $module = Module::find($request->get('id'));
 
         $data = $request->validate(array(
-            'name' => array('required', 'string', 'max:255'),
+            'name' => array('required', 'string', 'max:255', Rule::unique('modules')->ignore($module->id)),
             'field' => array('required', 'exists:fields,id'),
             'phone_number' => array('required'),
         ));
