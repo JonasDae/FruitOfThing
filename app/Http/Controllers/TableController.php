@@ -17,8 +17,7 @@ class TableController extends Controller
         //use paginate function on collection: https://gist.github.com/simonhamp/549e8821946e2c40a617c85d2cf5af5e
         $table_data = collect($this->table($fruit_type, $start_date, $end_date))->paginate(10); //can't send array so send collection instead
         $sensors = Sensor::get();
-        $sensor_added_values = Sensor_added_value::get();
-        return view('table', compact('table_data', 'sensors', 'sensor_added_values'));
+        return view('table', compact('table_data', 'sensors'));
     }
 
     public function table($fruit_type, $start_date = '', $end_date = '')
