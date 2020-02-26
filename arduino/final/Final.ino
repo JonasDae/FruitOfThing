@@ -79,7 +79,7 @@ int final_cnt = 0;
 #define GPRS_SERVER       "floriandh.sinners.be"
 #define GPRS_PATH_MEASURE       "/pcfruit/api/measurements/create.php"
 #define GPRS_PATH_MODULES       "/pcfruit/api/modules/create.php"
-#define GPRS_PATH_NOTIFICATION  "/pcfruit/api/modules/create.php"
+#define GPRS_PATH_NOTIFICATION  "/pcfruit/api/modules/notification.php"
 #define GPRS_PORT         443
 
 #define GSM_TRIES       10
@@ -250,7 +250,6 @@ float readWatermark(){
   } else {
     watermark_1_kp_instant = -2.246 - 5.239 * (rwm / 1000.00) * (1.0 + 0.018 * (tempGnd - 24.00)) - 0.06756 * (rwm / 1000.00) * (rwm / 1000.00) * ((1.00 + 0.018 * (tempGnd - 24.00)) * (1.00 + 0.018 * (tempGnd - 24.00)));
   }
-
   //map(value, fromLow, fromHigh, toLow, toHigh)
   watermark_1_per_instant = map(watermark_1_kp_instant, -200, 0, 100, 0);  //Convert to Percentage
   //http://www.omafra.gov.on.ca/english/engineer/facts/11-037f4.gif
@@ -338,13 +337,13 @@ String build_json_module()
   serializeJson(doc, out);
   return out;
 }
-String build_json_notification()
+String build_json_notification(String severity, String message)
 {
   String out = "";
   StaticJsonDocument<JSON_SIZE> doc;
   doc["module_id"] = MODULE_ID;
-  doc["severity"] = "info";
-  doc["message"] = "5 o clock and all OK";
+  doc["severity"] = severity;
+  doc["message"] = message;
   
   serializeJson(doc, out);
   return out;
@@ -355,7 +354,7 @@ String build_json_data()
   StaticJsonDocument<JSON_SIZE> doc;
 
   doc["module_id"] = MODULE_ID;
-  doc["battery_level"] = 69;
+  doc["battery_level"] = battery;
   doc["measure_date"] = rtc.getEpoch();  // UNIX timestamp
   
   JsonArray data_arr = doc.createNestedArray("data");
@@ -713,15 +712,15 @@ void loop() {
   readBattery();
   printAll();
   json_data = build_json_data();
-  json_notification = build_json_notification();
+  json_notification = build_json_notification("info", "6 o clock and all OK");
   sd_write(SD_FILE_NAME, json_data);
   Serial.println(json_data);
   Serial.println(json_notification);
-  /*
+  
   gsm_enable();
   json_push_data(json_data);
-  //json_push_notification(json_notification);
+  json_push_notification(json_notification);
   gsm_disable();
-  */
+  
   delay(1000);
 }
