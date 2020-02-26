@@ -61,8 +61,13 @@ int final_cnt = 0;
 #define SCLPIN  12		// serial clock
 #define RSTPIN  13		// serial reset
 
+// battery pins
+#define PIN_BATTERY   A4
+#define BATTERY_MIN   2.6f
+#define BATTERY_MAX   3.3f
+
 // json constants
-#define MODULE_NAME "logger 123"
+#define MODULE_NAME "geuderduino"
 #define JSON_SIZE 512
 
 // gprs constants
@@ -72,8 +77,9 @@ int final_cnt = 0;
 #define GPRS_PASSWORD   ""
 
 #define GPRS_SERVER       "floriandh.sinners.be"
-#define GPRS_PATH         "/pcfruit/api/measurements/create.php"
-#define GPRS_PATH_MODULES "/pcfruit/api/modules/create.php"
+#define GPRS_PATH_MEASURE       "/pcfruit/api/measurements/create.php"
+#define GPRS_PATH_MODULES       "/pcfruit/api/modules/create.php"
+#define GPRS_PATH_NOTIFICATION  "/pcfruit/api/modules/create.php"
 #define GPRS_PORT         443
 
 #define GSM_TRIES       10
@@ -112,6 +118,11 @@ SHT35 shtSensor(SCLPIN);
 float tempSHT;
 float humSHT;
 float wetbulbSHT;
+
+// battery values
+float batteryAnalog = 0.f;
+float batteryValue = 0.f;
+int battery = 0;
 
 // GPRS variables
 GSM gsm;
@@ -297,7 +308,13 @@ void readSHT()
 
     
 }
-
+float readBattery(){
+  Serial.println();
+  // read the value from the sensor:
+  batteryAnalog = analogRead(PIN_BATTERY);
+  batteryValue = batteryAnalog * (3.3 / ANALOG_RESOLUTION); 
+  battery = ((batteryValue-BATTERY_MIN)/(BATTERY_MAX-BATTERY_MIN))*100;
+}
 
 
 // json functions
@@ -317,6 +334,17 @@ String build_json_module()
   sensor_id["id"] = SENSOR_ID_4;
   sensor_id = sensor_arr.createNestedObject();
   sensor_id["id"] = SENSOR_ID_5;
+  
+  serializeJson(doc, out);
+  return out;
+}
+String build_json_notification()
+{
+  String out = "";
+  StaticJsonDocument<JSON_SIZE> doc;
+  doc["module_id"] = MODULE_ID;
+  doc["severity"] = "info";
+  doc["message"] = "5 o clock and all OK";
   
   serializeJson(doc, out);
   return out;
@@ -391,7 +419,6 @@ void json_push_module(String data) {
   while(!gsm_connected && tries < GSM_TRIES)
   {
     tries++;
-    Serial.println(client_gsm.connect(GPRS_SERVER, GPRS_PORT));
     if(client_gsm.connect(GPRS_SERVER, GPRS_PORT))
     {
       Serial.println("HTTPS OK");
@@ -435,34 +462,62 @@ void json_push_module(String data) {
     SENSOR_TEMPERATURE_AIR    = doc["module_sensors"][4];
   }
 }
+void json_push_notification(String data) {
+  boolean gsm_connected = false;  
+  int tries = 0;
+  while(!gsm_connected && tries < GSM_TRIES)
+  {
+    tries++;
+    if(client_gsm.connect(GPRS_SERVER, GPRS_PORT))
+    {
+      Serial.println("HTTPS OK");
+      gsm_connected = true;
+    
+      client_http.beginRequest();
+      client_http.post(GPRS_PATH_NOTIFICATION);
+      client_http.sendHeader("Content-Type", "application/json");
+    
+      client_http.sendHeader("Content-length", data.length());
+      client_http.beginBody();
+      client_http.print(data);
+    
+      client_http.endRequest();
+
+      client_gsm.stop();
+    }
+    else
+    {
+      Serial.println("HTTPS client not connected, retrying ...");
+    }
+  }
+}
 void json_push_data(String data) {
   boolean gsm_connected = false;  
   int tries = 0;
-  while(!gsm_connected || tries < GSM_TRIES)
+  while(!gsm_connected && tries < GSM_TRIES)
   {
     tries++;
-		Serial.println(client_gsm.connect(GPRS_SERVER, GPRS_PORT));
-		if(client_gsm.connect(GPRS_SERVER, GPRS_PORT))
-		{
-		  Serial.println("HTTPS OK");
-		  gsm_connected = true;
-		
-		  client_http.beginRequest();
-		  client_http.post(GPRS_PATH);
-		  client_http.sendHeader("Content-Type", "application/json");
-		
-		  client_http.sendHeader("Content-length", data.length());
-		  client_http.beginBody();
-		  client_http.print(data);
-		
-		  client_http.endRequest();
+    if(client_gsm.connect(GPRS_SERVER, GPRS_PORT))
+    {
+      Serial.println("HTTPS OK");
+      gsm_connected = true;
+    
+      client_http.beginRequest();
+      client_http.post(GPRS_PATH_MEASURE);
+      client_http.sendHeader("Content-Type", "application/json");
+    
+      client_http.sendHeader("Content-length", data.length());
+      client_http.beginBody();
+      client_http.print(data);
+    
+      client_http.endRequest();
 
-		  client_gsm.stop();
-	  }
-	  else
-	  {
-		  Serial.println("HTTPS client not connected, retrying ...");
-	  }
+      client_gsm.stop();
+    }
+    else
+    {
+      Serial.println("HTTPS client not connected, retrying ...");
+    }
   }
 }
 // median functions
@@ -570,12 +625,23 @@ void printSHT() {
   Serial.print(wetbulbSHT);
   Serial.println("C\t");
 }
+void printBattery(){
+  Serial.println("\nVin\tAnalog\t%");
+  Serial.println("-------------------------------------------------------------");
+  Serial.print(batteryValue);
+  Serial.print("V\t");
+  Serial.print(batteryAnalog);
+  Serial.print("\t");
+  Serial.print(battery);
+  Serial.println("%");
+}
 
 void printAll() {
 	printWatermark();
 	printDendro();
 	printSHT();
 	printTemp();
+  printBattery();
   printNotif(); 
 }
 
@@ -636,25 +702,26 @@ void setup() {
 }
 // Arduino loop
 void loop() {
-/*
-  String json = build_json_data();
-  gsm_enable();
-  json_push_data(json);
-  gsm_disable();
-*/
+  String json_data;
+  String json_notification;
+  
   readTemp();
 // WM after temperature
   readWatermark();
   readDendro();
   readSHT();
+  readBattery();
   printAll();
-  String json = build_json_data();
-  sd_write(SD_FILE_NAME, json);
-  Serial.println(json);
-/*
+  json_data = build_json_data();
+  json_notification = build_json_notification();
+  sd_write(SD_FILE_NAME, json_data);
+  Serial.println(json_data);
+  Serial.println(json_notification);
+  /*
   gsm_enable();
-  json_push_data(json);
+  json_push_data(json_data);
+  //json_push_notification(json_notification);
   gsm_disable();
-*/
+  */
   delay(1000);
 }
