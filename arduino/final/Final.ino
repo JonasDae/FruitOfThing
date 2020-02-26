@@ -213,13 +213,13 @@ float readWatermark(){
 
   rwm = ((average_v_in * resWatermark)/average_v_out)-resWatermark;
 
-  if (rwm <= 500) {
+  if (rwm <= 550) {
     watermark_1_kp_instant = 0;
-  } else if (rwm > 500 && rwm <= 1000) {
-    watermark_1_kp_instant = -20 * ((rwm / 1000.0) * (1.00 + 0.018 * (tempGnd- 24)) - 0.55);
-  } else if (rwm > 1000 && rwm <= 8000) {
+  } else if (rwm < 1000) {
+    watermark_1_kp_instant = -20 * ((rwm / 1000.0) * (1.00 + 0.018 * (tempGnd- 24.f)) - 0.55);
+  } else if (rwm < 8000) {
     watermark_1_kp_instant = (-3.213 * (rwm / 1000.0) - 4.093) / (1.0 - 0.009733 * (rwm / 1000.0) - 0.01205 * tempGnd);
-  } else if (rwm > 8000) {
+  } else {
     watermark_1_kp_instant = -2.246 - 5.239 * (rwm / 1000.00) * (1.0 + 0.018 * (tempGnd - 24.00)) - 0.06756 * (rwm / 1000.00) * (rwm / 1000.00) * ((1.00 + 0.018 * (tempGnd - 24.00)) * (1.00 + 0.018 * (tempGnd - 24.00)));
   }
 
