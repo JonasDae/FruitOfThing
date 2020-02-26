@@ -53,6 +53,11 @@
                         <input type="date" id="end_date" placeholder="Selecteer einddatum" value="{{ date('Y-m-d') }}" class="form-control">
                     </div>
                     <!--Graph-->
+                    <div class="position-absolute overlay">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="spinner d-flex m-auto position-absolute"></div>
+                        </div>
+                    </div>
                     <div id="graph" class="col-12"></div>
                 </div>
             </div>
@@ -67,6 +72,11 @@
         <div class="row">
             <div class="col">
                 <!--Table-->
+                <div class="position-absolute overlay">
+                    <div class="w-100 d-flex justify-content-center align-items-center">
+                        <div class="spinner d-flex m-auto position-absolute"></div>
+                    </div>
+                </div>
                 <div id="table"></div>
             </div>
         </div>
@@ -130,6 +140,15 @@
                 var page = $(this).attr('href').split('page=')[1];
 
                 update_table(page);
+            });
+
+            //Ajax loading
+            $(document).ajaxStart(function () {
+                $('.overlay').show();
+            });
+
+            $(document).ajaxComplete(function () {
+                $('.overlay').hide();
             });
         });
     </script>
