@@ -18,6 +18,7 @@
 #define SENSOR_ID_4         4   // HUMID GND
 #define SENSOR_ID_5         5   // TEMP GND
 
+int MODULE_ID = 1;
 int SENSOR_DENDROMETER 		    = 13;
 int SENSOR_TEMPERATURE_SOIL   = 14;
 int SENSOR_HUMIDITY_SOIL 	    = 16;
@@ -62,7 +63,6 @@ int final_cnt = 0;
 
 // json constants
 #define MODULE_NAME "logger 123"
-#define MODULE_ID 1
 #define JSON_SIZE 512
 
 // gprs constants
@@ -305,7 +305,7 @@ String build_json_module()
 {
   String out = "";
   StaticJsonDocument<JSON_SIZE> doc;
-  doc["module_identified"] = MODULE_NAME;
+  doc["module_identifier"] = MODULE_NAME;
   JsonArray sensor_arr = doc.createNestedArray("sensoren");
   JsonObject sensor_id = sensor_arr.createNestedObject();
   sensor_id["id"] = SENSOR_ID_1;
@@ -413,26 +413,26 @@ void json_push_module(String data) {
     }
   }
   if(gsm_connected) {
-    char http_status[32] = {0};
-    client_http.readBytesUntil('\r', http_status, sizeof(http_status));
-    if(strcmp(http_status, "HTTP/1.1 200 OK") != 0) {
-      Serial.println("HTTPS response NOK ...");
-      Serial.println(http_status);
-      return;
-    }
-    char http_headers_end[] = "\r\n\r\n";
-    if(!client_http.find(http_headers_end)) {
-      Serial.println("HTTPS invalid response...");
-      return;
-    }  
-    Serial.println("BP 1");
+    int response = client_http.responseStatusCode();
+    if(response == 200)
+      Serial.println("status 200 OK");
+     else {
+      Serial.print("status: ");
+      Serial.print(response);
+      Serial.println(" NOK");
+     }
     StaticJsonDocument<JSON_SIZE> doc;
-    DeserializationError jsonerr = deserializeJson(doc, client_http);
+    DeserializationError jsonerr = deserializeJson(doc, client_http.responseBody());
     if(jsonerr) {
       Serial.println(jsonerr.c_str());
       return;
     }
-    serializeJsonPretty(doc, Serial);
+    MODULE_ID                 = doc["module_id"];
+    SENSOR_DENDROMETER        = doc["module_sensors"][0];
+    SENSOR_TEMPERATURE_SOIL   = doc["module_sensors"][1];
+    SENSOR_HUMIDITY_SOIL      = doc["module_sensors"][2];
+    SENSOR_HUMIDITY_AIR       = doc["module_sensors"][3];
+    SENSOR_TEMPERATURE_AIR    = doc["module_sensors"][4];
   }
 }
 void json_push_data(String data) {
@@ -628,6 +628,8 @@ void setup() {
  // set rtc from ntp
  gsm_enable();
  rtc.setEpoch(ntp_get_time());
+ String json = build_json_module();  
+ json_push_module(json);
  gsm_disable();
  // SD setup
  sd_init(SD_FILE_NAME);
@@ -635,13 +637,6 @@ void setup() {
 // Arduino loop
 void loop() {
 /*
-  gsm_enable();
-  String json = build_json_module();
-  Serial.println(json);
-  
-   json_push_module(json);
-  gsm_disable();
-return;
   String json = build_json_data();
   gsm_enable();
   json_push_data(json);
@@ -653,7 +648,7 @@ return;
   readDendro();
   readSHT();
   printAll();
-//  String json = build_json_data();
+  String json = build_json_data();
   sd_write(SD_FILE_NAME, json);
   Serial.println(json);
 /*
