@@ -47,9 +47,9 @@ class ModuleController extends Controller
         $module = Module::find($request->get('id'));
 
         $data = $request->validate(array(
-            'name' => array('required', 'string', 'max:255', 'unique:modules'),
+            'name' => array('required', 'string', 'max:255'),
             'field' => array('required', 'exists:fields,id'),
-            'phone_number' => array('required', 'min:10', 'max:11'),
+            'phone_number' => array('required'),
         ));
 
         $module->name = $data['name'];

@@ -22,7 +22,7 @@ class CreateMeasurementsTable extends Migration
 
             $table->index('module_id');
             $table->index('module_sensor_id');
-            $table->foreign('module_id')->references('id')->on('modules')->onUpdate('cascade');
+            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('module_sensor_id')->references('id')->on('module_sensors')->onDelete('set null')->onUpdate('cascade');
         });
     }

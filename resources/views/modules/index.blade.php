@@ -69,7 +69,7 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-2 col-md-2 col-12">
-                                        <input name="phone_number" type="number" value="{{ old('phone_number') ?? $module->phone_number }}" class="form-control @error('name') is-invalid @enderror">
+                                        <input name="phone_number" type="text" value="{{ old('phone_number') ?? $module->phone_number }}" class="form-control @error('name') is-invalid @enderror">
                                     </div>
                                     <div class="col-lg-6 col-md-6 col text-right">
                                         <button type="submit" class="btn btn-success">Update</button>
