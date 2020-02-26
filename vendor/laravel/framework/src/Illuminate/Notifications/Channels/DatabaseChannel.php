@@ -54,7 +54,7 @@ class DatabaseChannel
     protected function buildPayload($notifiable, Notification $notification)
     {
         return [
-            'id' => $notification->id,
+            //'id' => $notification->id, //Remove the default Laravel UUID as id, instead we use auto increment
             'type' => get_class($notification),
             'data' => $this->getData($notifiable, $notification),
             'read_at' => null,
