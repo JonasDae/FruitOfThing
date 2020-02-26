@@ -16,6 +16,7 @@ if(isset($postdata) && !empty($postdata))
     $module_id = intval(mysqli_real_escape_string($con, $request['module_id'])); //int
     $battery_level = intval(mysqli_real_escape_string($con, $request['battery_level'])); //int
     $measure_date = DateTime::createFromFormat('U', mysqli_real_escape_string($con, $request['measure_date']))->format('Y-m-d H:i:s'); 
+    $measure_date = date('Y-m-d H:i:s',strtotime('+1 hour',strtotime($measure_date)));
 
     // Store measurements
 	foreach($request['data'] as $data)

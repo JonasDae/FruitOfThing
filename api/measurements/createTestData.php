@@ -13,7 +13,6 @@ if(isset($module_id) && !empty($module_id))
     // Set timezone
     date_default_timezone_set('Europe/Brussels');
 
-    // $connection_date = date("Y-m-d H:i:s", strtotime("2019-12-24 09:00:00"));
     $connection_date = date("Y-m-d H:i:s");
 
     $moduleSensors = [];
