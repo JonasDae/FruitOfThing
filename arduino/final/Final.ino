@@ -12,10 +12,25 @@
 #define ANALOG_RESOLUTION   4096.0
 
 // database constants
-#define SENSOR_DENDROMETER 		13
-#define SENSOR_TEMPERATURE 		14
-#define SENSOR_HUMIDITY_SOIL 	16
-#define SENSOR_HUMIDITY_AIR		15
+#define SENSOR_ID_1         1   // DENDRO
+#define SENSOR_ID_2         2   // TEMP AIR
+#define SENSOR_ID_3         3   // HUMID AIR
+#define SENSOR_ID_4         4   // HUMID GND
+#define SENSOR_ID_5         5   // TEMP GND
+
+int SENSOR_DENDROMETER 		    = 13;
+int SENSOR_TEMPERATURE_SOIL   = 14;
+int SENSOR_HUMIDITY_SOIL 	    = 16;
+int SENSOR_HUMIDITY_AIR		    = 15;
+int SENSOR_TEMPERATURE_AIR    = 99;
+
+// final values
+#define FINAL_DENDRO    0
+#define FINAL_TEMP      1
+#define FINAL_HUMID_GND 2
+#define FINAL_HUMID_AIR 3
+float finals[] = {0.f, 0.f, 0.f, 0.f};
+int final_cnt = 0;
 
 // LED defines
 #define PIN_LED 		    200		// FIXME
@@ -56,9 +71,10 @@
 #define GPRS_LOGIN      ""
 #define GPRS_PASSWORD   ""
 
-#define GPRS_SERVER     "floriandh.sinners.be"
-#define GPRS_PATH       "/pcfruit/api/measurements/create.php"
-#define GPRS_PORT       443
+#define GPRS_SERVER       "floriandh.sinners.be"
+#define GPRS_PATH         "/pcfruit/api/measurements/create.php"
+#define GPRS_PATH_MODULES "/pcfruit/api/modules/create.php"
+#define GPRS_PORT         443
 
 #define GSM_TRIES       10
 
@@ -116,7 +132,6 @@ String notifText[NOTIF_COUNT];
 #define CHECK_WARNING 1
 #define CHECK_DANGER 2
 #define CHECK_INFO 3
-
 
 //check system/sensors
 int checkGSM(){
@@ -286,7 +301,27 @@ void readSHT()
 
 
 // json functions
-String build_json()
+String build_json_module()
+{
+  String out = "";
+  StaticJsonDocument<JSON_SIZE> doc;
+  doc["module_identified"] = MODULE_NAME;
+  JsonArray sensor_arr = doc.createNestedArray("sensoren");
+  JsonObject sensor_id = sensor_arr.createNestedObject();
+  sensor_id["id"] = SENSOR_ID_1;
+  sensor_id = sensor_arr.createNestedObject();
+  sensor_id["id"] = SENSOR_ID_2;
+  sensor_id = sensor_arr.createNestedObject();
+  sensor_id["id"] = SENSOR_ID_3;
+  sensor_id = sensor_arr.createNestedObject();
+  sensor_id["id"] = SENSOR_ID_4;
+  sensor_id = sensor_arr.createNestedObject();
+  sensor_id["id"] = SENSOR_ID_5;
+  
+  serializeJson(doc, out);
+  return out;
+}
+String build_json_data()
 {
   String out = ""; 
   StaticJsonDocument<JSON_SIZE> doc;
@@ -301,8 +336,12 @@ String build_json()
   sensordata["value"] = distDendro;  
 
   sensordata = data_arr.createNestedObject();
-  sensordata["sensor"] = SENSOR_TEMPERATURE;
+  sensordata["sensor"] = SENSOR_TEMPERATURE_AIR;
   sensordata["value"] = tempSHT;
+  
+  sensordata = data_arr.createNestedObject();
+  sensordata["sensor"] = SENSOR_TEMPERATURE_SOIL;
+  sensordata["value"] = tempGnd;
 
   sensordata = data_arr.createNestedObject();
   sensordata["sensor"] = SENSOR_HUMIDITY_SOIL;
@@ -321,7 +360,7 @@ String build_json()
 void gsm_enable() {
   boolean gsm_connected = false;
   int tries = 0;
-  while(!gsm_connected || tries < GSM_TRIES)
+  while(!gsm_connected && tries < GSM_TRIES)
   {
     tries++;
     if((gsm.begin(GSM_PIN) == GSM_READY))
@@ -346,7 +385,57 @@ void gsm_enable() {
 void gsm_disable() {
   gsm.shutdown();
 }
-void json_push(String data) {
+void json_push_module(String data) {
+  boolean gsm_connected = false;  
+  int tries = 0;
+  while(!gsm_connected && tries < GSM_TRIES)
+  {
+    tries++;
+    Serial.println(client_gsm.connect(GPRS_SERVER, GPRS_PORT));
+    if(client_gsm.connect(GPRS_SERVER, GPRS_PORT))
+    {
+      Serial.println("HTTPS OK");
+      gsm_connected = true;
+    
+      client_http.beginRequest();
+      client_http.post(GPRS_PATH_MODULES);
+      client_http.sendHeader("Content-Type", "application/json");
+    
+      client_http.sendHeader("Content-length", data.length());
+      client_http.beginBody();
+      client_http.print(data);
+    
+      client_http.endRequest();
+    }
+    else
+    {
+      Serial.println("HTTPS client not connected, retrying ...");
+    }
+  }
+  if(gsm_connected) {
+    char http_status[32] = {0};
+    client_http.readBytesUntil('\r', http_status, sizeof(http_status));
+    if(strcmp(http_status, "HTTP/1.1 200 OK") != 0) {
+      Serial.println("HTTPS response NOK ...");
+      Serial.println(http_status);
+      return;
+    }
+    char http_headers_end[] = "\r\n\r\n";
+    if(!client_http.find(http_headers_end)) {
+      Serial.println("HTTPS invalid response...");
+      return;
+    }  
+    Serial.println("BP 1");
+    StaticJsonDocument<JSON_SIZE> doc;
+    DeserializationError jsonerr = deserializeJson(doc, client_http);
+    if(jsonerr) {
+      Serial.println(jsonerr.c_str());
+      return;
+    }
+    serializeJsonPretty(doc, Serial);
+  }
+}
+void json_push_data(String data) {
   boolean gsm_connected = false;  
   int tries = 0;
   while(!gsm_connected || tries < GSM_TRIES)
@@ -375,6 +464,25 @@ void json_push(String data) {
 		  Serial.println("HTTPS client not connected, retrying ...");
 	  }
   }
+}
+// median functions
+void add_finals()
+{
+  finals[FINAL_DENDRO]      += distDendro;
+  finals[FINAL_TEMP]        += tempSHT;
+  finals[FINAL_HUMID_GND]   += watermark_1_per_instant;
+  finals[FINAL_HUMID_AIR]   += humSHT;
+}
+void reset_finals()
+{
+  finals[FINAL_DENDRO]      = 0.f;
+  finals[FINAL_TEMP]        = 0.f;
+  finals[FINAL_HUMID_GND]   = 0.f;
+  finals[FINAL_HUMID_AIR]   = 0.f;  
+}
+void median_finals()
+{
+  
 }
 
 // NTP function
@@ -527,9 +635,16 @@ void setup() {
 // Arduino loop
 void loop() {
 /*
-  String json = build_json();
   gsm_enable();
-  json_push(json);
+  String json = build_json_module();
+  Serial.println(json);
+  
+   json_push_module(json);
+  gsm_disable();
+return;
+  String json = build_json_data();
+  gsm_enable();
+  json_push_data(json);
   gsm_disable();
 */
   readTemp();
@@ -538,13 +653,13 @@ void loop() {
   readDendro();
   readSHT();
   printAll();
-  String json = build_json();
+//  String json = build_json_data();
   sd_write(SD_FILE_NAME, json);
   Serial.println(json);
-
+/*
   gsm_enable();
-  json_push(json);
+  json_push_data(json);
   gsm_disable();
-  
+*/
   delay(1000);
 }
